@@ -1,9 +1,9 @@
-import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
-import { validateInput } from '../../utils/validate-input';
-import { validateAddress } from '../../utils/validation/address';
+import { Dec, Int, MsgExecuteContract } from "@terra-money/terra.js";
+import { validateInput } from "../../utils/validate-input";
+import { validateAddress } from "../../utils/validation/address";
 
-import { validateIsGreaterThanZero } from '../../utils/validation/number';
-import { validateWhitelistedStable } from '../../utils/validation/stable';
+import { validateIsGreaterThanZero } from "../../utils/validation/number";
+import { validateWhitelistedStable } from "../../utils/validation/stable";
 
 interface Option {
   address: string;
@@ -22,7 +22,7 @@ export const fabricateDepositStableCoin = ({
   symbol,
   amount,
 }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
@@ -45,9 +45,9 @@ export const fabricateDepositStableCoin = ({
       // coins
       {
         [`u${nativeTokenDenom}`]: new Int(
-          new Dec(amount).mul(1000000),
+          new Dec(amount).mul(1000000)
         ).toString(),
-      },
+      }
     ),
   ];
 };

@@ -1,7 +1,7 @@
-import { Dec, MsgExecuteContract } from '@terra-money/terra.js';
-import { validateInput } from '../../utils/validate-input';
-import { validateAddress } from '../../utils/validation/address';
-import { validateTrue } from '../../utils/validation/true';
+import { Dec, MsgExecuteContract } from "@terra-money/terra.js";
+import { validateInput } from "../../utils/validate-input";
+import { validateAddress } from "../../utils/validation/address";
+import { validateTrue } from "../../utils/validation/true";
 
 interface Option {
   address: string;
@@ -18,7 +18,7 @@ export const fabricatebOverseerUpWhiteList = ({
   custody_contract,
   ltv,
 }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),

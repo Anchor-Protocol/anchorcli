@@ -1,6 +1,6 @@
-import { Dec, MsgExecuteContract } from '@terra-money/terra.js';
-import { validateAddress } from '../../utils/validation/address';
-import { validateInput } from '../../utils/validate-input';
+import { Dec, MsgExecuteContract } from "@terra-money/terra.js";
+import { validateAddress } from "../../utils/validation/address";
+import { validateInput } from "../../utils/validate-input";
 
 interface Option {
   address: string;
@@ -13,7 +13,7 @@ export const fabricateSubmitBid = ({
   collateral_token,
   premium_rate,
 }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),

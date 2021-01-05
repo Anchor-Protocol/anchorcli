@@ -1,8 +1,8 @@
-import { Dec, MsgExecuteContract } from '@terra-money/terra.js';
-import { validateInput } from '../../utils/validate-input';
-import { validateAddress } from '../../utils/validation/address';
-import { validateTrue } from '../../utils/validation/true';
-import { validateIsNumber } from '../../utils/validation/number';
+import { Dec, MsgExecuteContract } from "@terra-money/terra.js";
+import { validateInput } from "../../utils/validate-input";
+import { validateAddress } from "../../utils/validation/address";
+import { validateTrue } from "../../utils/validation/true";
+import { validateIsNumber } from "../../utils/validation/number";
 
 interface Option {
   address: string;
@@ -29,7 +29,7 @@ export const fabricatebOverseerConfig = ({
   epoch_period,
   price_timeframe,
 }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),

@@ -1,10 +1,11 @@
-import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
-import { validateInput } from '../../utils/validate-input';
+import { Dec, Int, MsgExecuteContract } from "@terra-money/terra.js";
+import { validateInput } from "../../utils/validate-input";
 import {
   validateAddress,
   validateValAddress,
-} from '../../utils/validation/address';
-import { validateIsGreaterThanZero } from '../../utils/validation/number';
+} from "../../utils/validation/address";
+import { validateIsGreaterThanZero } from "../../utils/validation/number";
+import { AddressProviderFromEnvVar } from "../../address-provider";
 
 interface Option {
   address: string;
@@ -19,7 +20,7 @@ export const fabricatebAssetBond = ({
   bAsset,
   validator,
 }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
@@ -43,7 +44,7 @@ export const fabricatebAssetBond = ({
       // send native token
       {
         uluna: new Int(new Dec(amount).mul(1000000)).toString(),
-      },
+      }
     ),
   ];
 };

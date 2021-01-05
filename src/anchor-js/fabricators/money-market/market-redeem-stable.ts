@@ -1,8 +1,8 @@
-import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
-import { validateAddress } from '../../utils/validation/address';
-import { validateInput } from '../../utils/validate-input';
-import { validateIsGreaterThanZero } from '../../utils/validation/number';
-import { createHookMsg } from '../../utils/cw20/create-hook-msg';
+import { Dec, Int, MsgExecuteContract } from "@terra-money/terra.js";
+import { validateAddress } from "../../utils/validation/address";
+import { validateInput } from "../../utils/validate-input";
+import { validateIsGreaterThanZero } from "../../utils/validation/number";
+import { createHookMsg } from "../../utils/cw20/create-hook-msg";
 
 interface Option {
   address: string;
@@ -16,7 +16,7 @@ interface Option {
  * @param amount Amount of a stablecoin to redeem, or amount of an aToken (aTerra) to redeem (specified by symbol).
  */
 export const fabricateRedeemStable = ({ address, symbol, amount }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([validateAddress(address), validateIsGreaterThanZero(amount)]);
 

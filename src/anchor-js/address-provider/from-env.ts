@@ -1,46 +1,46 @@
-import { reactifyEnv } from './react-app-prefix';
+import { reactifyEnv } from "./react-app-prefix";
 
 console.log(process.env);
 
 export class AddressProviderFromEnvVar implements AddressProvider.Provider {
   bAssetReward(denom: string): string {
-    return getFromEnv('bAssetReward');
+    return getFromEnv("bAssetReward");
   }
   bAssetHub(denom: string): string {
-    return getFromEnv('bLuna');
+    return getFromEnv("bLuna");
   }
   bAssetToken(denom: string): string {
-    return getFromEnv('bAssetToken');
+    return getFromEnv("bAssetToken");
   }
   bAsset(denom: string): string {
-    return getFromEnv('bAsset');
+    return getFromEnv("bAsset");
   }
   market(denom: string): string {
-    return getFromEnv('mmMarket');
+    return getFromEnv("mmMarket");
   }
   custody(): string {
-    return getFromEnv('mmCustody');
+    return getFromEnv("mmCustody");
   }
   overseer(): string {
-    return getFromEnv('mmOverseer');
+    return getFromEnv("mmOverseer");
   }
   aToken(): string {
-    return getFromEnv('aUST');
+    return getFromEnv("aUST");
   }
   oracle(): string {
-    return getFromEnv('mmOracle');
+    return getFromEnv("mmOracle");
   }
   interest(): string {
-    return getFromEnv('mmInterest');
+    return getFromEnv("mmInterest");
   }
   liquidation(): string {
-    return getFromEnv('mmLiquidation');
+    return getFromEnv("mmLiquidation");
   }
 }
 
 function getFromEnv(key: string): string {
   const val = process.env[reactifyEnv(key)];
-  if (typeof val === 'undefined') {
+  if (typeof val === "undefined") {
     throw new Error(`address provider could not resolve key ${key}`);
   }
   return val;

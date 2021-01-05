@@ -1,10 +1,10 @@
-import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
-import { validateAddress } from '../../utils/validation/address';
-import { validateInput } from '../../utils/validate-input';
+import { Dec, Int, MsgExecuteContract } from "@terra-money/terra.js";
+import { validateAddress } from "../../utils/validation/address";
+import { validateInput } from "../../utils/validate-input";
 
-import { validateWhitelistedMarket } from '../../utils/validation/market';
-import { validateTrue } from '../../utils/validation/true';
-import { validateIsGreaterThanZero } from '../../utils/validation/number';
+import { validateWhitelistedMarket } from "../../utils/validation/market";
+import { validateTrue } from "../../utils/validation/true";
+import { validateIsGreaterThanZero } from "../../utils/validation/number";
 
 interface Option {
   address: string;
@@ -30,7 +30,7 @@ export const fabricateRedeemCollateral = ({
   redeem_all = true,
   amount = null,
 }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),

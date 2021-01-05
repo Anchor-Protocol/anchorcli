@@ -1,6 +1,6 @@
-import { MsgExecuteContract } from '@terra-money/terra.js';
-import { validateInput } from '../../utils/validate-input';
-import { validateValAddress } from '../../utils/validation/address';
+import { MsgExecuteContract } from "@terra-money/terra.js";
+import { validateInput } from "../../utils/validate-input";
+import { validateValAddress } from "../../utils/validation/address";
 
 interface Option {
   address: string; // sender address
@@ -14,11 +14,11 @@ export const fabricateRegisterValidator = ({
   address,
   validatorAddress,
 }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([validateValAddress(validatorAddress)]);
 
-  const bAssetHubAddress = addressProvider.bAssetHub('bluna');
+  const bAssetHubAddress = addressProvider.bAssetHub("bluna");
 
   return [
     new MsgExecuteContract(address, bAssetHubAddress, {

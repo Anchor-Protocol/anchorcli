@@ -1,8 +1,8 @@
-import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
-import { validateAddress } from '../../utils/validation/address';
-import { validateInput } from '../../utils/validate-input';
-import { validateIsNumber } from '../../utils/validation/number';
-import { validateTrue } from '../../utils/validation/true';
+import { Dec, Int, MsgExecuteContract } from "@terra-money/terra.js";
+import { validateAddress } from "../../utils/validation/address";
+import { validateInput } from "../../utils/validate-input";
+import { validateIsNumber } from "../../utils/validation/number";
+import { validateTrue } from "../../utils/validation/true";
 
 interface Option {
   address: string;
@@ -15,7 +15,7 @@ export const fabricateRetractBid = ({
   collateral_token,
   amount,
 }: Option) => (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
