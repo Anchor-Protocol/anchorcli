@@ -121,7 +121,7 @@ export async function handleExecCommand(
 
   //TODO: wallet and lcd should be processed.
   const lcd = getLCDClient();
-  let key = new CLIKey({ keyName: "random" });
+  let key = new CLIKey({ keyName: exec.from, home: exec.home });
   const wallet = lcd.wallet(key);
 
   //TODO: chain id can be an input value or
