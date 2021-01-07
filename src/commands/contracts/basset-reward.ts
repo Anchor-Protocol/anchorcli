@@ -22,6 +22,7 @@ const claim = menu
       recipient: recipient,
       bAsset: "bluna",
     })(mockAddressProvider);
+      await handleExecCommand(menu, msg)
   });
 
 //TODO: Add queries

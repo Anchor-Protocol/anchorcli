@@ -42,7 +42,7 @@ const bond = menu
 const global_index = menu
   .description("Update global index")
   .action(async () => {
-    const key = new CLIKey({ keyName: bond.from });
+    const key = new CLIKey({ keyName: global_index.from });
     const userAddress = key.accAddress;
     const msgs = fabricatebAssetUpdateGlobalIndex({
       address: userAddress,
@@ -59,19 +59,19 @@ const registerValidator = menu
   .description("Register a validator")
   .requiredOption("--validator <validator>", "Address of vlidator")
   .action(async ({ validator }: RegisterValidator) => {
-    const key = new CLIKey({ keyName: bond.from });
+    const key = new CLIKey({ keyName: registerValidator.from });
     const userAddress = key.accAddress;
     const msgs = fabricateRegisterValidator({
       address: userAddress,
       validatorAddress: validator,
     })(mockAddressProvider);
+    handleExecCommand(menu, msgs)
   });
 
 interface UpdateConfig {
   owner?: string;
   rewardAddr?: string;
-  tokenAddr?;
-  string;
+  tokenAddr?: string;
 }
 const updateConfig = menu
   .description("Update the config of hub contract")
@@ -82,7 +82,7 @@ const updateConfig = menu
   )
   .option("--token-address <tokenAddress>", "The new address of token contract")
   .action(async ({ owner, rewardAddr, tokenAddr }: UpdateConfig) => {
-    const key = new CLIKey({ keyName: bond.from });
+    const key = new CLIKey({ keyName: updateConfig.from });
     const userAddress = key.accAddress;
     const msg = fabricatebAssetConfig({
       address: userAddress,
@@ -91,6 +91,7 @@ const updateConfig = menu
       token_contract: tokenAddr,
       bAsset: "bluna",
     })(mockAddressProvider);
+    await handleExecCommand(menu, msg)
   });
 
 interface Params {
@@ -128,7 +129,7 @@ const updateParams = menu
       erThreshold,
       rewardDenom,
     }: Params) => {
-      const key = new CLIKey({ keyName: bond.from });
+      const key = new CLIKey({ keyName: updateParams.from });
       const userAddress = key.accAddress;
       const msg = fabricatebAssetParams({
         address: userAddress,
@@ -140,13 +141,14 @@ const updateParams = menu
         reward_denom: rewardDenom,
         bAsset: "bluna",
       })(mockAddressProvider);
+      await handleExecCommand(menu, msg)
     }
   );
 
 const withdrawUnbond = menu
   .description("Send withdraw unbonded message")
   .action(async () => {
-    const key = new CLIKey({ keyName: bond.from });
+    const key = new CLIKey({ keyName: withdrawUnbond.from });
     const userAddress = key.accAddress;
     const msg = fabricatebAssetWithdrawUnbonded({
       address: userAddress,
@@ -162,7 +164,7 @@ const unbond = menu
   .description("")
   .requiredOption("--amount <amount>", "The amount for unbonding")
   .action(async ({ amount }) => {
-    const key = new CLIKey({ keyName: bond.from });
+    const key = new CLIKey({ keyName: unbond.from });
     const userAddress = key.accAddress;
     const msg = fabricatebAssetBurn({
       address: userAddress,
