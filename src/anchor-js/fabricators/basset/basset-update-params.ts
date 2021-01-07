@@ -12,7 +12,7 @@ interface Option {
   unbonding_period?: number;
   peg_recovery_fee?: number;
   er_threshold?: number;
-  reward_denom?: number;
+  reward_denom?: string;
 }
 
 export const fabricatebAssetParams = ({
