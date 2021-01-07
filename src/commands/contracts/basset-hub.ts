@@ -65,7 +65,7 @@ const registerValidator = menu
       address: userAddress,
       validatorAddress: validator,
     })(mockAddressProvider);
-    handleExecCommand(menu, msgs)
+    handleExecCommand(menu, msgs);
   });
 
 interface UpdateConfig {
@@ -91,7 +91,7 @@ const updateConfig = menu
       token_contract: tokenAddr,
       bAsset: "bluna",
     })(mockAddressProvider);
-    await handleExecCommand(menu, msg)
+    await handleExecCommand(menu, msg);
   });
 
 interface Params {
@@ -141,7 +141,7 @@ const updateParams = menu
         reward_denom: rewardDenom,
         bAsset: "bluna",
       })(mockAddressProvider);
-      await handleExecCommand(menu, msg)
+      await handleExecCommand(menu, msg);
     }
   );
 
