@@ -127,7 +127,7 @@ const updateParams = menu
       pegRecoveryFee,
       erThreshold,
       rewardDenom,
-    }:Params) => {
+    }: Params) => {
       const key = new CLIKey({ keyName: bond.from });
       const userAddress = key.accAddress;
       const msg = fabricatebAssetParams({
@@ -173,3 +173,7 @@ const unbond = menu
   });
 
 //TODO: Add queries
+
+export default {
+  menu,
+};
