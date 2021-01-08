@@ -5,5 +5,15 @@ import Liquidity from "./money-liquidation";
 import Oracle from "./money-oracle";
 import Market from "./money-market";
 import Custody from "./money-custody";
+import Overseer from "./money-overseer";
 
-export const anchor = [Hub, Reward, Token, Liquidity, Oracle, Market, Custody];
+export const anchor = [
+  Hub,
+  Reward,
+  Token,
+  Liquidity,
+  Oracle,
+  Market,
+  Custody,
+  Overseer,
+];
