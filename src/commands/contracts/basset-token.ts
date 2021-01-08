@@ -23,8 +23,8 @@ interface Transfer {
 
 const transfer = menu
   .description("Transfer bAsset to other users")
-  .requiredOption("--amount <amount>")
-  .requiredOption("--recipient <recipient>")
+  .requiredOption("--amount <amount>", "Amount to send to recipient")
+  .requiredOption("--recipient <recipient>", "Recipient address")
   .action(async ({ amount, recipient }: Transfer) => {
     const key = new CLIKey({ keyName: transfer.from });
     const userAddress = key.accAddress;
@@ -44,9 +44,9 @@ interface TransferFrom {
 }
 const transferFrom = menu
   .description("Transfer bAsset to other users from the user's allowance")
-  .requiredOption("--owner <owner>")
-  .requiredOption("--amount <amount>")
-  .requiredOption("--recipient <recipient>")
+  .requiredOption("--owner <owner>", "Address of the owner of allowance")
+  .requiredOption("--amount <amount>", "Amount to transfer")
+  .requiredOption("--recipient <recipient>", "Recipient address")
   .action(async ({ amount, recipient, owner }: TransferFrom) => {
     const key = new CLIKey({ keyName: transferFrom.from });
     const userAddress = key.accAddress;
@@ -83,7 +83,7 @@ const sendFrom = menu
       bAsset: "bluna",
       contract: contract,
       owner: owner,
-      msg: msg,
+      msg: Buffer.from(JSON.stringify(msg)).toString("base64"),
     })(mockAddressProvider);
     await handleExecCommand(menu, message);
   });

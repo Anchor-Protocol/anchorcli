@@ -48,7 +48,7 @@ export const fabricateProvideCollateral = ({
     // provide_collateral call
     new MsgExecuteContract(address, bAssetTokenContract, {
       send: {
-        address: custodyContract,
+        contract: custodyContract,
         amount: new Int(new Dec(amount).mul(1000000)).toString(),
         msg: createHookMsg({
           deposit_collateral: {},

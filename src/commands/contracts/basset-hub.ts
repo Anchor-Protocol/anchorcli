@@ -68,6 +68,8 @@ const registerValidator = menu
     handleExecCommand(menu, msgs);
   });
 
+//TODO: Deregister Validator must be included
+
 interface UpdateConfig {
   owner?: string;
   rewardAddr?: string;
