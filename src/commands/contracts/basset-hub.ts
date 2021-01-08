@@ -25,8 +25,8 @@ interface BondArgs {
 
 const bond = menu
   .description("Bond asset and mint basset")
-  .requiredOption("--amount <amount>", "*Asset to be bonded and minted")
-  .requiredOption("--validator <validator>", "validator to delegate to")
+  .requiredOption("--amount <string>", "*Asset to be bonded and minted")
+  .requiredOption("--validator <AccAddress>", "validator to delegate to")
   .action(async ({ amount, validator }: BondArgs) => {
     const key = new CLIKey({ keyName: bond.from });
     const userAddress = key.accAddress;
@@ -57,7 +57,7 @@ interface RegisterValidator {
 
 const registerValidator = menu
   .description("Register a validator")
-  .requiredOption("--validator <validator>", "Address of vlidator")
+  .requiredOption("--validator <AccAddress>", "Address of vlidator")
   .action(async ({ validator }: RegisterValidator) => {
     const key = new CLIKey({ keyName: registerValidator.from });
     const userAddress = key.accAddress;
@@ -72,25 +72,22 @@ const registerValidator = menu
 
 interface UpdateConfig {
   owner?: string;
-  rewardAddr?: string;
-  tokenAddr?: string;
+  rewardAddress?: string;
+  tokenAddress?: string;
 }
 const updateConfig = menu
   .description("Update the config of hub contract")
-  .option("--owner <owner>", "Address of the new owner")
-  .option(
-    "--reward-address <rewardAddress>",
-    "The new address of reward contract"
-  )
-  .option("--token-address <tokenAddress>", "The new address of token contract")
-  .action(async ({ owner, rewardAddr, tokenAddr }: UpdateConfig) => {
+  .option("--owner <AccAddress>", "Address of the new owner")
+  .option("--reward-address <AccAddress>", "The new address of reward contract")
+  .option("--token-address <AccAddress>", "The new address of token contract")
+  .action(async ({ owner, rewardAddress, tokenAddress }: UpdateConfig) => {
     const key = new CLIKey({ keyName: updateConfig.from });
     const userAddress = key.accAddress;
     const msg = fabricatebAssetConfig({
       address: userAddress,
       owner: owner,
-      reward_contract: rewardAddr,
-      token_contract: tokenAddr,
+      reward_contract: rewardAddress,
+      token_contract: tokenAddress,
       bAsset: "bluna",
     })(mockAddressProvider);
     await handleExecCommand(menu, msg);
@@ -107,21 +104,15 @@ interface Params {
 
 const updateParams = menu
   .description("Update parameters for the hub contract")
+  .option("epoch-period <int>", "The period of time for each epoch in second")
+  .option("underlying-coin-denom <string>", "Supported denominator for basset")
   .option(
-    "epoch-period <epochPeriod>",
-    "The period of time for each epoch in second"
-  )
-  .option(
-    "underlying-coin-denom <underlyingCoinDenom>",
-    "Supported denominator for basset"
-  )
-  .option(
-    "unbonding-period <unbondingPeriod>",
+    "unbonding-period <int>",
     "Unbonding time, slightly more than unbonding period of sdk"
   )
-  .option("peg-recovery-fee <pegRecoveryFee>", "Recovery fee")
-  .option("er-threshold<erThreshold>", "Exchange rate threshold")
-  .option("reward-denom <rewardDenom>", "Denominator for reward calculation")
+  .option("peg-recovery-fee <Dec>", "Recovery fee")
+  .option("er-threshold<Dec>", "Exchange rate threshold")
+  .option("reward-denom <string>", "Denominator for reward calculation")
   .action(
     async ({
       epochPeriod,
@@ -164,7 +155,7 @@ interface Unbond {
 }
 const unbond = menu
   .description("")
-  .requiredOption("--amount <amount>", "The amount for unbonding")
+  .requiredOption("--amount <string>", "The amount for unbonding")
   .action(async ({ amount }) => {
     const key = new CLIKey({ keyName: unbond.from });
     const userAddress = key.accAddress;

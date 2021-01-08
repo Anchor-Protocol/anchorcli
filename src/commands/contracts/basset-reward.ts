@@ -13,7 +13,7 @@ interface Claim {
   recipient: string;
 }
 const claim = menu
-  .requiredOption("--recipient <recipient>", "Address of the receiver")
+  .requiredOption("--recipient <AccAddress>", "Address of the receiver")
   .action(async ({ recipient }: Claim) => {
     const key = new CLIKey({ keyName: claim.from });
     const userAddress = key.accAddress;
