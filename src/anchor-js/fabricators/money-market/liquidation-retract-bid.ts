@@ -3,6 +3,7 @@ import { validateAddress } from "../../utils/validation/address";
 import { validateInput } from "../../utils/validate-input";
 import { validateIsNumber } from "../../utils/validation/number";
 import { validateTrue } from "../../utils/validation/true";
+import { AddressProvider } from "../../address-provider/types";
 
 interface Option {
   address: string;

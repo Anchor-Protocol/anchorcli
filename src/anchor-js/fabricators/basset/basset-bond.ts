@@ -5,7 +5,7 @@ import {
   validateValAddress,
 } from "../../utils/validation/address";
 import { validateIsGreaterThanZero } from "../../utils/validation/number";
-import { AddressProviderFromEnvVar } from "../../address-provider";
+import { AddressProvider } from "../../address-provider/types";
 
 interface Option {
   address: string;

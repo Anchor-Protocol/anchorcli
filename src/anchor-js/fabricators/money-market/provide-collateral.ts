@@ -6,6 +6,7 @@ import { validateWhitelistedBAsset } from "../../utils/validation/basset";
 
 import { validateWhitelistedMarket } from "../../utils/validation/market";
 import { validateIsGreaterThanZero } from "../../utils/validation/number";
+import { AddressProvider } from "../../address-provider/types";
 
 interface Option {
   address: string;

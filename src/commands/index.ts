@@ -1,3 +1,3 @@
-import exec from './exec';
+import exec from "./exec";
 
 export default [exec];

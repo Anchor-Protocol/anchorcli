@@ -4,6 +4,7 @@ import { validateAddress } from "../../utils/validation/address";
 
 import { validateIsGreaterThanZero } from "../../utils/validation/number";
 import { validateWhitelistedStable } from "../../utils/validation/stable";
+import { AddressProvider } from "../../address-provider/types";
 
 interface Option {
   address: string;

@@ -5,6 +5,7 @@ import {
   validateIsGreaterThanZero,
   validateIsNumber,
 } from "../../utils/validation/number";
+import { AddressProvider } from "../../address-provider/types";
 
 type Expire = { at_height: number } | { at_time: number } | { never: {} };
 

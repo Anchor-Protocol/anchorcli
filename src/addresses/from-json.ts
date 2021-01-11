@@ -1,4 +1,5 @@
 import { ContractAddresses } from "./types";
+import { AddressProvider } from "../anchor-js/address-provider/types";
 
 export enum NETWORKS {
   COLUMBUS4,

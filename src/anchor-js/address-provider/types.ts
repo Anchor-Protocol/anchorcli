@@ -1,4 +1,4 @@
-declare namespace AddressProvider {
+export namespace AddressProvider {
   export interface Provider {
     bAssetReward(denom: string): string;
     bAssetHub(denom: string): string;

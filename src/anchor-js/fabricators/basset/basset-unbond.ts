@@ -6,6 +6,7 @@ import {
   validateIsNumber,
 } from "../../utils/validation/number";
 import { createHookMsg } from "../../utils/cw20/create-hook-msg";
+import { AddressProvider } from "../../address-provider/types";
 
 interface Option {
   address: string;
