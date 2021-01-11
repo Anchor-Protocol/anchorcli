@@ -2,8 +2,11 @@ import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
 import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 import { fabricatebCustodyConfig } from "../../anchor-js/fabricators";
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from "../../addresses/from-json";
 
-const mockAddressProvider = new AddressProviderFromEnvVar();
 const menu = createExecMenu(
   "custody",
   "Anchor MoneyMarket Custody contract functions"
@@ -22,11 +25,14 @@ const updateConfig = menu
   .action(async ({ liquidationContract }: Config) => {
     const key = new CLIKey({ keyName: updateConfig.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebCustodyConfig({
       address: userAddress,
       custody: "custody",
       liquidation_contract: liquidationContract,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 

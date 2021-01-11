@@ -4,8 +4,11 @@ import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
 import { Dec } from "@terra-money/terra.js";
 import { fabricatebInterestConfig } from "../../anchor-js/fabricators/money-market/interest-update-config";
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from "../../addresses/from-json";
 
-const mockAddressProvider = new AddressProviderFromEnvVar();
 const menu = createExecMenu(
   "interest",
   "Anchor MoneyMarket Interest contract functions"
@@ -34,11 +37,14 @@ const updateConfig = menu
   .action(async ({ owner, baseRate, interestMultiplier }: Config) => {
     const key = new CLIKey({ keyName: updateConfig.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebInterestConfig({
       address: userAddress,
       owner: owner,
       base_rate: baseRate,
       interest_multiplier: interestMultiplier,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });

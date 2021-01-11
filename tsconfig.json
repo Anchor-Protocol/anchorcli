@@ -2,10 +2,11 @@
   "compilerOptions": {
     "target": "esnext",
     "types": ["node"],
+    "esModuleInterop": true,
     "module": "commonjs",
     "lib": ["esnext"],
     "outDir": "lib",
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   },
   "include": ["./src/**/*"],
   "exclude": ["./src/**/*.test.ts"]

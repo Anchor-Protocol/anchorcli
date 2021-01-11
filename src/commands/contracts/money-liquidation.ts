@@ -7,8 +7,11 @@ import {
   fabricateSubmitBid,
 } from "../../anchor-js/fabricators";
 import { Dec } from "@terra-money/terra.js";
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from "../../addresses/from-json";
 
-const mockAddressProvider = new AddressProviderFromEnvVar();
 const menu = createExecMenu(
   "liquidation",
   "Anchor MoneyMarket Liquidation contract functions"
@@ -28,11 +31,14 @@ const liquidationRetractBid = menu
   .action(async ({ collateralToken, amount }: RetractBid) => {
     const key = new CLIKey({ keyName: liquidationRetractBid.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricateRetractBid({
       address: userAddress,
       collateral_token: collateralToken,
       amount: amount,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -50,11 +56,14 @@ const liquidationSubmitBid = menu
   .action(async ({ collateralToken, premiumRate }: RetractBid) => {
     const key = new CLIKey({ keyName: liquidationSubmitBid.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricateSubmitBid({
       address: userAddress,
       collateral_token: collateralToken,
       premium_rate: premiumRate,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -103,6 +112,9 @@ const liquidationUpdateConfig = menu
     }: UpdateConfig) => {
       const key = new CLIKey({ keyName: liquidationUpdateConfig.from });
       const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId)
+      );
       const msg = fabricateLiquidationConfig({
         address: userAddress,
         owner: owner,
@@ -113,7 +125,7 @@ const liquidationUpdateConfig = menu
         max_premium_rate: maxPremiumRate,
         liquidation_threshold: liquidationThreshold,
         price_timeframe: priceTimeframe,
-      })(mockAddressProvider);
+      })(addressProvider);
       await handleExecCommand(menu, msg);
     }
   );

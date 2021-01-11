@@ -7,8 +7,11 @@ import {
   fabricatebOracleConfig,
   fabricatebOracleFeedPrice,
 } from "../../anchor-js/fabricators";
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from "../../addresses/from-json";
 
-const mockAddressProvider = new AddressProviderFromEnvVar();
 const menu = createExecMenu(
   "oracle",
   "Anchor MoneyMarket Liquidation contract functions"
@@ -26,10 +29,13 @@ const feedPrice = menu
   .action(async ({ prices }: FeedPrice) => {
     const key = new CLIKey({ keyName: feedPrice.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebOracleFeedPrice({
       address: userAddress,
       prices: prices,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -39,13 +45,16 @@ interface Config {
 const updateConfig = menu
   .description("Update config")
   .option("--owner <AccAddress>", "Address of new owner")
-  .action(async ({ owner }) => {
+  .action(async ({ owner }: Config) => {
     const key = new CLIKey({ keyName: updateConfig.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebOracleConfig({
       address: userAddress,
       owner: owner,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 

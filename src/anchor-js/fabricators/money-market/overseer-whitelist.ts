@@ -29,7 +29,7 @@ export const fabricatebOverseerWhiteList = ({
 
   return [
     new MsgExecuteContract(address, mmOverseer, {
-      update_white_list: {
+      white_list: {
         collateral_token: collateral_token,
         custody_contract: custody_contract,
         ltv: ltv,

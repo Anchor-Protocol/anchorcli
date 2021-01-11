@@ -1,18 +1,19 @@
-import { Int } from "@terra-money/terra.js";
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import { fabricatebAssetBond } from "../../anchor-js/fabricators/basset/basset-bond";
 import { fabricatebAssetUpdateGlobalIndex } from "../../anchor-js/fabricators/basset/basset-update-global-index";
 import {
-  fabricateRegisterValidator,
+  fabricatebAssetBurn,
   fabricatebAssetConfig,
   fabricatebAssetParams,
   fabricatebAssetWithdrawUnbonded,
-  fabricatebAssetBurn,
+  fabricateRegisterValidator,
 } from "../../anchor-js/fabricators";
 import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from "../../addresses/from-json";
 
-const mockAddressProvider = new AddressProviderFromEnvVar();
 const menu = createExecMenu(
   "basset-hub",
   "Anchor bAsset Hub contract functions"
@@ -28,6 +29,9 @@ const bond = menu
   .requiredOption("--amount <string>", "*Asset to be bonded and minted")
   .requiredOption("--validator <AccAddress>", "validator to delegate to")
   .action(async ({ amount, validator }: BondArgs) => {
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const key = new CLIKey({ keyName: bond.from });
     const userAddress = key.accAddress;
     const msgs = fabricatebAssetBond({
@@ -35,7 +39,7 @@ const bond = menu
       amount: +amount,
       validator: validator,
       bAsset: "bluna",
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msgs);
   });
 
@@ -44,10 +48,13 @@ const global_index = menu
   .action(async () => {
     const key = new CLIKey({ keyName: global_index.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msgs = fabricatebAssetUpdateGlobalIndex({
       address: userAddress,
       bAsset: "bluna",
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msgs);
   });
 
@@ -61,11 +68,14 @@ const registerValidator = menu
   .action(async ({ validator }: RegisterValidator) => {
     const key = new CLIKey({ keyName: registerValidator.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msgs = fabricateRegisterValidator({
       address: userAddress,
       validatorAddress: validator,
-    })(mockAddressProvider);
-    handleExecCommand(menu, msgs);
+    })(addressProvider);
+    await handleExecCommand(menu, msgs);
   });
 
 //TODO: Deregister Validator must be included
@@ -83,13 +93,16 @@ const updateConfig = menu
   .action(async ({ owner, rewardAddress, tokenAddress }: UpdateConfig) => {
     const key = new CLIKey({ keyName: updateConfig.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebAssetConfig({
       address: userAddress,
       owner: owner,
       reward_contract: rewardAddress,
       token_contract: tokenAddress,
       bAsset: "bluna",
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -124,6 +137,9 @@ const updateParams = menu
     }: Params) => {
       const key = new CLIKey({ keyName: updateParams.from });
       const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId)
+      );
       const msg = fabricatebAssetParams({
         address: userAddress,
         epoch_period: epochPeriod,
@@ -133,7 +149,7 @@ const updateParams = menu
         er_threshold: erThreshold,
         reward_denom: rewardDenom,
         bAsset: "bluna",
-      })(mockAddressProvider);
+      })(addressProvider);
       await handleExecCommand(menu, msg);
     }
   );
@@ -143,10 +159,13 @@ const withdrawUnbond = menu
   .action(async () => {
     const key = new CLIKey({ keyName: withdrawUnbond.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebAssetWithdrawUnbonded({
       address: userAddress,
       bAsset: "bluna",
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -159,11 +178,14 @@ const unbond = menu
   .action(async ({ amount }) => {
     const key = new CLIKey({ keyName: unbond.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebAssetBurn({
       address: userAddress,
       amount: amount,
       bAsset: `bluna`,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 

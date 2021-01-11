@@ -10,8 +10,11 @@ import {
   fabricateRepay,
 } from "../../anchor-js/fabricators";
 import { Dec } from "@terra-money/terra.js";
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from "../../addresses/from-json";
 
-const mockAddressProvider = new AddressProviderFromEnvVar();
 const menu = createExecMenu(
   "market",
   "Anchor MoneyMarket Market contract functions"
@@ -28,12 +31,15 @@ const borrowStable = menu
   .action(async ({ amount, to }: BorrowStable) => {
     const key = new CLIKey({ keyName: borrowStable.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricateBorrow({
       address: userAddress,
       market: "market",
       amount: amount,
       withdrawTo: to,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -43,11 +49,14 @@ const depositStable = menu
   .action(async () => {
     const key = new CLIKey({ keyName: depositStable.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricateDepositStableCoin({
       address: userAddress,
       symbol: "market",
       amount: depositStable.amount,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -57,11 +66,14 @@ const redeamStable = menu
   .action(async ({ amount }) => {
     const key = new CLIKey({ keyName: redeamStable.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricateRedeemStable({
       address: userAddress,
       symbol: "market",
       amount: amount,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -71,11 +83,14 @@ const repay = menu
   .action(async ({ amount }) => {
     const key = new CLIKey({ keyName: repay.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricateRepay({
       address: userAddress,
       market: "market",
       amount: amount,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -95,13 +110,17 @@ const updateConfig = menu
   .action(async ({ ownerAddress, interestModel, reserveFactor }: Config) => {
     const key = new CLIKey({ keyName: updateConfig.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebMarketConfig({
       address: userAddress,
       owner_addr: ownerAddress,
       interest_model: interestModel,
       reserve_factor: reserveFactor,
       market: "market",
-    });
+    })(addressProvider);
+    await handleExecCommand(menu, msg);
   });
 
 //TODO: add queries

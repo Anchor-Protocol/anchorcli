@@ -9,8 +9,11 @@ import {
   fabricatebAssetTransfer,
   fabricatebAssetTransferFrom,
 } from "../../anchor-js/fabricators";
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from "../../addresses/from-json";
 
-const mockAddressProvider = new AddressProviderFromEnvVar();
 const menu = createExecMenu(
   "basset-token",
   "Anchor bAsset token contract functions"
@@ -28,12 +31,15 @@ const transfer = menu
   .action(async ({ amount, recipient }: Transfer) => {
     const key = new CLIKey({ keyName: transfer.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebAssetTransfer({
       address: userAddress,
       amount: amount,
       recipient: recipient,
       bAsset: "bluna",
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -50,13 +56,16 @@ const transferFrom = menu
   .action(async ({ amount, recipient, owner }: TransferFrom) => {
     const key = new CLIKey({ keyName: transferFrom.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebAssetTransferFrom({
       address: userAddress,
       amount: amount,
       recipient: recipient,
       bAsset: "bluna",
       owner: owner,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -77,6 +86,9 @@ const sendFrom = menu
   .action(async ({ amount, owner, contract, msg }: SendFrom) => {
     const key = new CLIKey({ keyName: sendFrom.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const message = fabricatebAssetSendFrom({
       address: userAddress,
       amount: amount,
@@ -84,7 +96,7 @@ const sendFrom = menu
       contract: contract,
       owner: owner,
       msg: Buffer.from(JSON.stringify(msg)).toString("base64"),
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, message);
   });
 
@@ -100,12 +112,15 @@ const burnFrom = menu
   .action(async ({ amount, owner }: BurnFrom) => {
     const key = new CLIKey({ keyName: burnFrom.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebAssetBurnFrom({
       address: userAddress,
       amount: amount,
       bAsset: "bluna",
       owner: owner,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -125,13 +140,16 @@ const increaseAllowance = menu
   .action(async ({ amount, spender, expires }: Allowance) => {
     const key = new CLIKey({ keyName: increaseAllowance.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebAssetIncreaseAllowance({
       address: userAddress,
       amount: amount,
       bAsset: "bluna",
       spender: spender,
       expires: expires,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
@@ -143,13 +161,16 @@ const decreaseAllowance = menu
   .action(async ({ amount, spender, expires }: Allowance) => {
     const key = new CLIKey({ keyName: decreaseAllowance.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebAssetdDecreaseAllowance({
       address: userAddress,
       amount: amount,
       bAsset: "bluna",
       spender: spender,
       expires: expires,
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 

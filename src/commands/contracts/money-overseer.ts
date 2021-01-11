@@ -9,8 +9,11 @@ import {
   fabricatebOverseerWhiteList,
 } from "../../anchor-js/fabricators";
 import { Dec } from "@terra-money/terra.js";
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from "../../addresses/from-json";
 
-const mockAddressProvider = new AddressProviderFromEnvVar();
 const menu = createExecMenu(
   "overseer",
   "Anchor MoneyMarket Overseer contract functions"
@@ -21,14 +24,17 @@ const excecuteEpochOperattion = menu
   .action(async () => {
     const key = new CLIKey({ keyName: excecuteEpochOperattion.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
     const msg = fabricatebOverseerEpoch({
       address: userAddress,
       overseer: "overseer",
-    })(mockAddressProvider);
+    })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
-interface Option {
+interface Config {
   ownerAddress?: string;
   oracleContract?: string;
   liquidationContract?: string;
@@ -76,9 +82,12 @@ const updateConfig = menu
       bufferDistributionRate,
       epochPeriod,
       priceTimeframe,
-    }) => {
+    }: Config) => {
       const key = new CLIKey({ keyName: updateConfig.from });
       const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId)
+      );
       const msg = fabricatebOverseerConfig({
         address: userAddress,
         overseer: "overseer",
@@ -90,7 +99,7 @@ const updateConfig = menu
         buffer_distribution_rate: bufferDistributionRate,
         epoch_period: epochPeriod,
         price_timeframe: priceTimeframe,
-      })(mockAddressProvider);
+      })(addressProvider);
       await handleExecCommand(menu, msg);
     }
   );
@@ -115,20 +124,21 @@ const whiteList = menu
     "--ltv <Dec>",
     "New maximum loan-to-value ratio allowed for collateral"
   )
-  .action(
-    async ({ collateralToken, custodyContract, ltv }: UpdateWhiteList) => {
-      const key = new CLIKey({ keyName: whiteList.from });
-      const userAddress = key.accAddress;
-      const msg = fabricatebOverseerWhiteList({
-        address: userAddress,
-        overseer: "overseer",
-        collateral_token: collateralToken,
-        custody_contract: custodyContract,
-        ltv: ltv,
-      })(mockAddressProvider);
-      await handleExecCommand(menu, msg);
-    }
-  );
+  .action(async ({ collateralToken, custodyContract, ltv }: WhiteList) => {
+    const key = new CLIKey({ keyName: whiteList.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const msg = fabricatebOverseerWhiteList({
+      address: userAddress,
+      overseer: "overseer",
+      collateral_token: collateralToken,
+      custody_contract: custodyContract,
+      ltv: ltv,
+    })(addressProvider);
+    await handleExecCommand(menu, msg);
+  });
 
 interface UpdateWhiteList {
   collateralToken: string;
@@ -154,13 +164,16 @@ const updateWhiteList = menu
     async ({ collateralToken, custodyContract, ltv }: UpdateWhiteList) => {
       const key = new CLIKey({ keyName: updateWhiteList.from });
       const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId)
+      );
       const msg = fabricatebOverseerUpWhiteList({
         address: userAddress,
         overseer: "overseer",
         collateral_token: collateralToken,
         custody_contract: custodyContract,
         ltv: ltv,
-      })(mockAddressProvider);
+      })(addressProvider);
       await handleExecCommand(menu, msg);
     }
   );
