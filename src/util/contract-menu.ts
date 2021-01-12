@@ -245,3 +245,11 @@ export async function handleExecCommand(
     }
   }
 }
+
+export async function handleQueryCommand(query: commander.Command, T: any) {
+  if (query.yaml) {
+    console.log(yaml.stringify(T));
+  } else {
+    jsome(T);
+  }
+}
