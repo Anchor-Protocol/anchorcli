@@ -30,3 +30,5 @@ export function run(argv: string[]): void {
     logger.error(e.message);
   }
 }
+
+run(process.argv);

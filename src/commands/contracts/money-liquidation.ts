@@ -22,14 +22,15 @@ interface RetractBid {
   amount?: number;
 }
 const liquidationRetractBid = menu
-  .description("Retract bid")
+  .command("retract-bid")
+  .description("Withdraw specified amount of stablecoins from the bid ")
   .requiredOption(
     "--collateral-token <AccAddress>",
     "Cw20 token contract address of bidding collateral"
   )
   .option("--amount <string>", "Amount of stablecoins remove from bid")
   .action(async ({ collateralToken, amount }: RetractBid) => {
-    const key = new CLIKey({ keyName: liquidationRetractBid.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -47,14 +48,15 @@ interface RetractBid {
   premiumRate: Dec;
 }
 const liquidationSubmitBid = menu
-  .description("Submits bid")
+  .command("submit-bid")
+  .description("Submit a new bid for the specified Cw20 collateral")
   .requiredOption(
     "--collateral-token <AccAddress>",
     "Cw20 token contract address of bidding collateral"
   )
   .option("--premium-rate <Dec>", "Rate of commission on executing this bid")
   .action(async ({ collateralToken, premiumRate }: RetractBid) => {
-    const key = new CLIKey({ keyName: liquidationSubmitBid.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -78,7 +80,8 @@ interface UpdateConfig {
   priceTimeframe: number;
 }
 const liquidationUpdateConfig = menu
-  .description("Update config")
+  .command("update-config")
+  .description("Update the Liquidation Contract's configuration")
   .option("--owner <AccAddress>", "Address of new owner")
   .option("--oracle-contract <string>", "New oracle contract address")
   .option("--stable-denom <string>", "New native token denomination for bids")

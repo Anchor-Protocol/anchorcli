@@ -16,6 +16,8 @@ interface Claim {
   recipient: string;
 }
 const claim = menu
+  .command("claim-rewards")
+  .description("Claims basset holder's accrued rewards")
   .requiredOption("--recipient <AccAddress>", "Address of the receiver")
   .action(async ({ recipient }: Claim) => {
     const key = new CLIKey({ keyName: claim.from });

@@ -21,7 +21,8 @@ interface Config {
 }
 
 const updateConfig = menu
-  .description("update config")
+  .command("update-config")
+  .description("Updates the configuration of the interest model contract")
   .option(
     "--owner <AccAddress>",
     "Address of contract owner that can update model parameters"
@@ -35,7 +36,7 @@ const updateConfig = menu
     "Multiplier between utilization ratio and per-block borrow rate"
   )
   .action(async ({ owner, baseRate, interestMultiplier }: Config) => {
-    const key = new CLIKey({ keyName: updateConfig.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -48,3 +49,9 @@ const updateConfig = menu
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
+
+//TODO: add queries
+
+export default {
+  menu,
+};

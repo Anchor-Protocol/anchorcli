@@ -25,6 +25,7 @@ interface BondArgs {
 }
 
 const bond = menu
+  .command("bond")
   .description("Bond asset and mint basset")
   .requiredOption("--amount <string>", "*Asset to be bonded and minted")
   .requiredOption("--validator <AccAddress>", "validator to delegate to")
@@ -32,7 +33,7 @@ const bond = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const key = new CLIKey({ keyName: bond.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const msgs = fabricatebAssetBond({
       address: userAddress,
@@ -44,9 +45,10 @@ const bond = menu
   });
 
 const global_index = menu
-  .description("Update global index")
+  .command("update-global-index")
+  .description("Update global index for reward distribution")
   .action(async () => {
-    const key = new CLIKey({ keyName: global_index.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -63,10 +65,11 @@ interface RegisterValidator {
 }
 
 const registerValidator = menu
-  .description("Register a validator")
-  .requiredOption("--validator <AccAddress>", "Address of vlidator")
+  .command("register-validator")
+  .description("Register a new validator to the validator whitelist")
+  .requiredOption("--validator <AccAddress>", "Address of validator")
   .action(async ({ validator }: RegisterValidator) => {
-    const key = new CLIKey({ keyName: registerValidator.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -86,12 +89,13 @@ interface UpdateConfig {
   tokenAddress?: string;
 }
 const updateConfig = menu
+  .command("update-config")
   .description("Update the config of hub contract")
   .option("--owner <AccAddress>", "Address of the new owner")
   .option("--reward-address <AccAddress>", "The new address of reward contract")
   .option("--token-address <AccAddress>", "The new address of token contract")
   .action(async ({ owner, rewardAddress, tokenAddress }: UpdateConfig) => {
-    const key = new CLIKey({ keyName: updateConfig.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -116,6 +120,7 @@ interface Params {
 }
 
 const updateParams = menu
+  .command("update-params")
   .description("Update parameters for the hub contract")
   .option("epoch-period <int>", "The period of time for each epoch in second")
   .option("underlying-coin-denom <string>", "Supported denominator for basset")
@@ -135,7 +140,7 @@ const updateParams = menu
       erThreshold,
       rewardDenom,
     }: Params) => {
-      const key = new CLIKey({ keyName: updateParams.from });
+      const key = new CLIKey({ keyName: menu.from });
       const userAddress = key.accAddress;
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId)
@@ -155,9 +160,10 @@ const updateParams = menu
   );
 
 const withdrawUnbond = menu
+  .command("withdraw-unbonded")
   .description("Send withdraw unbonded message")
   .action(async () => {
-    const key = new CLIKey({ keyName: withdrawUnbond.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -170,12 +176,13 @@ const withdrawUnbond = menu
   });
 
 interface Unbond {
-  string;
+  amount: string;
 }
 const unbond = menu
-  .description("")
+  .command("unbond")
+  .description("Burn and unbond a corresponding amount of asset")
   .requiredOption("--amount <string>", "The amount for unbonding")
-  .action(async ({ amount }) => {
+  .action(async ({ amount }: Unbond) => {
     const key = new CLIKey({ keyName: unbond.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
@@ -189,7 +196,10 @@ const unbond = menu
     await handleExecCommand(menu, msg);
   });
 
-//TODO: Add queries
+//TODO:
+// 1- Add deregister validator
+// 2- Add check slashing
+// 3- Add queries
 
 export default {
   menu,

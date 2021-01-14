@@ -19,8 +19,8 @@ import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 //TODO: should be loaded from a config file
 export function getLCDClient(): LCDClient {
   return new LCDClient({
-    chainID: "random",
-    URL: "random",
+    chainID: "tequila-0004",
+    URL: "https::tequila",
     gasPrices: [],
     gasAdjustment: 1.4,
   });

@@ -6,7 +6,7 @@ import Oracle from "./money-oracle";
 import Market from "./money-market";
 import Custody from "./money-custody";
 import Overseer from "./money-overseer";
-
+import Interset from "./money-interest";
 export const anchor = [
   Hub,
   Reward,
@@ -16,4 +16,5 @@ export const anchor = [
   Market,
   Custody,
   Overseer,
+  Interset,
 ];

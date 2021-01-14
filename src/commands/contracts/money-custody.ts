@@ -17,13 +17,14 @@ interface Config {
 }
 
 const updateConfig = menu
-  .description("update config")
+  .command("update-config")
+  .description("Updates the configuration of the Custody contract")
   .option(
     "--liquidation-contract <AccAddress>",
     "New contract address of Liquidation Contract"
   )
   .action(async ({ liquidationContract }: Config) => {
-    const key = new CLIKey({ keyName: updateConfig.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)

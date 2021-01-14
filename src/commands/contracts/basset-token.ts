@@ -25,11 +25,12 @@ interface Transfer {
 }
 
 const transfer = menu
+  .command("transfer")
   .description("Transfer bAsset to other users")
   .requiredOption("--amount <string>", "Amount to send to recipient")
   .requiredOption("--recipient <AccAddress>", "Recipient address")
   .action(async ({ amount, recipient }: Transfer) => {
-    const key = new CLIKey({ keyName: transfer.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -49,12 +50,13 @@ interface TransferFrom {
   owner: string;
 }
 const transferFrom = menu
+  .command("transfer-from")
   .description("Transfer bAsset to other users from the user's allowance")
   .requiredOption("--owner <AccAddress>", "Address of the owner of allowance")
   .requiredOption("--amount <string>", "Amount to transfer")
   .requiredOption("--recipient <AccAddress>", "Recipient address")
   .action(async ({ amount, recipient, owner }: TransferFrom) => {
-    const key = new CLIKey({ keyName: transferFrom.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -79,12 +81,13 @@ interface SendFrom {
   msg?: string;
 }
 const sendFrom = menu
+  .command("send-from")
   .description("Send bAsset to a contract from the user's allowance")
   .requiredOption("--owner <AccAddress>")
   .requiredOption("--amount <string>")
   .requiredOption("--recipient <AccAddress>")
   .action(async ({ amount, owner, contract, msg }: SendFrom) => {
-    const key = new CLIKey({ keyName: sendFrom.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -106,11 +109,12 @@ interface BurnFrom {
 }
 
 const burnFrom = menu
+  .command("burn-from")
   .description("burn bAsset from the user's allowance")
   .requiredOption("--owner <AccAddress>")
   .requiredOption("--amount <string>")
   .action(async ({ amount, owner }: BurnFrom) => {
-    const key = new CLIKey({ keyName: burnFrom.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -133,12 +137,13 @@ interface Allowance {
 }
 
 const increaseAllowance = menu
+  .command("increase-allowance")
   .description("burn bAsset from the user's allowance")
   .requiredOption("--sepender <AccAddress>", "Spender address")
   .requiredOption("--amount <string>", "Amount to increase")
   .option("--expires <json>", "Expires at")
   .action(async ({ amount, spender, expires }: Allowance) => {
-    const key = new CLIKey({ keyName: increaseAllowance.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -154,12 +159,13 @@ const increaseAllowance = menu
   });
 
 const decreaseAllowance = menu
+  .command("decrease-allowance")
   .description("burn bAsset from the user's allowance")
   .requiredOption("--sepender <AccAddress>", "Spender address")
   .requiredOption("--amount <string>", "Amount to increase")
   .option("--expires <json>", "Expires at")
   .action(async ({ amount, spender, expires }: Allowance) => {
-    const key = new CLIKey({ keyName: decreaseAllowance.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)

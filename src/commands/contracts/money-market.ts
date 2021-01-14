@@ -25,7 +25,8 @@ interface BorrowStable {
   to?: string;
 }
 const borrowStable = menu
-  .description("borrow stable")
+  .command("borrow-stable")
+  .description("Borrow stable coins from Anchor")
   .requiredOption("--amount <string>", "Amount of stablecoins to borrow")
   .option("--to <string>", "Withdrawal address for borrowed stablecoins")
   .action(async ({ amount, to }: BorrowStable) => {
@@ -44,10 +45,11 @@ const borrowStable = menu
   });
 
 const depositStable = menu
-  .description("deposit stable")
-  .requiredOption("--amount <string>", "Amount of stablecoins to borrow")
+  .command("deposit-stable")
+  .description("Deposits stable coins to Anchor")
+  .requiredOption("--amount <string>", "Amount of stable coins to borrow")
   .action(async () => {
-    const key = new CLIKey({ keyName: depositStable.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -61,10 +63,11 @@ const depositStable = menu
   });
 
 const redeamStable = menu
-  .description("redeem stable")
-  .requiredOption("--amount <string>", "")
+  .command("redeem-stable")
+  .description("Redeems aTokens to their underlying stable coins")
+  .requiredOption("--amount <string>", "Amount for redeem")
   .action(async ({ amount }) => {
-    const key = new CLIKey({ keyName: redeamStable.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -78,10 +81,11 @@ const redeamStable = menu
   });
 
 const repay = menu
-  .description("repay stable")
-  .requiredOption("--amount <string>", "")
+  .command("repay-stable")
+  .description("Repay previous stable coin liability")
+  .requiredOption("--amount <string>", "Amount stable coin to send beforehand")
   .action(async ({ amount }) => {
-    const key = new CLIKey({ keyName: repay.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -100,7 +104,8 @@ interface Config {
   reserveFactor?: Dec;
 }
 const updateConfig = menu
-  .description("update config")
+  .command("update-config")
+  .description("Update the configuration of the contract")
   .option("--owner-address <AccAddress>", "Address of new owner")
   .option(
     "--reserve-factor <Dec>",
@@ -108,7 +113,7 @@ const updateConfig = menu
   )
   .option("--interest-model <string>", "New interest model contract address")
   .action(async ({ ownerAddress, interestModel, reserveFactor }: Config) => {
-    const key = new CLIKey({ keyName: updateConfig.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)

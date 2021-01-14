@@ -24,7 +24,8 @@ interface FeedPrice {
 }
 
 const feedPrice = menu
-  .description("Feed price")
+  .command("feed_price")
+  .description("Feeds new price data")
   .requiredOption("--prices <json>", "Vector of assets and their prices")
   .action(async ({ prices }: FeedPrice) => {
     const key = new CLIKey({ keyName: feedPrice.from });
@@ -43,10 +44,11 @@ interface Config {
   owner?: string;
 }
 const updateConfig = menu
-  .description("Update config")
+  .command("update-config")
+  .description("Updates the configuration of the contract")
   .option("--owner <AccAddress>", "Address of new owner")
   .action(async ({ owner }: Config) => {
-    const key = new CLIKey({ keyName: updateConfig.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)

@@ -20,9 +20,10 @@ const menu = createExecMenu(
 );
 
 const excecuteEpochOperattion = menu
-  .description("execute epoch operations")
+  .command("execute_epoch_operations")
+  .description("Execute epoch operations")
   .action(async () => {
-    const key = new CLIKey({ keyName: excecuteEpochOperattion.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -45,7 +46,8 @@ interface Config {
   priceTimeframe?: number;
 }
 const updateConfig = menu
-  .description("update config")
+  .command("update-config")
+  .description("Update the configuration of the contract")
   .option("--owner-address <AccAddress>", "Address of new contract owner")
   .option("--oracle-contract <AccAddress>", "Contract address of new Oracle")
   .option(
@@ -83,7 +85,7 @@ const updateConfig = menu
       epochPeriod,
       priceTimeframe,
     }: Config) => {
-      const key = new CLIKey({ keyName: updateConfig.from });
+      const key = new CLIKey({ keyName: menu.from });
       const userAddress = key.accAddress;
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId)
@@ -111,7 +113,8 @@ interface WhiteList {
 }
 
 const whiteList = menu
-  .description("update white list")
+  .command("whitelist")
+  .description("Whitelist a new collateral accepted in the money market")
   .requiredOption(
     "--collateral-token <AccAddress>",
     "Cw20 token contract address of collateral"
@@ -125,7 +128,7 @@ const whiteList = menu
     "New maximum loan-to-value ratio allowed for collateral"
   )
   .action(async ({ collateralToken, custodyContract, ltv }: WhiteList) => {
-    const key = new CLIKey({ keyName: whiteList.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -147,7 +150,8 @@ interface UpdateWhiteList {
 }
 
 const updateWhiteList = menu
-  .description("update white list")
+  .command("update_whitelist")
+  .description('Update information for an already whitelisted collateral"')
   .requiredOption(
     "--collateral-token <AccAddress>",
     "Cw20 token contract address of collateral"
