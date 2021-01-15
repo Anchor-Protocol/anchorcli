@@ -1,7 +1,11 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 
-import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
+import {
+  createExecMenu,
+  createQueryMenu,
+  handleExecCommand,
+} from "../../util/contract-menu";
 import {
   fabricatebOverseerConfig,
   fabricatebOverseerEpoch,
@@ -182,8 +186,10 @@ const updateWhiteList = menu
     }
   );
 
-//TODO: add queries
+const query = createQueryMenu("overseer", "Anchor overseer contract queries");
 
+//TODO: Add queries
 export default {
+  query,
   menu,
 };

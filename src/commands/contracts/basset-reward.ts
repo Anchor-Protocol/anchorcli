@@ -1,6 +1,10 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
-import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
+import {
+  createExecMenu,
+  createQueryMenu,
+  handleExecCommand,
+} from "../../util/contract-menu";
 import { fabricatebAssetClaim } from "../../anchor-js/fabricators";
 import {
   AddressProviderFromJSON,
@@ -33,7 +37,13 @@ const claim = menu
     await handleExecCommand(menu, msg);
   });
 
+const query = createQueryMenu(
+  "basset-reward",
+  "Anchor bAsset reward contract queries"
+);
+
 //TODO: Add queries
 export default {
+  query,
   menu,
 };

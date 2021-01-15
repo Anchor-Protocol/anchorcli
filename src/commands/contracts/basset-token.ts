@@ -1,6 +1,10 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
-import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
+import {
+  createExecMenu,
+  createQueryMenu,
+  handleExecCommand,
+} from "../../util/contract-menu";
 import {
   fabricatebAssetBurnFrom,
   fabricatebAssetdDecreaseAllowance,
@@ -180,8 +184,13 @@ const decreaseAllowance = menu
     await handleExecCommand(menu, msg);
   });
 
-//TODO: add queries
+const query = createQueryMenu(
+  "basset-token",
+  "Anchor bAsset token  contract queries"
+);
 
+//TODO: Add queries
 export default {
+  query,
   menu,
 };

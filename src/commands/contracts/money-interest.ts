@@ -1,7 +1,11 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 
-import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
+import {
+  createExecMenu,
+  createQueryMenu,
+  handleExecCommand,
+} from "../../util/contract-menu";
 import { Dec } from "@terra-money/terra.js";
 import { fabricatebInterestConfig } from "../../anchor-js/fabricators/money-market/interest-update-config";
 import {
@@ -50,8 +54,10 @@ const updateConfig = menu
     await handleExecCommand(menu, msg);
   });
 
-//TODO: add queries
+const query = createQueryMenu("interest", "Anchor interest contract queries");
 
+//TODO: Add queries
 export default {
+  query,
   menu,
 };

@@ -8,11 +8,18 @@ import {
   fabricatebAssetWithdrawUnbonded,
   fabricateRegisterValidator,
 } from "../../anchor-js/fabricators";
-import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
+import {
+  createExecMenu,
+  createQueryMenu,
+  getLCDClient,
+  handleExecCommand,
+  handleQueryCommand,
+} from "../../util/contract-menu";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
+import { queryHubConfig } from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "basset-hub",
@@ -201,6 +208,25 @@ const unbond = menu
 // 2- Add check slashing
 // 3- Add queries
 
+const query = createQueryMenu(
+  "basset-hub",
+  "Anchor bAsset hub contract queries"
+);
+const getConfig = query
+  .command("config")
+  .description("Get the Hub contract's configuration")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const config_query = await queryHubConfig({ lcd: lcd, bAsset: "bluna" })(
+      addressProvider
+    );
+    await handleQueryCommand(query, config_query);
+  });
+
 export default {
+  query,
   menu,
 };

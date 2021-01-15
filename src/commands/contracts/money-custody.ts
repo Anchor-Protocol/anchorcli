@@ -1,4 +1,8 @@
-import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
+import {
+  createExecMenu,
+  createQueryMenu,
+  handleExecCommand,
+} from "../../util/contract-menu";
 import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 import { fabricatebCustodyConfig } from "../../anchor-js/fabricators";
@@ -37,8 +41,10 @@ const updateConfig = menu
     await handleExecCommand(menu, msg);
   });
 
-//TODO: add queries
+const query = createQueryMenu("custody", "Anchor custody contract queries");
 
+//TODO: Add queries
 export default {
+  query,
   menu,
 };

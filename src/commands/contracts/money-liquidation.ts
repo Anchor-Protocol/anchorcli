@@ -1,5 +1,9 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { createExecMenu, handleExecCommand } from "../../util/contract-menu";
+import {
+  createExecMenu,
+  createQueryMenu,
+  handleExecCommand,
+} from "../../util/contract-menu";
 import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import { fabricateRetractBid } from "../../anchor-js/fabricators/money-market/liquidation-retract-bid";
 import {
@@ -133,8 +137,13 @@ const liquidationUpdateConfig = menu
     }
   );
 
+const query = createQueryMenu(
+  "liquidation",
+  "Anchor liquidation contract queries"
+);
+
+//TODO: Add queries
 export default {
+  query,
   menu,
 };
-
-//TODO: add queries
