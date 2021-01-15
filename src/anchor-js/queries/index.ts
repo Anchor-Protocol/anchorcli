@@ -11,3 +11,8 @@ export * from "./basset/reward-state";
 export * from "./basset/reward-accrued-rewards";
 export * from "./basset/reward-holder";
 export * from "./basset/reward-holders";
+export * from "./basset/token-token-info";
+export * from "./basset/token-balance";
+export * from "./basset/token-minter";
+export * from "./basset/token-all-allowance";
+export * from "./basset/token-all-accounts";

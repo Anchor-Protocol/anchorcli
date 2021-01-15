@@ -125,7 +125,7 @@ interface AllHistory {
   limit?: number;
 }
 
-const getholders = query
+const getHolders = query
   .command("holders")
   .description("Get information about all bLuna holders")
   .option("--start-after <int>", "Address of bLuna holder to start query")

@@ -3,7 +3,9 @@ import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import {
   createExecMenu,
   createQueryMenu,
+  getLCDClient,
   handleExecCommand,
+  handleQueryCommand,
 } from "../../util/contract-menu";
 import {
   fabricatebAssetBurnFrom,
@@ -17,6 +19,15 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
+import {
+  queryRewardHolders,
+  queryTokenAllAccounts,
+  queryTokenAllAllowance,
+  queryTokenBalance,
+  queryTokenMinter,
+} from "../../anchor-js/queries";
+import { queryTokenInfo } from "../../anchor-js/queries/basset/token-token-info";
+import { queryTokenAllowance } from "../../anchor-js/queries/basset/token-allowance";
 
 const menu = createExecMenu(
   "basset-token",
@@ -189,7 +200,132 @@ const query = createQueryMenu(
   "Anchor bAsset token  contract queries"
 );
 
-//TODO: Add queries
+const getTokenInfo = query
+  .command("token-info")
+  .description("Get information about the token")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const query_token = await queryTokenInfo({ lcd: lcd, bAsset: "bluna" })(
+      addressProvider
+    );
+    await handleQueryCommand(query, query_token);
+  });
+
+interface Balance {
+  address: string;
+}
+
+const getBalance = query
+  .command("balance")
+  .description("Get the current balance of the address")
+  .option("--address <AccAddress>", "Address of user")
+  .action(async ({ address }: Balance) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const balance_query = await queryTokenBalance({
+      lcd: lcd,
+      bAsset: "bluna",
+      address: address,
+    })(addressProvider);
+    await handleQueryCommand(query, balance_query);
+  });
+
+const getMinter = query
+  .command("minter")
+  .description("Get who can mint and how much")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const query_minter = await queryTokenMinter({ lcd: lcd, bAsset: "bluna" })(
+      addressProvider
+    );
+    await handleQueryCommand(query, query_minter);
+  });
+
+interface AllowanceArgs {
+  owner: string;
+  spender: string;
+}
+const getAllowance = query
+  .command("allowance")
+  .description("Get how much spender can use from owner account")
+  .option("--owner <AccAddress>", "Address of owner")
+  .option("--spender <AccAddress>", "Address of spender")
+  .action(async ({ owner, spender }: AllowanceArgs) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const allowance_query = await queryTokenAllowance({
+      lcd: lcd,
+      bAsset: "bluna",
+      owner: owner,
+      spender: spender,
+    })(addressProvider);
+    await handleQueryCommand(query, allowance_query);
+  });
+
+interface AllAllowances {
+  owner: string;
+  startAfter?: string;
+  limit?: number;
+}
+
+const getAllowances = query
+  .command("all-allowances")
+  .description("Get all allowances this owner has approved")
+  .option("--owner <AccAddress>", "Address of the owner")
+  .option("--start-after <int>", "Address of bLuna holder to start query")
+  .option("--limit <int>", "Maximum number of query entries")
+  .action(async ({ owner, startAfter, limit }: AllAllowances) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryTokenAllAllowance({
+      lcd: lcd,
+      bAsset: "bluna",
+      owner: owner,
+      startAfter: startAfter,
+      lim: +limit,
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
+  });
+
+interface AllAccounts {
+  startAfter?: string;
+  limit?: number;
+}
+
+const getAccounts = query
+  .command("all-accounts")
+  .description("Get all accounts that have balances")
+  .option(
+    "--start-after <AccAddress>",
+    "Address of bLuna holder to start query"
+  )
+  .option("--limit <int>", "Maximum number of query entries")
+  .action(async ({ startAfter, limit }: AllAccounts) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryTokenAllAccounts({
+      lcd: lcd,
+      bAsset: "bluna",
+      startAfter: startAfter,
+      lim: +limit,
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
+  });
+
 export default {
   query,
   menu,
