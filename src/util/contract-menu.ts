@@ -168,6 +168,8 @@ export async function handleExecCommand(
 
     if (exec.fees === undefined) {
       feeAmount = estimatedFee.amount;
+    } else {
+      feeAmount = Parse.coins(exec.fees);
     }
   } else {
     if (exec.fees === undefined) {

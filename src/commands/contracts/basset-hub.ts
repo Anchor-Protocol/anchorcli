@@ -24,9 +24,11 @@ import {
   queryHubCurrentBatch,
   queryHubHistory,
   queryHubParams,
+  queryHubState,
   queryHubUnbond,
   queryHubWhiteVals,
   queryHubWithdrawable,
+  queryRewardState,
 } from "../../anchor-js/queries";
 
 const menu = createExecMenu(
@@ -348,6 +350,20 @@ const getWhitdrawable = query
       block_time: blockTime,
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
+  });
+
+const getState = query
+  .command("state")
+  .description("Get information about the current state")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const config_query = await queryHubState({ lcd: lcd, bAsset: "bluna" })(
+      addressProvider
+    );
+    await handleQueryCommand(query, config_query);
   });
 
 export default {

@@ -3,13 +3,23 @@ import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import {
   createExecMenu,
   createQueryMenu,
+  getLCDClient,
   handleExecCommand,
+  handleQueryCommand,
 } from "../../util/contract-menu";
 import { fabricatebAssetClaim } from "../../anchor-js/fabricators";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
+import {
+  queryHubHistory,
+  queryRewardConfig,
+  queryRewardHolder,
+  queryRewardHolders,
+  queryRewardState,
+} from "../../anchor-js/queries";
+import { queryRewardAccrued } from "../../anchor-js/queries/basset/reward-accrued-rewards";
 
 const menu = createExecMenu(
   "basset-reward",
@@ -41,6 +51,98 @@ const query = createQueryMenu(
   "basset-reward",
   "Anchor bAsset reward contract queries"
 );
+
+const getConfig = query
+  .command("config")
+  .description("Get the contract configuration of bLuna Reward")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const config_query = await queryRewardConfig({ lcd: lcd, bAsset: "bluna" })(
+      addressProvider
+    );
+    await handleQueryCommand(query, config_query);
+  });
+
+const getState = query
+  .command("state")
+  .description("Get information about the current state")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const config_query = await queryRewardState({ lcd: lcd, bAsset: "bluna" })(
+      addressProvider
+    );
+    await handleQueryCommand(query, config_query);
+  });
+
+interface AccruedRewards {
+  address: string;
+}
+
+const getAccruedRewards = query
+  .command("accrued-rewards")
+  .description(
+    "Get the amount of rewards accrued to the specified bLuna holder"
+  )
+  .option("--address <AccAddress>", "Address of user")
+  .action(async ({ address }: AccruedRewards) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryRewardAccrued({
+      lcd: lcd,
+      bAsset: "bluna",
+      address: address,
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
+  });
+
+const getHolder = query
+  .command("holder")
+  .description("Get information about the specified bLuna holder")
+  .option("--address <AccAddress>", "Address of user")
+  .action(async ({ address }: AccruedRewards) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryRewardHolder({
+      lcd: lcd,
+      bAsset: "bluna",
+      address: address,
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
+  });
+
+interface AllHistory {
+  startAfter?: string;
+  limit?: number;
+}
+
+const getholders = query
+  .command("holders")
+  .description("Get information about all bLuna holders")
+  .option("--start-after <int>", "Address of bLuna holder to start query")
+  .option("--limit <int>", "Maximum number of query entries")
+  .action(async ({ startAfter, limit }: AllHistory) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryRewardHolders({
+      lcd: lcd,
+      bAsset: "bluna",
+      startAfter: startAfter,
+      lim: +limit,
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
+  });
 
 //TODO: Add queries
 export default {

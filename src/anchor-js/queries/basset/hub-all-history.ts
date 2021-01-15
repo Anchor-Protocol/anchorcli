@@ -21,7 +21,6 @@ export const queryHubHistory = ({
   addressProvider: AddressProvider.Provider
 ): Promise<HistoryResponse> => {
   const bAssetContractAddress = addressProvider.bAssetHub(bAsset);
-  console.log(lim);
   let reponse: HistoryResponse = await lcd.wasm.contractQuery(
     bAssetContractAddress,
     {
