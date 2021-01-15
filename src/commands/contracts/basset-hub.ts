@@ -19,7 +19,15 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
-import { queryHubConfig } from "../../anchor-js/queries";
+import {
+  queryHubConfig,
+  queryHubCurrentBatch,
+  queryHubHistory,
+  queryHubParams,
+  queryHubUnbond,
+  queryHubWhiteVals,
+  queryHubWithdrawable,
+} from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "basset-hub",
@@ -224,6 +232,122 @@ const getConfig = query
       addressProvider
     );
     await handleQueryCommand(query, config_query);
+  });
+
+const getCurrentBatch = query
+  .command("current-batch")
+  .description("Get information about the current undelegation batch")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryHubCurrentBatch({
+      lcd: lcd,
+      bAsset: "bluna",
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
+  });
+
+interface AllHistory {
+  startFrom?: number;
+  limit?: number;
+}
+
+const getAllHistory = query
+  .command("all-history")
+  .description("Get the historical list of undelegation batch entries")
+  .option("--start-from <int>", "Batch ID to start query")
+  .option("--limit <int>", "Maximum number of query entries")
+  .action(async ({ startFrom, limit }: AllHistory) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryHubHistory({
+      lcd: lcd,
+      bAsset: "bluna",
+      startFrom: startFrom,
+      lim: limit,
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
+  });
+
+const getParams = query
+  .command("params")
+  .description("Get parameter information")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryHubParams({ lcd: lcd, bAsset: "bluna" })(
+      addressProvider
+    );
+    await handleQueryCommand(query, batch_query);
+  });
+
+const getWhitelistedValidators = query
+  .command("whitelisted-validators")
+  .description("Get the list of whitelisted validators")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryHubWhiteVals({ lcd: lcd, bAsset: "bluna" })(
+      addressProvider
+    );
+    await handleQueryCommand(query, batch_query);
+  });
+
+interface UnbondRequest {
+  address: string;
+}
+
+const getUnbondRequest = query
+  .command("unbond-requests")
+  .description(
+    "Get the list of Luna unbonding amounts being unbonded for the specified user"
+  )
+  .option("--address <AccAddress>", "Address of user")
+  .action(async ({ address }: UnbondRequest) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryHubUnbond({
+      lcd: lcd,
+      bAsset: "bluna",
+      address: address,
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
+  });
+
+interface Whitdrawable {
+  address: string;
+  blockTime: number;
+}
+
+const getWhitdrawable = query
+  .command("withdrawable-unbonded")
+  .description(
+    "Get the amount of undelegated Luna that is available for withdrawal"
+  )
+  .option("--address <AccAddress>", "Address of user")
+  .option("--block-time <int>", "Current block timestamp")
+  .action(async ({ address, blockTime }: Whitdrawable) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const batch_query = await queryHubWithdrawable({
+      lcd: lcd,
+      bAsset: "bluna",
+      address: address,
+      block_time: blockTime,
+    })(addressProvider);
+    await handleQueryCommand(query, batch_query);
   });
 
 export default {

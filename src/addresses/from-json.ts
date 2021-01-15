@@ -12,10 +12,10 @@ const chainIDToNetworkName = {
   "tequila-0004": NETWORKS.TEQUILA0004,
 };
 export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
-  const network = chainIDToNetworkName[chainId];
-  if (typeof network === "undefined") {
-    throw new Error("unknown network");
-  }
+  const network =
+    chainId === undefined
+      ? chainIDToNetworkName["tequila-0004"]
+      : chainIDToNetworkName[chainId];
   return network;
 };
 

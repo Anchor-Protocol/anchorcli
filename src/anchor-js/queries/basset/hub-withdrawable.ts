@@ -5,7 +5,7 @@ interface Option {
   lcd: LCDClient;
   bAsset: string;
   address: string;
-  block_time: string;
+  block_time: number;
 }
 
 interface WithdrableResponse {
@@ -26,7 +26,7 @@ export const queryHubWithdrawable = ({
     {
       withdrawable_unbonded: {
         address: address,
-        block_time: block_time,
+        block_time: +block_time,
       },
     }
   );

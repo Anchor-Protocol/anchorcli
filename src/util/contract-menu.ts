@@ -18,8 +18,8 @@ import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 
 export function getLCDClient(): LCDClient {
   return new LCDClient({
-    chainID: 'tequila-0004',
-    URL: 'https://tequila-lcd.terra.dev',
+    chainID: "tequila-0004",
+    URL: "https://tequila-lcd.terra.dev",
     gasPrices: [],
     gasAdjustment: 1.4,
   });

@@ -4,8 +4,8 @@ import { AddressProvider } from "../../address-provider/types";
 interface Option {
   lcd: LCDClient;
   bAsset: string;
-  start_from: number;
-  limit: number;
+  startFrom?: number;
+  lim?: number;
 }
 
 interface HistoryResponse {
@@ -15,18 +15,19 @@ interface HistoryResponse {
 export const queryHubHistory = ({
   lcd,
   bAsset,
-  start_from,
-  limit,
+  startFrom,
+  lim,
 }: Option) => async (
   addressProvider: AddressProvider.Provider
 ): Promise<HistoryResponse> => {
   const bAssetContractAddress = addressProvider.bAssetHub(bAsset);
+  console.log(lim);
   let reponse: HistoryResponse = await lcd.wasm.contractQuery(
     bAssetContractAddress,
     {
       all_history: {
-        start_from: start_from,
-        limit: limit,
+        start_from: +startFrom,
+        limit: +lim,
       },
     }
   );
