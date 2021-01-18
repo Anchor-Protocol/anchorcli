@@ -2,7 +2,9 @@ import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 import {
   createExecMenu,
   createQueryMenu,
+  getLCDClient,
   handleExecCommand,
+  handleQueryCommand,
 } from "../../util/contract-menu";
 import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import { fabricateRetractBid } from "../../anchor-js/fabricators/money-market/liquidation-retract-bid";
@@ -15,6 +17,12 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
+import { queryCustodyBorrowers } from "../../anchor-js/queries/money-market/custody-borrowers";
+import { queryLiquidationBid } from "../../anchor-js/queries/money-market/liquidation-bid";
+import { queryLiquidationBidsByUser } from "../../anchor-js/queries/money-market/liquidation-bid-by-user";
+import { queryLiquidationBidsByCollateral } from "../../anchor-js/queries/money-market/liquidation-bids-by-collateral";
+import { queryLiquidationConfig } from "../../anchor-js/queries/money-market/liquidation-config";
+import { queryLiquidationLiquidationAmount } from "../../anchor-js/queries/money-market/liquidation-liquidation-amount";
 
 const menu = createExecMenu(
   "liquidation",
@@ -142,7 +150,144 @@ const query = createQueryMenu(
   "Anchor liquidation contract queries"
 );
 
-//TODO: Add queries
+interface Bid {
+  collateralToken: string;
+  bidder: string;
+}
+
+const getBid = query
+  .command("bid")
+  .requiredOption(
+    "--collateral-token <AccAddress>",
+    "Token contract address of bidding collateral"
+  )
+  .requiredOption("--bidder <AccAddress>", "Address of bidder")
+  .action(async ({ collateralToken, bidder }: Bid) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const queryBid = await queryLiquidationBid({
+      lcd,
+      collateralToken,
+      bidder,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryBid);
+  });
+
+interface BidsByUser {
+  bidder: string;
+  startAfter?: string;
+  limit?: number;
+}
+
+const getBidsByUser = query
+  .command("bids-by-user")
+  .requiredOption("--bidder <AccAddress>", "Address of bidder")
+  .option(
+    "--start-after <AccAddress>",
+    "Token contract address of collateral to start query"
+  )
+  .option("--limit <int>", "Maximum number of query entries")
+  .action(async ({ bidder, startAfter, limit }: BidsByUser) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const queryBidsByUser = await queryLiquidationBidsByUser({
+      lcd,
+      bidder,
+      startAfter,
+      limit,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryBidsByUser);
+  });
+
+interface BidsByCollateral {
+  collateralToken: string;
+  startAfter?: string;
+  limit?: number;
+}
+
+const getBidsByCollateral = query
+  .command("bids-by-collateral")
+  .requiredOption(
+    "--collateral-token <AccAddress>",
+    "Token contract address of collateral"
+  )
+  .option(
+    "--start-after <AccAddress>",
+    "Token contract address of collateral to start query"
+  )
+  .option("--limit <int>", "Maximum number of query entries")
+  .action(async ({ collateralToken, startAfter, limit }: BidsByCollateral) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const queryBidsByCollateral = await queryLiquidationBidsByCollateral({
+      lcd,
+      collateralToken,
+      startAfter,
+      limit,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryBidsByCollateral);
+  });
+
+interface Config {}
+
+const getConfig = query.command("config").action(async ({}: Config) => {
+  const lcd = getLCDClient();
+  const addressProvider = new AddressProviderFromJSON(
+    resolveChainIDToNetworkName(menu.chainId)
+  );
+  const queryConfig = await queryLiquidationConfig({
+    lcd,
+  })(addressProvider);
+  await handleQueryCommand(menu, queryConfig);
+});
+
+interface LiquidationAmount {
+  borrowAmount: string;
+  borrowLimit: string;
+  collaterals: object;
+  collateralPrices: object[];
+}
+//TODO  FIGURE OUT THE INPUT OF TOKENSHUMAN AND VEC<DECIMAL>
+const getLiquidationAmount = query
+  .command("liquidation-amount")
+  .requiredOption("--borrow-amount <int>", "Liability of borrower")
+  .requiredOption("--borrow-limit <int>", "Borrow limit of borrower")
+  .requiredOption(
+    "--collaterals <TokensHuman>",
+    "Held collaterals and locked amounts"
+  )
+  .requiredOption(
+    "--collateral_prices <Vec<Dec>>",
+    "Vector of collateral prices"
+  )
+  .action(
+    async ({
+      borrowAmount,
+      borrowLimit,
+      collaterals,
+      collateralPrices,
+    }: LiquidationAmount) => {
+      const lcd = getLCDClient();
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId)
+      );
+      const queryLiquidationAmount = await queryLiquidationLiquidationAmount({
+        lcd,
+        borrowAmount,
+        borrowLimit,
+        collaterals,
+        collateralPrices,
+      })(addressProvider);
+      await handleQueryCommand(menu, queryLiquidationAmount);
+    }
+  );
+
 export default {
   query,
   menu,
