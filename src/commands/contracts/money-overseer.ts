@@ -20,7 +20,7 @@ import {
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
 import { queryOraclePrices } from "../../anchor-js/queries/money-market/oracle-prices";
-import { queryOverseerAllCollateral } from "../../anchor-js/queries/money-market/overseer-all-collaterals";
+import { queryOverseerAllCollaterals } from "../../anchor-js/queries/money-market/overseer-all-collaterals";
 import { queryOverseerBorrowLimit } from "../../anchor-js/queries/money-market/overseer-borrow-limit";
 import { queryOverseerCollaterals } from "../../anchor-js/queries/money-market/overseer-collaterals";
 import { queryOverseerConfig } from "../../anchor-js/queries/money-market/overseer-config";
@@ -198,28 +198,28 @@ const updateWhiteList = menu
 
 const query = createQueryMenu("overseer", "Anchor overseer contract queries");
 
-interface AllCollateral {
+interface AllCollaterals {
   startAfter?: string;
   limit?: number;
 }
 
-const getAllCollateral = query
-  .command("all-collateral")
+const getAllCollaterals = query
+  .command("all-collaterals")
   .option("--start-after <AccAddress>", "Borrower address of start query")
   .option("--limit <int>", "Maximum number of query entries")
-  .action(async ({ startAfter, limit }: AllCollateral) => {
+  .action(async ({ startAfter, limit }: AllCollaterals) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
     const overseer = addressProvider.overseer();
-    const queryAllCollateral = await queryOverseerAllCollateral({
+    const queryAllCollaterals = await queryOverseerAllCollaterals({
       lcd,
       overseer,
       startAfter,
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryAllCollateral);
+    await handleQueryCommand(menu, queryAllCollaterals);
   });
 
 interface BorrowLimit {
@@ -295,22 +295,18 @@ const getDistributionParams = query
     await handleQueryCommand(menu, queryDistributionParams);
   });
 
-interface EpochState {}
-
-const getEpochState = query
-  .command("epoch-state")
-  .action(async ({}: EpochState) => {
-    const lcd = getLCDClient();
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
-    );
-    const overseer = addressProvider.overseer();
-    const queryEpochState = await queryOverseerEpochState({
-      lcd,
-      overseer,
-    })(addressProvider);
-    await handleQueryCommand(menu, queryEpochState);
-  });
+const getEpochState = query.command("epoch-state").action(async () => {
+  const lcd = getLCDClient();
+  const addressProvider = new AddressProviderFromJSON(
+    resolveChainIDToNetworkName(menu.chainId)
+  );
+  const overseer = addressProvider.overseer();
+  const queryEpochState = await queryOverseerEpochState({
+    lcd,
+    overseer,
+  })(addressProvider);
+  await handleQueryCommand(menu, queryEpochState);
+});
 
 interface QueryWhitelist {
   collateralToken?: string;

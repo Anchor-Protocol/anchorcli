@@ -19,7 +19,7 @@ import {
 } from "../../addresses/from-json";
 import { queryCustodyBorrowers } from "../../anchor-js/queries/money-market/custody-borrowers";
 import { queryLiquidationBid } from "../../anchor-js/queries/money-market/liquidation-bid";
-import { queryLiquidationBidsByUser } from "../../anchor-js/queries/money-market/liquidation-bid-by-user";
+import { queryLiquidationBidsByUser } from "../../anchor-js/queries/money-market/liquidation-bids-by-user";
 import { queryLiquidationBidsByCollateral } from "../../anchor-js/queries/money-market/liquidation-bids-by-collateral";
 import { queryLiquidationConfig } from "../../anchor-js/queries/money-market/liquidation-config";
 import { queryLiquidationLiquidationAmount } from "../../anchor-js/queries/money-market/liquidation-liquidation-amount";
@@ -234,9 +234,7 @@ const getBidsByCollateral = query
     await handleQueryCommand(menu, queryBidsByCollateral);
   });
 
-interface Config {}
-
-const getConfig = query.command("config").action(async ({}: Config) => {
+const getConfig = query.command("config").action(async () => {
   const lcd = getLCDClient();
   const addressProvider = new AddressProviderFromJSON(
     resolveChainIDToNetworkName(menu.chainId)

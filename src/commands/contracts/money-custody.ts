@@ -96,8 +96,6 @@ const getBorrowers = query
     await handleQueryCommand(menu, queryBorrowers);
   });
 
-interface Config {}
-
 const getConfig = query.command("config").action(async ({}: Config) => {
   const lcd = getLCDClient();
   const addressProvider = new AddressProviderFromJSON(

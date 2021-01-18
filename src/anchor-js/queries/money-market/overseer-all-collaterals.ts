@@ -11,7 +11,7 @@ interface AllCollateralsResponse {
   allCollaterals: object[];
 }
 
-export const queryOverseerAllCollateral = ({
+export const queryOverseerAllCollaterals = ({
   lcd,
   overseer,
   startAfter,
