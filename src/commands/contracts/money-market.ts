@@ -4,7 +4,9 @@ import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import {
   createExecMenu,
   createQueryMenu,
+  getLCDClient,
   handleExecCommand,
+  handleQueryCommand,
 } from "../../util/contract-menu";
 import {
   fabricatebMarketConfig,
@@ -18,6 +20,13 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
+import { queryLiquidationConfig } from "../../anchor-js/queries/money-market/liquidation-config";
+import { queryMarketConfig } from "../../anchor-js/queries/money-market/market-config";
+import { queryMarketEpochState } from "../../anchor-js/queries/money-market/market-epoch-state";
+import { queryMarketLiabilities } from "../../anchor-js/queries/money-market/market-liabilities";
+import { queryMarketLiability } from "../../anchor-js/queries/money-market/market-liability";
+import { queryMarketLoanAmount } from "../../anchor-js/queries/money-market/market-loan-amount";
+import { queryMarketState } from "../../anchor-js/queries/money-market/market-state";
 
 const menu = createExecMenu(
   "market",
@@ -134,7 +143,129 @@ const updateConfig = menu
 
 const query = createQueryMenu("market", "Anchor market contract queries");
 
-//TODO: Add queries
+interface Config {}
+
+const getConfig = query.command("config").action(async ({}: Config) => {
+  const lcd = getLCDClient();
+  const addressProvider = new AddressProviderFromJSON(
+    resolveChainIDToNetworkName(menu.chainId)
+  );
+  const market = addressProvider.market("market");
+  const queryConfig = await queryMarketConfig({
+    lcd,
+    market,
+  })(addressProvider);
+  await handleQueryCommand(menu, queryConfig);
+});
+
+interface EpochState {
+  blockHeight?: number;
+}
+
+const getEpochState = query
+  .command("epoch-state")
+  .option("--block-height <int>", "Current block number")
+  .action(async ({ blockHeight }: EpochState) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const market = addressProvider.market("market");
+    const queryEpochState = await queryMarketEpochState({
+      lcd,
+      market,
+      blockHeight,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryEpochState);
+  });
+
+interface Liabilities {
+  startAfter?: string;
+  limit?: number;
+}
+
+const getLiabilities = query
+  .command("liabilities")
+  .option("--start-after <AccAddress>", "Borrower address to start query")
+  .option("--limit <int>", "Maximum number of entries to query")
+  .action(async ({ startAfter, limit }: Liabilities) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const market = addressProvider.market("market");
+    const queryLiabilities = await queryMarketLiabilities({
+      lcd,
+      market,
+      startAfter,
+      limit,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryLiabilities);
+  });
+
+interface Liability {
+  borrower: string;
+}
+
+const getLiability = query
+  .command("liability")
+  .requiredOption("--borrower <AccAddress>", "Address of borrower")
+  .action(async ({ borrower }: Liability) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const market = addressProvider.market("market");
+    const queryLiability = await queryMarketLiability({
+      lcd,
+      market,
+      borrower,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryLiability);
+  });
+
+interface LoanAmount {
+  borrower: string;
+  blockHeight: number;
+}
+
+const getLoanAmount = query
+  .command("loan-amount")
+  .requiredOption("--borrower <AccAddress>", "Address of borrower")
+  .requiredOption(
+    "--block-height <int>",
+    "Block number to apply in calculation"
+  )
+  .action(async ({ borrower, blockHeight }: LoanAmount) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const market = addressProvider.market("market");
+    const queryLoanAmount = await queryMarketLoanAmount({
+      lcd,
+      market,
+      borrower,
+      blockHeight,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryLoanAmount);
+  });
+
+interface State {}
+
+const getState = query.command("state").action(async ({}: State) => {
+  const lcd = getLCDClient();
+  const addressProvider = new AddressProviderFromJSON(
+    resolveChainIDToNetworkName(menu.chainId)
+  );
+  const market = addressProvider.market("market");
+  const queryState = await queryMarketState({
+    lcd,
+    market,
+  })(addressProvider);
+  await handleQueryCommand(menu, queryState);
+});
+
 export default {
   query,
   menu,
