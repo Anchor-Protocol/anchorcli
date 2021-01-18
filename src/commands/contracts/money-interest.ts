@@ -4,7 +4,9 @@ import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import {
   createExecMenu,
   createQueryMenu,
+  getLCDClient,
   handleExecCommand,
+  handleQueryCommand,
 } from "../../util/contract-menu";
 import { Dec } from "@terra-money/terra.js";
 import { fabricatebInterestConfig } from "../../anchor-js/fabricators/money-market/interest-update-config";
@@ -12,6 +14,8 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
+import { queryInterestModelBorrowRate } from "../../anchor-js/queries/money-market/interest-model-borrow-rate";
+import { queryInterestModelConfig } from "../../anchor-js/queries/money-market/interest-model-config";
 
 const menu = createExecMenu(
   "interest",
@@ -56,7 +60,49 @@ const updateConfig = menu
 
 const query = createQueryMenu("interest", "Anchor interest contract queries");
 
-//TODO: Add queries
+interface BorrowRate {
+  marketBalance: string;
+  totalLiabilities: string;
+  totalReserves: string;
+}
+
+const getBorrowRate = query
+  .command("borrow-rate")
+  .requiredOption("--market-balance <int>", "Stablecoin balance of Market")
+  .requiredOption(
+    "--total-liabilities <Dec>",
+    "Total amount of borrower liabilities"
+  )
+  .requiredOption(
+    "--total-reserves <Dec>",
+    "Amount of Market contract reserves"
+  )
+  .action(
+    async ({ marketBalance, totalLiabilities, totalReserves }: BorrowRate) => {
+      const lcd = getLCDClient();
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId)
+      );
+      const queryBorrowRate = await queryInterestModelBorrowRate({
+        lcd,
+        marketBalance,
+        totalLiabilities,
+        totalReserves,
+      })(addressProvider);
+      await handleQueryCommand(menu, queryBorrowRate);
+    }
+  );
+
+interface Config {}
+const getConfig = query.command("config").action(async ({}: Config) => {
+  const lcd = getLCDClient();
+  const addressProvider = new AddressProviderFromJSON(
+    resolveChainIDToNetworkName(menu.chainId)
+  );
+  const queryConfig = await queryInterestModelConfig({ lcd })(addressProvider);
+  await handleQueryCommand(menu, queryConfig);
+});
+
 export default {
   query,
   menu,
