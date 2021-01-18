@@ -4,7 +4,9 @@ import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import {
   createExecMenu,
   createQueryMenu,
+  getLCDClient,
   handleExecCommand,
+  handleQueryCommand,
 } from "../../util/contract-menu";
 import {
   fabricatebOverseerConfig,
@@ -12,11 +14,19 @@ import {
   fabricatebOverseerUpWhiteList,
   fabricatebOverseerWhiteList,
 } from "../../anchor-js/fabricators";
-import { Dec } from "@terra-money/terra.js";
+import { Dec, DistributionParams } from "@terra-money/terra.js";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
+import { queryOraclePrices } from "../../anchor-js/queries/money-market/oracle-prices";
+import { queryOverseerAllCollateral } from "../../anchor-js/queries/money-market/overseer-all-collaterals";
+import { queryOverseerBorrowLimit } from "../../anchor-js/queries/money-market/overseer-borrow-limit";
+import { queryOverseerCollaterals } from "../../anchor-js/queries/money-market/overseer-collaterals";
+import { queryOverseerConfig } from "../../anchor-js/queries/money-market/overseer-config";
+import { queryOverseerDistributionParams } from "../../anchor-js/queries/money-market/overseer-distribution-params";
+import { queryOverseerEpochState } from "../../anchor-js/queries/money-market/overseer-epoch-state";
+import { queryOverseerWhitelist } from "../../anchor-js/queries/money-market/overseer-whitelist";
 
 const menu = createExecMenu(
   "overseer",
@@ -188,7 +198,153 @@ const updateWhiteList = menu
 
 const query = createQueryMenu("overseer", "Anchor overseer contract queries");
 
-//TODO: Add queries
+interface AllCollateral {
+  startAfter?: string;
+  limit?: number;
+}
+
+const getAllCollateral = query
+  .command("all-collateral")
+  .option("--start-after <AccAddress>", "Borrower address of start query")
+  .option("--limit <int>", "Maximum number of query entries")
+  .action(async ({ startAfter, limit }: AllCollateral) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const overseer = addressProvider.overseer();
+    const queryAllCollateral = await queryOverseerAllCollateral({
+      lcd,
+      overseer,
+      startAfter,
+      limit,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryAllCollateral);
+  });
+
+interface BorrowLimit {
+  borrower: string;
+  blockTime?: number;
+}
+
+const getBorrowLimit = query
+  .command("borrow-limit")
+  .requiredOption("--borrower <AccAddress>", "Address of borrower")
+  .option("--block-time <int>", "Current block timestamp")
+  .action(async ({ borrower, blockTime }: BorrowLimit) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const overseer = addressProvider.overseer();
+    const queryBorrowLimit = await queryOverseerBorrowLimit({
+      lcd,
+      overseer,
+      borrower,
+      blockTime,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryBorrowLimit);
+  });
+
+interface Collaterals {
+  borrower: string;
+}
+
+const getCollaterals = query
+  .command("collaterals")
+  .requiredOption("--borrower <AccAddress>", "Address of borrower")
+  .action(async ({ borrower }: Collaterals) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const overseer = addressProvider.overseer();
+    const queryCollaterals = await queryOverseerCollaterals({
+      lcd,
+      overseer,
+      borrower,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryCollaterals);
+  });
+
+const getConfig = query.command("config").action(async ({}: Config) => {
+  const lcd = getLCDClient();
+  const addressProvider = new AddressProviderFromJSON(
+    resolveChainIDToNetworkName(menu.chainId)
+  );
+  const overseer = addressProvider.overseer();
+  const queryConfig = await queryOverseerConfig({
+    lcd,
+    overseer,
+  })(addressProvider);
+  await handleQueryCommand(menu, queryConfig);
+});
+
+const getDistributionParams = query
+  .command("distribution-params")
+  .action(async ({}: DistributionParams) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const overseer = addressProvider.overseer();
+    const queryDistributionParams = await queryOverseerDistributionParams({
+      lcd,
+      overseer,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryDistributionParams);
+  });
+
+interface EpochState {}
+
+const getEpochState = query
+  .command("epoch-state")
+  .action(async ({}: EpochState) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const overseer = addressProvider.overseer();
+    const queryEpochState = await queryOverseerEpochState({
+      lcd,
+      overseer,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryEpochState);
+  });
+
+interface QueryWhitelist {
+  collateralToken?: string;
+  startAfter?: string;
+  limit?: number;
+}
+
+const getWhitelist = query
+  .command("whitelist")
+  .option(
+    "--collateral-token <AccAddress>",
+    "Cw20 Token address of collateral to query information"
+  )
+  .option(
+    "--start-after <AccAddress>",
+    "Collateral Cw20 Token address to start query"
+  )
+  .option("--limit <int>", "Maximum number of query entries")
+  .action(async ({ collateralToken, startAfter, limit }: QueryWhitelist) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const overseer = addressProvider.overseer();
+    const queryWhitelist = await queryOverseerWhitelist({
+      lcd,
+      overseer,
+      collateralToken,
+      startAfter,
+      limit,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryWhitelist);
+  });
+
 export default {
   query,
   menu,
