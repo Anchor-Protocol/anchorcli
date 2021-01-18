@@ -21,7 +21,7 @@ export const queryOverseerDistributionParams = ({
   let response: DistributionParamsResponse = await lcd.wasm.contractQuery(
     overseerContractAddress,
     {
-      distributionParams: {},
+      distribution_params: {},
     }
   );
   return response;

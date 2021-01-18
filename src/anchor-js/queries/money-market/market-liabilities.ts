@@ -24,7 +24,7 @@ export const queryMarketLiabilities = ({
     marketContractAddress,
     {
       liabilities: {
-        startAfter: startAfter,
+        start_after: startAfter,
         limit: limit,
       },
     }

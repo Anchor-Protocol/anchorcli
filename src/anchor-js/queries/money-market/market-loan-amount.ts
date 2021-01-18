@@ -26,7 +26,7 @@ export const queryMarketLoanAmount = ({
     {
       loan_amount: {
         borrower: borrower,
-        blockHeight: blockHeight,
+        block_height: blockHeight,
       },
     }
   );

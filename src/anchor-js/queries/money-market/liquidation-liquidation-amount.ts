@@ -25,11 +25,11 @@ export const queryLiquidationLiquidationAmount = ({
   let response: LiquidationAmountResponse = await lcd.wasm.contractQuery(
     liquidationContractAddress,
     {
-      liquidationAmount: {
-        borrowAmount: borrowAmount,
-        borrowLimit: borrowLimit,
+      liquidation_amount: {
+        borrow_amount: borrowAmount,
+        borrow_limit: borrowLimit,
         collaterals: collaterals,
-        collateralPrices: collateralPrices,
+        collateral_prices: collateralPrices,
       },
     }
   );

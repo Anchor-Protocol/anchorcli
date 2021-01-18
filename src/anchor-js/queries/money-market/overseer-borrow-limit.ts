@@ -25,9 +25,9 @@ export const queryOverseerBorrowLimit = ({
   let response: BorrowLimitResponse = await lcd.wasm.contractQuery(
     overseerContractAddress,
     {
-      borrowLimit: {
+      borrow_limit: {
         borrower: borrower,
-        blockTime: blockTime,
+        block_time: blockTime,
       },
     }
   );

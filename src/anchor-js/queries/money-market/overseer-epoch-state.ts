@@ -19,7 +19,7 @@ export const queryOverseerEpochState = ({ lcd, overseer }: Option) => async (
   let response: EpochStateResponse = await lcd.wasm.contractQuery(
     overseerContractAddress,
     {
-      epochState: {},
+      epoch_state: {},
     }
   );
   return response;

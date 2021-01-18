@@ -26,8 +26,8 @@ export const queryOverseerWhitelist = ({
     overseerContractAddress,
     {
       whitelist: {
-        collateralToken: collateralToken,
-        startAfter: startAfter,
+        collateral_token: collateralToken,
+        start_after: startAfter,
         limit: limit,
       },
     }

@@ -24,7 +24,7 @@ export const queryCustodyBorrowers = ({
     custodyContractAddress,
     {
       borrowers: {
-        startAfter: startAfter,
+        start_after: startAfter,
         limit: limit,
       },
     }

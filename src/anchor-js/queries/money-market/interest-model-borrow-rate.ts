@@ -23,10 +23,10 @@ export const queryInterestModelBorrowRate = ({
   let response: BorrowRateResponse = await lcd.wasm.contractQuery(
     interestModelContractAddress,
     {
-      borrowRate: {
-        marketBalance: marketBalance,
-        totalLiabilities: totalLiabilities,
-        totalReserves: totalReserves,
+      borrow_rate: {
+        market_balance: marketBalance,
+        total_liabilities: totalLiabilities,
+        total_reserves: totalReserves,
       },
     }
   );
