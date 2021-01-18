@@ -10,7 +10,7 @@ interface PricesResponse {
   prices: object[];
 }
 
-export const queryOraclePrice = ({ lcd, startAfter, limit }: Option) => async (
+export const queryOraclePrices = ({ lcd, startAfter, limit }: Option) => async (
   addressProvider: AddressProvider.Provider
 ): Promise<PricesResponse> => {
   const oracleContractAddress = addressProvider.oracle();
@@ -19,7 +19,7 @@ export const queryOraclePrice = ({ lcd, startAfter, limit }: Option) => async (
     {
       prices: {
         start_after: startAfter,
-        limit: limit,
+        limit: +limit,
       },
     }
   );
