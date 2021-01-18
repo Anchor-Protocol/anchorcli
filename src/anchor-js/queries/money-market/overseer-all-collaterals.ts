@@ -23,8 +23,8 @@ export const queryOverseerAllCollateral = ({
   let response: AllCollateralsResponse = await lcd.wasm.contractQuery(
     overseerContractAddress,
     {
-      allCollaterals: {
-        startAfter: startAfter,
+      all_collaterals: {
+        start_after: startAfter,
         limit: limit,
       },
     }

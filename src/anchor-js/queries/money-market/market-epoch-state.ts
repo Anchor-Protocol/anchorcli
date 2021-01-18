@@ -23,7 +23,7 @@ export const queryMarketEpochState = ({
     marketContractAddress,
     {
       epoch_state: {
-        blockHeight: blockHeight,
+        block_height: blockHeight,
       },
     }
   );

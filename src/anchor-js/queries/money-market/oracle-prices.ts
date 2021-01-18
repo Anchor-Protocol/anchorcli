@@ -18,7 +18,7 @@ export const queryOraclePrice = ({ lcd, startAfter, limit }: Option) => async (
     oracleContractAddress,
     {
       prices: {
-        startAfter: startAfter,
+        start_after: startAfter,
         limit: limit,
       },
     }

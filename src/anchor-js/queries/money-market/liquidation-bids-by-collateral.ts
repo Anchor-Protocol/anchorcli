@@ -23,9 +23,9 @@ export const queryLiquidationBidsByCollateral = ({
   let response: BidsByCollateralResponse = await lcd.wasm.contractQuery(
     liquidationContractAddress,
     {
-      bidsByCollateral: {
-        collateralToken: collateralToken,
-        startAfter: startAfter,
+      bids_by_collateral: {
+        collateral_token: collateralToken,
+        start_after: startAfter,
         limit: limit,
       },
     }

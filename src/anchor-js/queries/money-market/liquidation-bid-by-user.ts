@@ -23,7 +23,7 @@ export const queryLiquidationBidsByUser = ({
   let response: BidsByUserResponse = await lcd.wasm.contractQuery(
     liquidationContractAddress,
     {
-      bidsByUser: { bidder: bidder, startAfter: startAfter, limit: limit },
+      bidsByUser: { bidder: bidder, start_after: startAfter, limit: limit },
     }
   );
   return response;
