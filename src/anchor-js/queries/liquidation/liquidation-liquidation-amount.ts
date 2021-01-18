@@ -1,0 +1,37 @@
+import { LCDClient } from "@terra-money/terra.js";
+import { AddressProvider } from "../../address-provider/types";
+
+interface Option {
+  lcd: LCDClient;
+  borrowAmount: string;
+  borrowLimit: string;
+  collaterals: object;
+  collateralPrices: object[];
+}
+interface LiquidationAmountResponse {
+  collaterals: object[];
+}
+
+export const queryLiquidationLiquidationAmount = ({
+  lcd,
+  borrowAmount,
+  borrowLimit,
+  collaterals,
+  collateralPrices,
+}: Option) => async (
+  addressProvider: AddressProvider.Provider
+): Promise<LiquidationAmountResponse> => {
+  const liquidationContractAddress = addressProvider.liquidation();
+  let response: LiquidationAmountResponse = await lcd.wasm.contractQuery(
+    liquidationContractAddress,
+    {
+      liquidationAmount: {
+        borrowAmount: borrowAmount,
+        borrowLimit: borrowLimit,
+        collaterals: collaterals,
+        collateralPrices: collateralPrices,
+      },
+    }
+  );
+  return response;
+};
