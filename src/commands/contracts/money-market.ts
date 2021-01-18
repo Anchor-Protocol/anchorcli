@@ -143,8 +143,6 @@ const updateConfig = menu
 
 const query = createQueryMenu("market", "Anchor market contract queries");
 
-interface Config {}
-
 const getConfig = query.command("config").action(async ({}: Config) => {
   const lcd = getLCDClient();
   const addressProvider = new AddressProviderFromJSON(
@@ -251,9 +249,7 @@ const getLoanAmount = query
     await handleQueryCommand(menu, queryLoanAmount);
   });
 
-interface State {}
-
-const getState = query.command("state").action(async ({}: State) => {
+const getState = query.command("state").action(async () => {
   const lcd = getLCDClient();
   const addressProvider = new AddressProviderFromJSON(
     resolveChainIDToNetworkName(menu.chainId)
