@@ -148,10 +148,9 @@ const getConfig = query.command("config").action(async ({}: Config) => {
   const addressProvider = new AddressProviderFromJSON(
     resolveChainIDToNetworkName(menu.chainId)
   );
-  const market = addressProvider.market("market");
   const queryConfig = await queryMarketConfig({
     lcd,
-    market,
+    market: "market",
   })(addressProvider);
   await handleQueryCommand(menu, queryConfig);
 });
@@ -168,10 +167,9 @@ const getEpochState = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const market = addressProvider.market("market");
     const queryEpochState = await queryMarketEpochState({
       lcd,
-      market,
+      market: "market",
       blockHeight,
     })(addressProvider);
     await handleQueryCommand(menu, queryEpochState);
@@ -191,10 +189,9 @@ const getLiabilities = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const market = addressProvider.market("market");
     const queryLiabilities = await queryMarketLiabilities({
       lcd,
-      market,
+      market: "market",
       startAfter,
       limit,
     })(addressProvider);
@@ -213,10 +210,9 @@ const getLiability = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const market = addressProvider.market("market");
     const queryLiability = await queryMarketLiability({
       lcd,
-      market,
+      market: "market",
       borrower,
     })(addressProvider);
     await handleQueryCommand(menu, queryLiability);
@@ -239,10 +235,9 @@ const getLoanAmount = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const market = addressProvider.market("market");
     const queryLoanAmount = await queryMarketLoanAmount({
       lcd,
-      market,
+      market: "market",
       borrower,
       blockHeight,
     })(addressProvider);
@@ -254,10 +249,9 @@ const getState = query.command("state").action(async () => {
   const addressProvider = new AddressProviderFromJSON(
     resolveChainIDToNetworkName(menu.chainId)
   );
-  const market = addressProvider.market("market");
   const queryState = await queryMarketState({
     lcd,
-    market,
+    market: "market",
   })(addressProvider);
   await handleQueryCommand(menu, queryState);
 });

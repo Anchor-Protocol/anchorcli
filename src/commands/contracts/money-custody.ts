@@ -65,10 +65,11 @@ const getBorrower = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const custody = addressProvider.custody();
-    const queryBorrower = await queryCustodyBorrower({ lcd, custody, address })(
-      addressProvider
-    );
+    const queryBorrower = await queryCustodyBorrower({
+      lcd,
+      custody: "custody",
+      address,
+    })(addressProvider);
     await handleQueryCommand(menu, queryBorrower);
   });
 
@@ -86,10 +87,9 @@ const getBorrowers = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const custody = addressProvider.custody();
     const queryBorrowers = await queryCustodyBorrowers({
       lcd,
-      custody,
+      custody: "custody",
       startAfter,
       limit,
     })(addressProvider);
@@ -101,10 +101,9 @@ const getConfig = query.command("config").action(async ({}: Config) => {
   const addressProvider = new AddressProviderFromJSON(
     resolveChainIDToNetworkName(menu.chainId)
   );
-  const custody = addressProvider.custody();
   const queryConfig = await queryCustodyConfig({
     lcd,
-    custody,
+    custody: "custody",
   })(addressProvider);
   await handleQueryCommand(menu, queryConfig);
 });

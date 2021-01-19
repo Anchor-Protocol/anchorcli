@@ -257,11 +257,11 @@ const getLiquidationAmount = query
   .requiredOption("--borrow-amount <int>", "Liability of borrower")
   .requiredOption("--borrow-limit <int>", "Borrow limit of borrower")
   .requiredOption(
-    "--collaterals <TokensHuman>",
+    "--collaterals <Vec<<AccAddress>,<Dec>>>",
     "Held collaterals and locked amounts"
   )
   .requiredOption(
-    "--collateral_prices <Vec<Dec>>",
+    "--collateral-prices <Vec<Dec>>",
     "Vector of collateral prices"
   )
   .action(
