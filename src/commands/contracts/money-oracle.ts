@@ -1,5 +1,4 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 
 import {
   createExecMenu,
@@ -17,10 +16,11 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
-import { queryMarketConfig } from "../../anchor-js/queries/money-market/market-config";
-import { queryOracleConfig } from "../../anchor-js/queries/money-market/oracle-config";
-import { queryOraclePrice } from "../../anchor-js/queries/money-market/oracle-price";
-import { queryOraclePrices } from "../../anchor-js/queries/money-market/oracle-prices";
+import {
+  queryOracleConfig,
+  queryOraclePrice,
+  queryOraclePrices,
+} from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "oracle",

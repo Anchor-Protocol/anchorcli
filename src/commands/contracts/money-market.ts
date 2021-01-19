@@ -1,5 +1,4 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 
 import {
   createExecMenu,
@@ -20,13 +19,14 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
-import { queryLiquidationConfig } from "../../anchor-js/queries/money-market/liquidation-config";
-import { queryMarketConfig } from "../../anchor-js/queries/money-market/market-config";
-import { queryMarketEpochState } from "../../anchor-js/queries/money-market/market-epoch-state";
-import { queryMarketLiabilities } from "../../anchor-js/queries/money-market/market-liabilities";
-import { queryMarketLiability } from "../../anchor-js/queries/money-market/market-liability";
-import { queryMarketLoanAmount } from "../../anchor-js/queries/money-market/market-loan-amount";
-import { queryMarketState } from "../../anchor-js/queries/money-market/market-state";
+import {
+  queryMarketConfig,
+  queryMarketEpochState,
+  queryMarketLiabilities,
+  queryMarketLiability,
+  queryMarketLoanAmount,
+  queryMarketState,
+} from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "market",
@@ -75,7 +75,7 @@ const depositStable = menu
     await handleExecCommand(menu, msg);
   });
 
-const redeamStable = menu
+const redeemStable = menu
   .command("redeem-stable")
   .description("Redeems aTokens to their underlying stable coins")
   .requiredOption("--amount <string>", "Amount for redeem")

@@ -1,5 +1,4 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 
 import {
   createExecMenu,
@@ -14,8 +13,10 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
-import { queryInterestModelBorrowRate } from "../../anchor-js/queries/money-market/interest-model-borrow-rate";
-import { queryInterestModelConfig } from "../../anchor-js/queries/money-market/interest-model-config";
+import {
+  queryInterestModelBorrowRate,
+  queryInterestModelConfig,
+} from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "interest",

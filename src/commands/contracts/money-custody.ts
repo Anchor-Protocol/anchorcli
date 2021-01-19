@@ -5,18 +5,17 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from "../../util/contract-menu";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
 import { fabricatebCustodyConfig } from "../../anchor-js/fabricators";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
-import { queryInterestModelBorrowRate } from "../../anchor-js/queries/money-market/interest-model-borrow-rate";
-import { AccAddress } from "@terra-money/terra.js";
-import { queryCustodyBorrower } from "../../anchor-js/queries/money-market/custody-borrower";
-import { queryCustodyBorrowers } from "../../anchor-js/queries/money-market/custody-borrowers";
-import { queryCustodyConfig } from "../../anchor-js/queries/money-market/custody-config";
+import {
+  queryCustodyBorrower,
+  queryCustodyBorrowers,
+  queryCustodyConfig,
+} from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "custody",
