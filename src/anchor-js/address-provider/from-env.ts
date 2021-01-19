@@ -1,4 +1,5 @@
 import { reactifyEnv } from "./react-app-prefix";
+import { AddressProvider } from "./types";
 
 console.log(process.env);
 

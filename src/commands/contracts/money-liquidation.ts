@@ -6,7 +6,6 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from "../../util/contract-menu";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import { fabricateRetractBid } from "../../anchor-js/fabricators/money-market/liquidation-retract-bid";
 import {
   fabricateLiquidationConfig,
@@ -17,12 +16,13 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
-import { queryCustodyBorrowers } from "../../anchor-js/queries/money-market/custody-borrowers";
-import { queryLiquidationBid } from "../../anchor-js/queries/money-market/liquidation-bid";
-import { queryLiquidationBidsByUser } from "../../anchor-js/queries/money-market/liquidation-bids-by-user";
-import { queryLiquidationBidsByCollateral } from "../../anchor-js/queries/money-market/liquidation-bids-by-collateral";
-import { queryLiquidationConfig } from "../../anchor-js/queries/money-market/liquidation-config";
-import { queryLiquidationLiquidationAmount } from "../../anchor-js/queries/money-market/liquidation-liquidation-amount";
+import {
+  queryLiquidationBid,
+  queryLiquidationBidsByUser,
+  queryLiquidationBidsByCollateral,
+  queryLiquidationConfig,
+  queryLiquidationLiquidationAmount,
+} from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "liquidation",

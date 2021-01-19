@@ -1,5 +1,4 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import {
   createExecMenu,
   createQueryMenu,
@@ -13,13 +12,12 @@ import {
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
 import {
-  queryHubHistory,
   queryRewardConfig,
   queryRewardHolder,
   queryRewardHolders,
   queryRewardState,
 } from "../../anchor-js/queries";
-import { queryRewardAccrued } from "../../anchor-js/queries/basset/reward-accrued-rewards";
+import { queryRewardAccrued } from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "basset-reward",

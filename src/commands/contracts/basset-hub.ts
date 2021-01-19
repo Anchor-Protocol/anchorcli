@@ -1,5 +1,5 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { fabricatebAssetBond } from "../../anchor-js/fabricators/basset/basset-bond";
+import { fabricatebAssetBond } from "../../anchor-js/fabricators";
 import { fabricatebAssetUpdateGlobalIndex } from "../../anchor-js/fabricators/basset/basset-update-global-index";
 import {
   fabricatebAssetBurn,
@@ -28,7 +28,6 @@ import {
   queryHubUnbond,
   queryHubWhiteVals,
   queryHubWithdrawable,
-  queryRewardState,
 } from "../../anchor-js/queries";
 
 const menu = createExecMenu(

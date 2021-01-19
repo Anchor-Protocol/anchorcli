@@ -1,5 +1,4 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 
 import {
   createExecMenu,
@@ -19,21 +18,22 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
-import { queryOraclePrices } from "../../anchor-js/queries/money-market/oracle-prices";
-import { queryOverseerAllCollaterals } from "../../anchor-js/queries/money-market/overseer-all-collaterals";
-import { queryOverseerBorrowLimit } from "../../anchor-js/queries/money-market/overseer-borrow-limit";
-import { queryOverseerCollaterals } from "../../anchor-js/queries/money-market/overseer-collaterals";
-import { queryOverseerConfig } from "../../anchor-js/queries/money-market/overseer-config";
-import { queryOverseerDistributionParams } from "../../anchor-js/queries/money-market/overseer-distribution-params";
-import { queryOverseerEpochState } from "../../anchor-js/queries/money-market/overseer-epoch-state";
-import { queryOverseerWhitelist } from "../../anchor-js/queries/money-market/overseer-whitelist";
+import {
+  queryOverseerAllCollaterals,
+  queryOverseerBorrowLimit,
+  queryOverseerCollaterals,
+  queryOverseerConfig,
+  queryOverseerDistributionParams,
+  queryOverseerEpochState,
+  queryOverseerWhitelist,
+} from "../../anchor-js/queries";
 
 const menu = createExecMenu(
   "overseer",
   "Anchor MoneyMarket Overseer contract functions"
 );
 
-const excecuteEpochOperattion = menu
+const executeEpochOperation = menu
   .command("execute_epoch_operations")
   .description("Execute epoch operations")
   .action(async () => {

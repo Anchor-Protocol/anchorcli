@@ -1,5 +1,4 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { AddressProviderFromEnvVar } from "../../anchor-js/address-provider";
 import {
   createExecMenu,
   createQueryMenu,
@@ -20,13 +19,12 @@ import {
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
 import {
-  queryRewardHolders,
   queryTokenAllAccounts,
   queryTokenAllAllowance,
   queryTokenBalance,
   queryTokenMinter,
 } from "../../anchor-js/queries";
-import { queryTokenInfo } from "../../anchor-js/queries/basset/token-token-info";
+import { queryTokenInfo } from "../../anchor-js/queries";
 import { queryTokenAllowance } from "../../anchor-js/queries/basset/token-allowance";
 
 const menu = createExecMenu(
@@ -154,7 +152,7 @@ interface Allowance {
 const increaseAllowance = menu
   .command("increase-allowance")
   .description("burn bAsset from the user's allowance")
-  .requiredOption("--sepender <AccAddress>", "Spender address")
+  .requiredOption("--spender <AccAddress>", "Spender address")
   .requiredOption("--amount <string>", "Amount to increase")
   .option("--expires <json>", "Expires at")
   .action(async ({ amount, spender, expires }: Allowance) => {
