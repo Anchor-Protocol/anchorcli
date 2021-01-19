@@ -212,10 +212,9 @@ const getAllCollaterals = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const overseer = addressProvider.overseer();
     const queryAllCollaterals = await queryOverseerAllCollaterals({
       lcd,
-      overseer,
+      overseer: "overseer",
       startAfter,
       limit,
     })(addressProvider);
@@ -236,10 +235,9 @@ const getBorrowLimit = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const overseer = addressProvider.overseer();
     const queryBorrowLimit = await queryOverseerBorrowLimit({
       lcd,
-      overseer,
+      overseer: "overseer",
       borrower,
       blockTime,
     })(addressProvider);
@@ -258,10 +256,9 @@ const getCollaterals = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const overseer = addressProvider.overseer();
     const queryCollaterals = await queryOverseerCollaterals({
       lcd,
-      overseer,
+      overseer: "overseer",
       borrower,
     })(addressProvider);
     await handleQueryCommand(menu, queryCollaterals);
@@ -272,10 +269,9 @@ const getConfig = query.command("config").action(async ({}: Config) => {
   const addressProvider = new AddressProviderFromJSON(
     resolveChainIDToNetworkName(menu.chainId)
   );
-  const overseer = addressProvider.overseer();
   const queryConfig = await queryOverseerConfig({
     lcd,
-    overseer,
+    overseer: "overseer",
   })(addressProvider);
   await handleQueryCommand(menu, queryConfig);
 });
@@ -287,10 +283,9 @@ const getDistributionParams = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const overseer = addressProvider.overseer();
     const queryDistributionParams = await queryOverseerDistributionParams({
       lcd,
-      overseer,
+      overseer: "overseer",
     })(addressProvider);
     await handleQueryCommand(menu, queryDistributionParams);
   });
@@ -300,10 +295,9 @@ const getEpochState = query.command("epoch-state").action(async () => {
   const addressProvider = new AddressProviderFromJSON(
     resolveChainIDToNetworkName(menu.chainId)
   );
-  const overseer = addressProvider.overseer();
   const queryEpochState = await queryOverseerEpochState({
     lcd,
-    overseer,
+    overseer: "overseer",
   })(addressProvider);
   await handleQueryCommand(menu, queryEpochState);
 });
@@ -330,10 +324,9 @@ const getWhitelist = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
-    const overseer = addressProvider.overseer();
     const queryWhitelist = await queryOverseerWhitelist({
       lcd,
-      overseer,
+      overseer: "overseer",
       collateralToken,
       startAfter,
       limit,
