@@ -29,6 +29,9 @@ import {
   queryHubWhiteVals,
   queryHubWithdrawable,
 } from "../../anchor-js/queries";
+import { Parse } from "../../util/parse-input";
+import accAddress = Parse.accAddress;
+import int = Parse.int;
 
 const menu = createExecMenu(
   "basset-hub",
@@ -54,7 +57,7 @@ const bond = menu
     const msgs = fabricatebAssetBond({
       address: userAddress,
       amount: +amount,
-      validator: validator,
+      validator: accAddress(validator),
       bAsset: "bluna",
     })(addressProvider);
     await handleExecCommand(menu, msgs);
