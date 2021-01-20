@@ -6,13 +6,13 @@ export enum NETWORKS {
   TEQUILA0004,
 }
 
-import tequila from "./tequila-0004.json";
+import * as tequila from "./tequila-0004.json";
 
-const chainIDToNetworkName = {
+const chainIDToNetworkName: any = {
   "tequila-0004": NETWORKS.TEQUILA0004,
 };
 export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
-  const network =
+  const network: NETWORKS =
     chainId === undefined
       ? chainIDToNetworkName["tequila-0004"]
       : chainIDToNetworkName[chainId];
@@ -31,16 +31,16 @@ export class AddressProviderFromJSON implements AddressProvider.Provider {
     this.addressesMap = networksMap[network];
   }
 
-  bAssetReward(denom: string): string {
+  bAssetReward(): string {
     return this.addressesMap.bAssetReward;
   }
-  bAssetHub(denom: string): string {
+  bAssetHub(): string {
     return this.addressesMap.bLunaHub;
   }
-  bAssetToken(denom: string): string {
+  bAssetToken(): string {
     return this.addressesMap.bAssetToken;
   }
-  market(denom: string): string {
+  market(): string {
     return this.addressesMap.mmMarket;
   }
   custody(): string {
