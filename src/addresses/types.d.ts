@@ -1,4 +1,11 @@
-export interface ContractAddresses {
+import { LCDClientConfig } from "@terra-money/terra.js";
+
+export interface AnchorConfig {
+  lcd: LCDClientConfig;
+  contracts: Contracts;
+}
+
+export interface Contracts {
   bLunaHub: string;
   bAssetToken: string;
   bAssetReward: string;

@@ -6,23 +6,17 @@ import { Parse } from "./parse-input";
 import * as yaml from "yaml";
 
 import {
-  Msg,
   StdFee,
   StdSignMsg,
   Coins,
   MsgExecuteContract,
   LCDClient,
-  Key,
 } from "@terra-money/terra.js";
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
+import { loadConfig } from "./config";
 
 export function getLCDClient(): LCDClient {
-  return new LCDClient({
-    chainID: "tequila-0004",
-    URL: "https://tequila-lcd.terra.dev",
-    gasPrices: [],
-    gasAdjustment: 1.4,
-  });
+  return new LCDClient(loadConfig().lcd);
 }
 
 export function createExecMenu(
@@ -118,7 +112,6 @@ export async function handleExecCommand(
     return console.log(JSON.stringify(msgs[0].execute_msg));
   }
 
-  //TODO: wallet and lcd should be processed.
   const lcd = getLCDClient();
   let key = new CLIKey({ keyName: exec.from, home: exec.home });
   const wallet = lcd.wallet(key);

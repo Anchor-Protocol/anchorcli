@@ -1,12 +1,13 @@
-import { ContractAddresses } from "./types";
+import { Contracts } from "./types";
 import { AddressProvider } from "../anchor-js/address-provider/types";
 
 export enum NETWORKS {
   COLUMBUS4,
   TEQUILA0004,
 }
+import { loadConfig } from "../util/config";
 
-import * as tequila from "./tequila-0004.json";
+const contracts: Contracts = loadConfig().contracts;
 
 const chainIDToNetworkName: any = {
   "tequila-0004": NETWORKS.TEQUILA0004,
@@ -19,13 +20,13 @@ export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
   return network;
 };
 
-const networksMap: { [networkName: string]: ContractAddresses } = {
-  [NETWORKS.COLUMBUS4]: tequila,
-  [NETWORKS.TEQUILA0004]: tequila,
+const networksMap: { [networkName: string]: Contracts } = {
+  [NETWORKS.COLUMBUS4]: contracts,
+  [NETWORKS.TEQUILA0004]: contracts,
 };
 
 export class AddressProviderFromJSON implements AddressProvider.Provider {
-  addressesMap: ContractAddresses;
+  addressesMap: Contracts;
 
   constructor(network: NETWORKS) {
     this.addressesMap = networksMap[network];

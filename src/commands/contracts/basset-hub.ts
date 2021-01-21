@@ -32,6 +32,7 @@ import {
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
 import int = Parse.int;
+import { loadConfig } from "../../util/config";
 
 const menu = createExecMenu(
   "basset-hub",
@@ -57,9 +58,10 @@ const bond = menu
     const msgs = fabricatebAssetBond({
       address: userAddress,
       amount: +amount,
-      validator: accAddress(validator),
+      validator: validator,
       bAsset: "bluna",
     })(addressProvider);
+
     await handleExecCommand(menu, msgs);
   });
 
