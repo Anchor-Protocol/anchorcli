@@ -6,17 +6,19 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from "util/contract-menu";
 import { Dec } from "@terra-money/terra.js";
-import { fabricatebInterestConfig } from "../../anchor-js/fabricators/money-market/interest-update-config";
+import { fabricatebInterestConfig } from "anchor-js/fabricators/money-market/interest-update-config";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from "addresses/from-json";
 import {
   queryInterestModelBorrowRate,
   queryInterestModelConfig,
 } from "../../anchor-js/queries";
+import { Parse } from "util/parse-input";
+import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
   "interest",
@@ -69,6 +71,9 @@ interface BorrowRate {
 
 const getBorrowRate = query
   .command("borrow-rate")
+  .description(
+    "Get the calculated per-block borrow rate, based on fed in market conditions"
+  )
   .requiredOption("--market-balance <int>", "Stablecoin balance of Market")
   .requiredOption(
     "--total-liabilities <Dec>",
@@ -94,14 +99,19 @@ const getBorrowRate = query
     }
   );
 
-const getConfig = query.command("config").action(async ({}: Config) => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryConfig = await queryInterestModelConfig({ lcd })(addressProvider);
-  await handleQueryCommand(menu, queryConfig);
-});
+const getConfig = query
+  .command("config")
+  .description("Get the interest model contract configuration")
+  .action(async ({}: Config) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const queryConfig = await queryInterestModelConfig({ lcd })(
+      addressProvider
+    );
+    await handleQueryCommand(menu, queryConfig);
+  });
 
 export default {
   query,

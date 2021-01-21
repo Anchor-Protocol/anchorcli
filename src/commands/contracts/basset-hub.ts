@@ -1,6 +1,6 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { fabricatebAssetBond } from "../../anchor-js/fabricators";
-import { fabricatebAssetUpdateGlobalIndex } from "../../anchor-js/fabricators/basset/basset-update-global-index";
+import { fabricatebAssetBond } from "anchor-js/fabricators";
+import { fabricatebAssetUpdateGlobalIndex } from "anchor-js/fabricators/basset/basset-update-global-index";
 import {
   fabricatebAssetBurn,
   fabricatebAssetConfig,
@@ -14,11 +14,11 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from "util/contract-menu";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from "addresses/from-json";
 import {
   queryHubConfig,
   queryHubCurrentBatch,
@@ -29,10 +29,8 @@ import {
   queryHubWhiteVals,
   queryHubWithdrawable,
 } from "../../anchor-js/queries";
-import { Parse } from "../../util/parse-input";
+import { Parse } from "util/parse-input";
 import accAddress = Parse.accAddress;
-import int = Parse.int;
-import { loadConfig } from "../../util/config";
 
 const menu = createExecMenu(
   "basset-hub",
@@ -325,7 +323,7 @@ const getUnbondRequest = query
     const batch_query = await queryHubUnbond({
       lcd: lcd,
       bAsset: "bluna",
-      address: address,
+      address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
@@ -350,7 +348,7 @@ const getWhitdrawable = query
     const batch_query = await queryHubWithdrawable({
       lcd: lcd,
       bAsset: "bluna",
-      address: address,
+      address: accAddress(address),
       block_time: blockTime,
     })(addressProvider);
     await handleQueryCommand(query, batch_query);

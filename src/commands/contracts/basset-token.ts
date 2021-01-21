@@ -5,7 +5,7 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from "util/contract-menu";
 import {
   fabricatebAssetBurnFrom,
   fabricatebAssetdDecreaseAllowance,
@@ -17,15 +17,17 @@ import {
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from "addresses/from-json";
 import {
   queryTokenAllAccounts,
   queryTokenAllAllowance,
   queryTokenBalance,
   queryTokenMinter,
 } from "../../anchor-js/queries";
-import { queryTokenInfo } from "../../anchor-js/queries";
-import { queryTokenAllowance } from "../../anchor-js/queries/basset/token-allowance";
+import { queryTokenInfo } from "anchor-js/queries";
+import { queryTokenAllowance } from "anchor-js/queries/basset/token-allowance";
+import { Parse } from "util/parse-input";
+import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
   "basset-token",
@@ -228,7 +230,7 @@ const getBalance = query
     const balance_query = await queryTokenBalance({
       lcd: lcd,
       bAsset: "bluna",
-      address: address,
+      address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, balance_query);
   });
@@ -264,8 +266,8 @@ const getAllowance = query
     const allowance_query = await queryTokenAllowance({
       lcd: lcd,
       bAsset: "bluna",
-      owner: owner,
-      spender: spender,
+      owner: accAddress(owner),
+      spender: accAddress(spender),
     })(addressProvider);
     await handleQueryCommand(query, allowance_query);
   });
@@ -290,7 +292,7 @@ const getAllowances = query
     const batch_query = await queryTokenAllAllowance({
       lcd: lcd,
       bAsset: "bluna",
-      owner: owner,
+      owner: accAddress(owner),
       startAfter: startAfter,
       lim: +limit,
     })(addressProvider);
@@ -318,7 +320,7 @@ const getAccounts = query
     const batch_query = await queryTokenAllAccounts({
       lcd: lcd,
       bAsset: "bluna",
-      startAfter: startAfter,
+      startAfter: accAddress(startAfter),
       lim: +limit,
     })(addressProvider);
     await handleQueryCommand(query, batch_query);

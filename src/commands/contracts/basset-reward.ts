@@ -5,19 +5,21 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
-import { fabricatebAssetClaim } from "../../anchor-js/fabricators";
+} from "util/contract-menu";
+import { fabricatebAssetClaim } from "anchor-js/fabricators";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from "addresses/from-json";
 import {
   queryRewardConfig,
   queryRewardHolder,
   queryRewardHolders,
   queryRewardState,
 } from "../../anchor-js/queries";
-import { queryRewardAccrued } from "../../anchor-js/queries";
+import { queryRewardAccrued } from "anchor-js/queries";
+import { Parse } from "util/parse-input";
+import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
   "basset-reward",
@@ -96,7 +98,7 @@ const getAccruedRewards = query
     const batch_query = await queryRewardAccrued({
       lcd: lcd,
       bAsset: "bluna",
-      address: address,
+      address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
@@ -113,7 +115,7 @@ const getHolder = query
     const batch_query = await queryRewardHolder({
       lcd: lcd,
       bAsset: "bluna",
-      address: address,
+      address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });

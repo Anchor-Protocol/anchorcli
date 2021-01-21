@@ -6,7 +6,7 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from "util/contract-menu";
 import {
   fabricatebMarketConfig,
   fabricateBorrow,
@@ -18,7 +18,7 @@ import { Dec } from "@terra-money/terra.js";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from "addresses/from-json";
 import {
   queryMarketConfig,
   queryMarketEpochState,
@@ -27,6 +27,8 @@ import {
   queryMarketLoanAmount,
   queryMarketState,
 } from "../../anchor-js/queries";
+import { Parse } from "util/parse-input";
+import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
   "market",
@@ -143,17 +145,20 @@ const updateConfig = menu
 
 const query = createQueryMenu("market", "Anchor market contract queries");
 
-const getConfig = query.command("config").action(async ({}: Config) => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryConfig = await queryMarketConfig({
-    lcd,
-    market: "market",
-  })(addressProvider);
-  await handleQueryCommand(menu, queryConfig);
-});
+const getConfig = query
+  .command("config")
+  .description("Get the Market contract configuration")
+  .action(async ({}: Config) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const queryConfig = await queryMarketConfig({
+      lcd,
+      market: "market",
+    })(addressProvider);
+    await handleQueryCommand(menu, queryConfig);
+  });
 
 interface EpochState {
   blockHeight?: number;
@@ -161,6 +166,9 @@ interface EpochState {
 
 const getEpochState = query
   .command("epoch-state")
+  .description(
+    "Get state information related to epoch operations. Returns the interest-accrued block_height field is filled. Returns the stored (no interest accrued) state if not filled"
+  )
   .option("--block-height <int>", "Current block number")
   .action(async ({ blockHeight }: EpochState) => {
     const lcd = getLCDClient();
@@ -182,6 +190,7 @@ interface Liabilities {
 
 const getLiabilities = query
   .command("liabilities")
+  .description("Get liability information for all borrowers")
   .option("--start-after <AccAddress>", "Borrower address to start query")
   .option("--limit <int>", "Maximum number of entries to query")
   .action(async ({ startAfter, limit }: Liabilities) => {
@@ -192,7 +201,7 @@ const getLiabilities = query
     const queryLiabilities = await queryMarketLiabilities({
       lcd,
       market: "market",
-      startAfter,
+      startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
     await handleQueryCommand(menu, queryLiabilities);
@@ -204,6 +213,7 @@ interface Liability {
 
 const getLiability = query
   .command("liability")
+  .description("Get liability information for the specified borrower")
   .requiredOption("--borrower <AccAddress>", "Address of borrower")
   .action(async ({ borrower }: Liability) => {
     const lcd = getLCDClient();
@@ -213,7 +223,7 @@ const getLiability = query
     const queryLiability = await queryMarketLiability({
       lcd,
       market: "market",
-      borrower,
+      borrower: accAddress(borrower),
     })(addressProvider);
     await handleQueryCommand(menu, queryLiability);
   });
@@ -225,6 +235,9 @@ interface LoanAmount {
 
 const getLoanAmount = query
   .command("loan-amount")
+  .description(
+    "Get the liability amount for the specified borrower at the specified block number"
+  )
   .requiredOption("--borrower <AccAddress>", "Address of borrower")
   .requiredOption(
     "--block-height <int>",
@@ -238,23 +251,26 @@ const getLoanAmount = query
     const queryLoanAmount = await queryMarketLoanAmount({
       lcd,
       market: "market",
-      borrower,
+      borrower: accAddress(borrower),
       blockHeight,
     })(addressProvider);
     await handleQueryCommand(menu, queryLoanAmount);
   });
 
-const getState = query.command("state").action(async () => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryState = await queryMarketState({
-    lcd,
-    market: "market",
-  })(addressProvider);
-  await handleQueryCommand(menu, queryState);
-});
+const getState = query
+  .command("state")
+  .description("Get information related to the overall state of Market")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const queryState = await queryMarketState({
+      lcd,
+      market: "market",
+    })(addressProvider);
+    await handleQueryCommand(menu, queryState);
+  });
 
 export default {
   query,

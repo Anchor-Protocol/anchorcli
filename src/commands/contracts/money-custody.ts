@@ -4,18 +4,20 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from "util/contract-menu";
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { fabricatebCustodyConfig } from "../../anchor-js/fabricators";
+import { fabricatebCustodyConfig } from "anchor-js/fabricators";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from "addresses/from-json";
 import {
   queryCustodyBorrower,
   queryCustodyBorrowers,
   queryCustodyConfig,
 } from "../../anchor-js/queries";
+import { Parse } from "util/parse-input";
+import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
   "custody",
@@ -55,6 +57,7 @@ interface Borrower {
 
 const getBorrower = query
   .command("borrower")
+  .description("Get the collateral balance of the specified borrower")
   .requiredOption(
     "--address <AccAddress>",
     "Address of borrower that deposited collateral"
@@ -67,7 +70,7 @@ const getBorrower = query
     const queryBorrower = await queryCustodyBorrower({
       lcd,
       custody: "custody",
-      address,
+      address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(menu, queryBorrower);
   });
@@ -79,6 +82,7 @@ interface Borrowers {
 
 const getBorrowers = query
   .command("borrowers")
+  .description("Get the collateral balance of all borrowers")
   .option("--start-after <AccAddress>", "Borrower address to start query")
   .option("--limit <int>", "Maximum number of query entries")
   .action(async ({ startAfter, limit }: Borrowers) => {
@@ -89,23 +93,26 @@ const getBorrowers = query
     const queryBorrowers = await queryCustodyBorrowers({
       lcd,
       custody: "custody",
-      startAfter,
+      startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
     await handleQueryCommand(menu, queryBorrowers);
   });
 
-const getConfig = query.command("config").action(async ({}: Config) => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryConfig = await queryCustodyConfig({
-    lcd,
-    custody: "custody",
-  })(addressProvider);
-  await handleQueryCommand(menu, queryConfig);
-});
+const getConfig = query
+  .command("config")
+  .description("Get the contract configuration of the Custody contract")
+  .action(async ({}: Config) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const queryConfig = await queryCustodyConfig({
+      lcd,
+      custody: "custody",
+    })(addressProvider);
+    await handleQueryCommand(menu, queryConfig);
+  });
 
 export default {
   query,

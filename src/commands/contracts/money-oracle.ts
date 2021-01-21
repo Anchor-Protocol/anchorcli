@@ -6,7 +6,7 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from "util/contract-menu";
 import { Dec } from "@terra-money/terra.js";
 import {
   fabricatebOracleConfig,
@@ -15,7 +15,7 @@ import {
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from "addresses/from-json";
 import {
   queryOracleConfig,
   queryOraclePrice,
@@ -72,16 +72,19 @@ const updateConfig = menu
 
 const query = createQueryMenu("oracle", "Anchor oracle contract queries");
 
-const getConfig = query.command("config").action(async ({}: Config) => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryConfig = await queryOracleConfig({
-    lcd,
-  })(addressProvider);
-  await handleQueryCommand(menu, queryConfig);
-});
+const getConfig = query
+  .command("config")
+  .description("Get the Oracle contract configuration")
+  .action(async ({}: Config) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const queryConfig = await queryOracleConfig({
+      lcd,
+    })(addressProvider);
+    await handleQueryCommand(menu, queryConfig);
+  });
 
 interface QueryPrice {
   base: string;
@@ -90,6 +93,9 @@ interface QueryPrice {
 
 const getPrice = query
   .command("price")
+  .description(
+    "Get price information for the specified base asset denominated in the quote asset"
+  )
   .requiredOption("--base <String>", "Asset for which to get price")
   .requiredOption(
     "--quote <String>",
@@ -115,6 +121,7 @@ interface Prices {
 
 const getPrices = query
   .command("prices")
+  .description("Get price information for all assets")
   .option("--start-after <String>", "Asset to start query")
   .option("--limit <int>", "Maximum number of query entries")
   .action(async ({ startAfter, limit }: Prices) => {
