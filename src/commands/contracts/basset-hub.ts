@@ -31,6 +31,7 @@ import {
 } from "../../anchor-js/queries";
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
+import { fabricateDeRegisterValidator } from "../../anchor-js/fabricators/basset/basset-deregister-validator";
 
 const menu = createExecMenu(
   "basset-hub",
@@ -100,7 +101,22 @@ const registerValidator = menu
     await handleExecCommand(menu, msgs);
   });
 
-//TODO: Deregister Validator must be included
+const deregisterValidator = menu
+  .command("deregister-validator")
+  .description("Deregister the validator from the validator whitelist")
+  .requiredOption("--validator <AccAddress>", "Address of validator")
+  .action(async ({ validator }: RegisterValidator) => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const msgs = fabricateDeRegisterValidator({
+      address: userAddress,
+      validatorAddress: validator,
+    })(addressProvider);
+    await handleExecCommand(menu, msgs);
+  });
 
 interface UpdateConfig {
   owner?: string;
