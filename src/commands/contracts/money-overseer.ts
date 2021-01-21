@@ -29,6 +29,7 @@ import {
 } from "../../anchor-js/queries";
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
+import int = Parse.int;
 
 const menu = createExecMenu(
   "overseer",
@@ -87,7 +88,7 @@ const updateConfig = menu
     "New minimum time delay between epoch operations"
   )
   .option(
-    "--price-time-frame <int>",
+    "--price-timeframe <int>",
     "New window of time before price data is considered outdated"
   )
   .action(
@@ -115,8 +116,8 @@ const updateConfig = menu
         distribution_threshold: distributionThreshold,
         target_deposit_rate: targetDepositRate,
         buffer_distribution_rate: bufferDistributionRate,
-        epoch_period: epochPeriod,
-        price_timeframe: priceTimeframe,
+        epoch_period: +epochPeriod,
+        price_timeframe: +priceTimeframe,
       })(addressProvider);
       await handleExecCommand(menu, msg);
     }
