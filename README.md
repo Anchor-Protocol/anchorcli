@@ -9,11 +9,17 @@ Command-line interface for Anchor Protocol on Terra.
   - [Query](#query)
 ## Setup
 
+**Requirements**
+
+- Node.js 12+
+- NPM, yarn
+- [`terracli`](https://github.com/terra-project/core) in your path
+
 ****
 Insert this line in the terminal:
 
 ```bash
-$ ts-node src/index.ts
+$ yarn install
 ```
 
 Directions on interacting with `anchorcli` would appear:
