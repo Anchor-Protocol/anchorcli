@@ -27,6 +27,8 @@ import {
   queryOverseerEpochState,
   queryOverseerWhitelist,
 } from "../../anchor-js/queries";
+import { Parse } from "../../util/parse-input";
+import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
   "overseer",
@@ -205,20 +207,21 @@ interface AllCollaterals {
 
 const getAllCollaterals = query
   .command("all-collaterals")
+  .description("Get locked collateral information for all borrowers")
   .option("--start-after <AccAddress>", "Borrower address of start query")
   .option("--limit <int>", "Maximum number of query entries")
   .action(async ({ startAfter, limit }: AllCollaterals) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryAllCollaterals = await queryOverseerAllCollaterals({
       lcd,
       overseer: "overseer",
-      startAfter,
+      startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryAllCollaterals);
+    await handleQueryCommand(query, queryAllCollaterals);
   });
 
 interface BorrowLimit {
@@ -228,20 +231,23 @@ interface BorrowLimit {
 
 const getBorrowLimit = query
   .command("borrow-limit")
+  .description(
+    "Get the borrow limit for the specified borrower. Fails if the oracle price is expired"
+  )
   .requiredOption("--borrower <AccAddress>", "Address of borrower")
   .option("--block-time <int>", "Current block timestamp")
   .action(async ({ borrower, blockTime }: BorrowLimit) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryBorrowLimit = await queryOverseerBorrowLimit({
       lcd,
       overseer: "overseer",
-      borrower,
+      borrower: accAddress(borrower),
       blockTime,
     })(addressProvider);
-    await handleQueryCommand(menu, queryBorrowLimit);
+    await handleQueryCommand(query, queryBorrowLimit);
   });
 
 interface Collaterals {
@@ -250,57 +256,65 @@ interface Collaterals {
 
 const getCollaterals = query
   .command("collaterals")
+  .description("Get locked collateral information for the specified borrower")
   .requiredOption("--borrower <AccAddress>", "Address of borrower")
   .action(async ({ borrower }: Collaterals) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryCollaterals = await queryOverseerCollaterals({
       lcd,
       overseer: "overseer",
-      borrower,
+      borrower: accAddress(borrower),
     })(addressProvider);
-    await handleQueryCommand(menu, queryCollaterals);
+    await handleQueryCommand(query, queryCollaterals);
   });
 
-const getConfig = query.command("config").action(async ({}: Config) => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryConfig = await queryOverseerConfig({
-    lcd,
-    overseer: "overseer",
-  })(addressProvider);
-  await handleQueryCommand(menu, queryConfig);
-});
+const getConfig = query
+  .command("config")
+  .description("Get the configuration of the Overseer contract")
+  .action(async ({}: Config) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId)
+    );
+    const queryConfig = await queryOverseerConfig({
+      lcd,
+      overseer: "overseer",
+    })(addressProvider);
+    await handleQueryCommand(query, queryConfig);
+  });
 
 const getDistributionParams = query
   .command("distribution-params")
+  .description("Get parameter information related to reward distribution")
   .action(async ({}: DistributionParams) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryDistributionParams = await queryOverseerDistributionParams({
       lcd,
       overseer: "overseer",
     })(addressProvider);
-    await handleQueryCommand(menu, queryDistributionParams);
+    await handleQueryCommand(query, queryDistributionParams);
   });
 
-const getEpochState = query.command("epoch-state").action(async () => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryEpochState = await queryOverseerEpochState({
-    lcd,
-    overseer: "overseer",
-  })(addressProvider);
-  await handleQueryCommand(menu, queryEpochState);
-});
+const getEpochState = query
+  .command("epoch-state")
+  .description("Get information related to the current epoch")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId)
+    );
+    const queryEpochState = await queryOverseerEpochState({
+      lcd,
+      overseer: "overseer",
+    })(addressProvider);
+    await handleQueryCommand(query, queryEpochState);
+  });
 
 interface QueryWhitelist {
   collateralToken?: string;
@@ -310,6 +324,9 @@ interface QueryWhitelist {
 
 const getWhitelist = query
   .command("whitelist")
+  .description(
+    "Get information about the specified collateral if the collateral_token field is filled. Gets information about all collaterals if the collateral_token field is not filled"
+  )
   .option(
     "--collateral-token <AccAddress>",
     "Cw20 Token address of collateral to query information"
@@ -322,16 +339,16 @@ const getWhitelist = query
   .action(async ({ collateralToken, startAfter, limit }: QueryWhitelist) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryWhitelist = await queryOverseerWhitelist({
       lcd,
       overseer: "overseer",
-      collateralToken,
-      startAfter,
+      collateralToken: accAddress(collateralToken),
+      startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryWhitelist);
+    await handleQueryCommand(query, queryWhitelist);
   });
 
 export default {

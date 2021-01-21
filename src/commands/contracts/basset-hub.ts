@@ -31,8 +31,6 @@ import {
 } from "../../anchor-js/queries";
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
-import int = Parse.int;
-import { loadConfig } from "../../util/config";
 
 const menu = createExecMenu(
   "basset-hub",
@@ -232,7 +230,7 @@ const getConfig = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const config_query = await queryHubConfig({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -246,7 +244,7 @@ const getCurrentBatch = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubCurrentBatch({
       lcd: lcd,
@@ -268,7 +266,7 @@ const getAllHistory = query
   .action(async ({ startFrom, limit }: AllHistory) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubHistory({
       lcd: lcd,
@@ -285,7 +283,7 @@ const getParams = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubParams({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -299,7 +297,7 @@ const getWhitelistedValidators = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubWhiteVals({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -320,12 +318,12 @@ const getUnbondRequest = query
   .action(async ({ address }: UnbondRequest) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubUnbond({
       lcd: lcd,
       bAsset: "bluna",
-      address: address,
+      address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
@@ -345,12 +343,12 @@ const getWhitdrawable = query
   .action(async ({ address, blockTime }: Whitdrawable) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubWithdrawable({
       lcd: lcd,
       bAsset: "bluna",
-      address: address,
+      address: accAddress(address),
       block_time: blockTime,
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
@@ -362,7 +360,7 @@ const getState = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const config_query = await queryHubState({ lcd: lcd, bAsset: "bluna" })(
       addressProvider

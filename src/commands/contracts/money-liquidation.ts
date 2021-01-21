@@ -23,6 +23,8 @@ import {
   queryLiquidationConfig,
   queryLiquidationLiquidationAmount,
 } from "../../anchor-js/queries";
+import { Parse } from "../../util/parse-input";
+import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
   "liquidation",
@@ -157,6 +159,9 @@ interface Bid {
 
 const getBid = query
   .command("bid")
+  .description(
+    "Get information about the specifed bidder's bid for the specified collateral"
+  )
   .requiredOption(
     "--collateral-token <AccAddress>",
     "Token contract address of bidding collateral"
@@ -165,14 +170,14 @@ const getBid = query
   .action(async ({ collateralToken, bidder }: Bid) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryBid = await queryLiquidationBid({
       lcd,
-      collateralToken,
-      bidder,
+      collateralToken: accAddress(collateralToken),
+      bidder: accAddress(bidder),
     })(addressProvider);
-    await handleQueryCommand(menu, queryBid);
+    await handleQueryCommand(query, queryBid);
   });
 
 interface BidsByUser {
@@ -183,6 +188,7 @@ interface BidsByUser {
 
 const getBidsByUser = query
   .command("bids-by-user")
+  .description("Get information for all bids submitted by the specified bidder")
   .requiredOption("--bidder <AccAddress>", "Address of bidder")
   .option(
     "--start-after <AccAddress>",
@@ -192,15 +198,15 @@ const getBidsByUser = query
   .action(async ({ bidder, startAfter, limit }: BidsByUser) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryBidsByUser = await queryLiquidationBidsByUser({
       lcd,
-      bidder,
-      startAfter,
+      bidder: accAddress(bidder),
+      startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryBidsByUser);
+    await handleQueryCommand(query, queryBidsByUser);
   });
 
 interface BidsByCollateral {
@@ -211,6 +217,9 @@ interface BidsByCollateral {
 
 const getBidsByCollateral = query
   .command("bids-by-collateral")
+  .description(
+    "Get bid information for all bids submitted for the specified collateral"
+  )
   .requiredOption(
     "--collateral-token <AccAddress>",
     "Token contract address of collateral"
@@ -227,23 +236,26 @@ const getBidsByCollateral = query
     );
     const queryBidsByCollateral = await queryLiquidationBidsByCollateral({
       lcd,
-      collateralToken,
-      startAfter,
+      collateralToken: accAddress(collateralToken),
+      startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryBidsByCollateral);
+    await handleQueryCommand(query, queryBidsByCollateral);
   });
 
-const getConfig = query.command("config").action(async () => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryConfig = await queryLiquidationConfig({
-    lcd,
-  })(addressProvider);
-  await handleQueryCommand(menu, queryConfig);
-});
+const getConfig = query
+  .command("config")
+  .description("Get the Liquidation Contract's configuration")
+  .action(async () => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId)
+    );
+    const queryConfig = await queryLiquidationConfig({
+      lcd,
+    })(addressProvider);
+    await handleQueryCommand(query, queryConfig);
+  });
 
 interface LiquidationAmount {
   borrowAmount: string;
@@ -254,6 +266,9 @@ interface LiquidationAmount {
 //TODO  FIGURE OUT THE INPUT OF TOKENSHUMAN AND VEC<DECIMAL>
 const getLiquidationAmount = query
   .command("liquidation-amount")
+  .description(
+    "Get the amount of collaterals that needs to be liquidated in order for the borrower's loan to reach safe_ratio, based on the fed in borrower's status"
+  )
   .requiredOption("--borrow-amount <int>", "Liability of borrower")
   .requiredOption("--borrow-limit <int>", "Borrow limit of borrower")
   .requiredOption(
@@ -273,7 +288,7 @@ const getLiquidationAmount = query
     }: LiquidationAmount) => {
       const lcd = getLCDClient();
       const addressProvider = new AddressProviderFromJSON(
-        resolveChainIDToNetworkName(menu.chainId)
+        resolveChainIDToNetworkName(query.chainId)
       );
       const queryLiquidationAmount = await queryLiquidationLiquidationAmount({
         lcd,
@@ -282,7 +297,7 @@ const getLiquidationAmount = query
         collaterals,
         collateralPrices,
       })(addressProvider);
-      await handleQueryCommand(menu, queryLiquidationAmount);
+      await handleQueryCommand(query, queryLiquidationAmount);
     }
   );
 

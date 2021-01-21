@@ -72,16 +72,19 @@ const updateConfig = menu
 
 const query = createQueryMenu("oracle", "Anchor oracle contract queries");
 
-const getConfig = query.command("config").action(async ({}: Config) => {
-  const lcd = getLCDClient();
-  const addressProvider = new AddressProviderFromJSON(
-    resolveChainIDToNetworkName(menu.chainId)
-  );
-  const queryConfig = await queryOracleConfig({
-    lcd,
-  })(addressProvider);
-  await handleQueryCommand(menu, queryConfig);
-});
+const getConfig = query
+  .command("config")
+  .description("Get the Oracle contract configuration")
+  .action(async ({}: Config) => {
+    const lcd = getLCDClient();
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId)
+    );
+    const queryConfig = await queryOracleConfig({
+      lcd,
+    })(addressProvider);
+    await handleQueryCommand(query, queryConfig);
+  });
 
 interface QueryPrice {
   base: string;
@@ -90,6 +93,9 @@ interface QueryPrice {
 
 const getPrice = query
   .command("price")
+  .description(
+    "Get price information for the specified base asset denominated in the quote asset"
+  )
   .requiredOption("--base <String>", "Asset for which to get price")
   .requiredOption(
     "--quote <String>",
@@ -98,14 +104,14 @@ const getPrice = query
   .action(async ({ base, quote }: QueryPrice) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryPrice = await queryOraclePrice({
       lcd,
       base,
       quote,
     })(addressProvider);
-    await handleQueryCommand(menu, queryPrice);
+    await handleQueryCommand(query, queryPrice);
   });
 
 interface Prices {
@@ -115,19 +121,20 @@ interface Prices {
 
 const getPrices = query
   .command("prices")
+  .description("Get price information for all assets")
   .option("--start-after <String>", "Asset to start query")
   .option("--limit <int>", "Maximum number of query entries")
   .action(async ({ startAfter, limit }: Prices) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryPrices = await queryOraclePrices({
       lcd,
       startAfter,
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryPrices);
+    await handleQueryCommand(query, queryPrices);
   });
 
 export default {
