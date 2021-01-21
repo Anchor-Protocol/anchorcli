@@ -5,8 +5,8 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "util/contract-menu";
-import { fabricateRetractBid } from "anchor-js/fabricators/money-market/liquidation-retract-bid";
+} from "../../util/contract-menu";
+import { fabricateRetractBid } from "../../anchor-js/fabricators/money-market/liquidation-retract-bid";
 import {
   fabricateLiquidationConfig,
   fabricateSubmitBid,
@@ -15,7 +15,7 @@ import { Dec } from "@terra-money/terra.js";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "addresses/from-json";
+} from "../../addresses/from-json";
 import {
   queryLiquidationBid,
   queryLiquidationBidsByUser,
@@ -23,7 +23,7 @@ import {
   queryLiquidationConfig,
   queryLiquidationLiquidationAmount,
 } from "../../anchor-js/queries";
-import { Parse } from "util/parse-input";
+import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
@@ -170,14 +170,14 @@ const getBid = query
   .action(async ({ collateralToken, bidder }: Bid) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryBid = await queryLiquidationBid({
       lcd,
       collateralToken: accAddress(collateralToken),
       bidder: accAddress(bidder),
     })(addressProvider);
-    await handleQueryCommand(menu, queryBid);
+    await handleQueryCommand(query, queryBid);
   });
 
 interface BidsByUser {
@@ -198,7 +198,7 @@ const getBidsByUser = query
   .action(async ({ bidder, startAfter, limit }: BidsByUser) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryBidsByUser = await queryLiquidationBidsByUser({
       lcd,
@@ -206,7 +206,7 @@ const getBidsByUser = query
       startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryBidsByUser);
+    await handleQueryCommand(query, queryBidsByUser);
   });
 
 interface BidsByCollateral {
@@ -240,7 +240,7 @@ const getBidsByCollateral = query
       startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryBidsByCollateral);
+    await handleQueryCommand(query, queryBidsByCollateral);
   });
 
 const getConfig = query
@@ -249,12 +249,12 @@ const getConfig = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryConfig = await queryLiquidationConfig({
       lcd,
     })(addressProvider);
-    await handleQueryCommand(menu, queryConfig);
+    await handleQueryCommand(query, queryConfig);
   });
 
 interface LiquidationAmount {
@@ -288,7 +288,7 @@ const getLiquidationAmount = query
     }: LiquidationAmount) => {
       const lcd = getLCDClient();
       const addressProvider = new AddressProviderFromJSON(
-        resolveChainIDToNetworkName(menu.chainId)
+        resolveChainIDToNetworkName(query.chainId)
       );
       const queryLiquidationAmount = await queryLiquidationLiquidationAmount({
         lcd,
@@ -297,7 +297,7 @@ const getLiquidationAmount = query
         collaterals,
         collateralPrices,
       })(addressProvider);
-      await handleQueryCommand(menu, queryLiquidationAmount);
+      await handleQueryCommand(query, queryLiquidationAmount);
     }
   );
 

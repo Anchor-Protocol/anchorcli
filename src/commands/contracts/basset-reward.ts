@@ -5,20 +5,20 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "util/contract-menu";
-import { fabricatebAssetClaim } from "anchor-js/fabricators";
+} from "../../util/contract-menu";
+import { fabricatebAssetClaim } from "../../anchor-js/fabricators";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "addresses/from-json";
+} from "../../addresses/from-json";
 import {
   queryRewardConfig,
   queryRewardHolder,
   queryRewardHolders,
   queryRewardState,
 } from "../../anchor-js/queries";
-import { queryRewardAccrued } from "anchor-js/queries";
-import { Parse } from "util/parse-input";
+import { queryRewardAccrued } from "../../anchor-js/queries";
+import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
@@ -34,7 +34,7 @@ const claim = menu
   .description("Claims basset holder's accrued rewards")
   .requiredOption("--recipient <AccAddress>", "Address of the receiver")
   .action(async ({ recipient }: Claim) => {
-    const key = new CLIKey({ keyName: claim.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -58,7 +58,7 @@ const getConfig = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const config_query = await queryRewardConfig({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -72,7 +72,7 @@ const getState = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const config_query = await queryRewardState({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -93,7 +93,7 @@ const getAccruedRewards = query
   .action(async ({ address }: AccruedRewards) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryRewardAccrued({
       lcd: lcd,
@@ -110,7 +110,7 @@ const getHolder = query
   .action(async ({ address }: AccruedRewards) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryRewardHolder({
       lcd: lcd,
@@ -133,7 +133,7 @@ const getHolders = query
   .action(async ({ startAfter, limit }: AllHistory) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryRewardHolders({
       lcd: lcd,

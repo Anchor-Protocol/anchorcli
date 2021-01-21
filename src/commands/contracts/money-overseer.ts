@@ -6,7 +6,7 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "util/contract-menu";
+} from "../../util/contract-menu";
 import {
   fabricatebOverseerConfig,
   fabricatebOverseerEpoch,
@@ -17,7 +17,7 @@ import { Dec, DistributionParams } from "@terra-money/terra.js";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "addresses/from-json";
+} from "../../addresses/from-json";
 import {
   queryOverseerAllCollaterals,
   queryOverseerBorrowLimit,
@@ -27,7 +27,7 @@ import {
   queryOverseerEpochState,
   queryOverseerWhitelist,
 } from "../../anchor-js/queries";
-import { Parse } from "util/parse-input";
+import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
@@ -213,7 +213,7 @@ const getAllCollaterals = query
   .action(async ({ startAfter, limit }: AllCollaterals) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryAllCollaterals = await queryOverseerAllCollaterals({
       lcd,
@@ -221,7 +221,7 @@ const getAllCollaterals = query
       startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryAllCollaterals);
+    await handleQueryCommand(query, queryAllCollaterals);
   });
 
 interface BorrowLimit {
@@ -239,7 +239,7 @@ const getBorrowLimit = query
   .action(async ({ borrower, blockTime }: BorrowLimit) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryBorrowLimit = await queryOverseerBorrowLimit({
       lcd,
@@ -247,7 +247,7 @@ const getBorrowLimit = query
       borrower: accAddress(borrower),
       blockTime,
     })(addressProvider);
-    await handleQueryCommand(menu, queryBorrowLimit);
+    await handleQueryCommand(query, queryBorrowLimit);
   });
 
 interface Collaterals {
@@ -261,14 +261,14 @@ const getCollaterals = query
   .action(async ({ borrower }: Collaterals) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryCollaterals = await queryOverseerCollaterals({
       lcd,
       overseer: "overseer",
       borrower: accAddress(borrower),
     })(addressProvider);
-    await handleQueryCommand(menu, queryCollaterals);
+    await handleQueryCommand(query, queryCollaterals);
   });
 
 const getConfig = query
@@ -277,13 +277,13 @@ const getConfig = query
   .action(async ({}: Config) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryConfig = await queryOverseerConfig({
       lcd,
       overseer: "overseer",
     })(addressProvider);
-    await handleQueryCommand(menu, queryConfig);
+    await handleQueryCommand(query, queryConfig);
   });
 
 const getDistributionParams = query
@@ -292,13 +292,13 @@ const getDistributionParams = query
   .action(async ({}: DistributionParams) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryDistributionParams = await queryOverseerDistributionParams({
       lcd,
       overseer: "overseer",
     })(addressProvider);
-    await handleQueryCommand(menu, queryDistributionParams);
+    await handleQueryCommand(query, queryDistributionParams);
   });
 
 const getEpochState = query
@@ -307,13 +307,13 @@ const getEpochState = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryEpochState = await queryOverseerEpochState({
       lcd,
       overseer: "overseer",
     })(addressProvider);
-    await handleQueryCommand(menu, queryEpochState);
+    await handleQueryCommand(query, queryEpochState);
   });
 
 interface QueryWhitelist {
@@ -339,7 +339,7 @@ const getWhitelist = query
   .action(async ({ collateralToken, startAfter, limit }: QueryWhitelist) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryWhitelist = await queryOverseerWhitelist({
       lcd,
@@ -348,7 +348,7 @@ const getWhitelist = query
       startAfter: accAddress(startAfter),
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryWhitelist);
+    await handleQueryCommand(query, queryWhitelist);
   });
 
 export default {

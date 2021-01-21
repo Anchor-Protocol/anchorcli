@@ -1,6 +1,6 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { fabricatebAssetBond } from "anchor-js/fabricators";
-import { fabricatebAssetUpdateGlobalIndex } from "anchor-js/fabricators/basset/basset-update-global-index";
+import { fabricatebAssetBond } from "../../anchor-js/fabricators";
+import { fabricatebAssetUpdateGlobalIndex } from "../../anchor-js/fabricators/basset/basset-update-global-index";
 import {
   fabricatebAssetBurn,
   fabricatebAssetConfig,
@@ -14,11 +14,11 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "util/contract-menu";
+} from "../../util/contract-menu";
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "addresses/from-json";
+} from "../../addresses/from-json";
 import {
   queryHubConfig,
   queryHubCurrentBatch,
@@ -29,7 +29,7 @@ import {
   queryHubWhiteVals,
   queryHubWithdrawable,
 } from "../../anchor-js/queries";
-import { Parse } from "util/parse-input";
+import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
@@ -230,7 +230,7 @@ const getConfig = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const config_query = await queryHubConfig({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -244,7 +244,7 @@ const getCurrentBatch = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubCurrentBatch({
       lcd: lcd,
@@ -266,7 +266,7 @@ const getAllHistory = query
   .action(async ({ startFrom, limit }: AllHistory) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubHistory({
       lcd: lcd,
@@ -283,7 +283,7 @@ const getParams = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubParams({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -297,7 +297,7 @@ const getWhitelistedValidators = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubWhiteVals({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -318,7 +318,7 @@ const getUnbondRequest = query
   .action(async ({ address }: UnbondRequest) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubUnbond({
       lcd: lcd,
@@ -343,7 +343,7 @@ const getWhitdrawable = query
   .action(async ({ address, blockTime }: Whitdrawable) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryHubWithdrawable({
       lcd: lcd,
@@ -360,7 +360,7 @@ const getState = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const config_query = await queryHubState({ lcd: lcd, bAsset: "bluna" })(
       addressProvider

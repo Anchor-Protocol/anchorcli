@@ -5,7 +5,7 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "util/contract-menu";
+} from "../../util/contract-menu";
 import {
   fabricatebAssetBurnFrom,
   fabricatebAssetdDecreaseAllowance,
@@ -17,16 +17,16 @@ import {
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "addresses/from-json";
+} from "../../addresses/from-json";
 import {
   queryTokenAllAccounts,
   queryTokenAllAllowance,
   queryTokenBalance,
   queryTokenMinter,
 } from "../../anchor-js/queries";
-import { queryTokenInfo } from "anchor-js/queries";
-import { queryTokenAllowance } from "anchor-js/queries/basset/token-allowance";
-import { Parse } from "util/parse-input";
+import { queryTokenInfo } from "../../anchor-js/queries";
+import { queryTokenAllowance } from "../../anchor-js/queries/basset/token-allowance";
+import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
@@ -206,7 +206,7 @@ const getTokenInfo = query
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const query_token = await queryTokenInfo({ lcd: lcd, bAsset: "bluna" })(
       addressProvider
@@ -261,7 +261,7 @@ const getAllowance = query
   .action(async ({ owner, spender }: AllowanceArgs) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const allowance_query = await queryTokenAllowance({
       lcd: lcd,
@@ -287,7 +287,7 @@ const getAllowances = query
   .action(async ({ owner, startAfter, limit }: AllAllowances) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryTokenAllAllowance({
       lcd: lcd,
@@ -315,7 +315,7 @@ const getAccounts = query
   .action(async ({ startAfter, limit }: AllAccounts) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const batch_query = await queryTokenAllAccounts({
       lcd: lcd,

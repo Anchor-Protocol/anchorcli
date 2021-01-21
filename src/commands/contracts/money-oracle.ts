@@ -6,7 +6,7 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "util/contract-menu";
+} from "../../util/contract-menu";
 import { Dec } from "@terra-money/terra.js";
 import {
   fabricatebOracleConfig,
@@ -15,7 +15,7 @@ import {
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "addresses/from-json";
+} from "../../addresses/from-json";
 import {
   queryOracleConfig,
   queryOraclePrice,
@@ -78,12 +78,12 @@ const getConfig = query
   .action(async ({}: Config) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryConfig = await queryOracleConfig({
       lcd,
     })(addressProvider);
-    await handleQueryCommand(menu, queryConfig);
+    await handleQueryCommand(query, queryConfig);
   });
 
 interface QueryPrice {
@@ -104,14 +104,14 @@ const getPrice = query
   .action(async ({ base, quote }: QueryPrice) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryPrice = await queryOraclePrice({
       lcd,
       base,
       quote,
     })(addressProvider);
-    await handleQueryCommand(menu, queryPrice);
+    await handleQueryCommand(query, queryPrice);
   });
 
 interface Prices {
@@ -127,14 +127,14 @@ const getPrices = query
   .action(async ({ startAfter, limit }: Prices) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(query.chainId)
     );
     const queryPrices = await queryOraclePrices({
       lcd,
       startAfter,
       limit,
     })(addressProvider);
-    await handleQueryCommand(menu, queryPrices);
+    await handleQueryCommand(query, queryPrices);
   });
 
 export default {
