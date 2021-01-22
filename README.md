@@ -7,6 +7,7 @@ Command-line interface for Anchor Protocol on Terra.
 - [Usage](#usage)
   - [Execute](#execute)
   - [Query](#query)
+- [License](#license)
 ## Setup
 
 **Requirements**
@@ -98,5 +99,8 @@ Commands:
 
 ```
 
+## License
+
+This software is licensed under the Apache 2.0 license. Read more about it [here](./LICENSE).
 
 © 2021 Anchor Protocol
