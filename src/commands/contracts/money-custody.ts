@@ -18,6 +18,7 @@ import {
 } from "../../anchor-js/queries";
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
+import int = Parse.int;
 
 const menu = createExecMenu(
   "custody",
@@ -77,7 +78,7 @@ const getBorrower = query
 
 interface Borrowers {
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getBorrowers = query
@@ -94,7 +95,7 @@ const getBorrowers = query
       lcd,
       custody: "custody",
       startAfter: accAddress(startAfter),
-      limit,
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryBorrowers);
   });

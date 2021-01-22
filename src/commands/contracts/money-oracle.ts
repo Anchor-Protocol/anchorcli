@@ -21,6 +21,8 @@ import {
   queryOraclePrice,
   queryOraclePrices,
 } from "../../anchor-js/queries";
+import { Parse } from "../../util/parse-input";
+import int = Parse.int;
 
 const menu = createExecMenu(
   "oracle",
@@ -116,7 +118,7 @@ const getPrice = query
 
 interface Prices {
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getPrices = query
@@ -132,7 +134,7 @@ const getPrices = query
     const queryPrices = await queryOraclePrices({
       lcd,
       startAfter,
-      limit,
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryPrices);
   });

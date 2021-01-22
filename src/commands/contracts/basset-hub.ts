@@ -35,6 +35,7 @@ import {
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
 import { fabricateDeRegisterValidator } from "../../anchor-js/fabricators/basset/basset-deregister-validator";
+import int = Parse.int;
 
 const menu = createExecMenu(
   "basset-hub",
@@ -165,11 +166,11 @@ const updateConfig = menu
   });
 
 interface Params {
-  epochPeriod?: number;
+  epochPeriod?: string;
   underlyingCoinDenom?: string;
-  unbondingPeriod?: number;
-  pegRecoveryFee?: number;
-  erThreshold?: number;
+  unbondingPeriod?: string;
+  pegRecoveryFee?: string;
+  erThreshold?: string;
   rewardDenom?: string;
 }
 
@@ -201,11 +202,11 @@ const updateParams = menu
       );
       const msg = fabricatebAssetParams({
         address: userAddress,
-        epoch_period: epochPeriod,
+        epoch_period: int(epochPeriod),
         underlying_coin_denom: underlyingCoinDenom,
-        unbonding_period: unbondingPeriod,
-        peg_recovery_fee: pegRecoveryFee,
-        er_threshold: erThreshold,
+        unbonding_period: int(unbondingPeriod),
+        peg_recovery_fee: int(pegRecoveryFee),
+        er_threshold: int(erThreshold),
         reward_denom: rewardDenom,
         bAsset: "bluna",
       })(addressProvider);
@@ -284,8 +285,8 @@ const getCurrentBatch = query
   });
 
 interface AllHistory {
-  startFrom?: number;
-  limit?: number;
+  startFrom?: string;
+  limit?: string;
 }
 
 const getAllHistory = query
@@ -301,8 +302,8 @@ const getAllHistory = query
     const batch_query = await queryHubHistory({
       lcd: lcd,
       bAsset: "bluna",
-      startFrom: startFrom,
-      lim: limit,
+      startFrom: int(startFrom),
+      lim: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
@@ -360,7 +361,7 @@ const getUnbondRequest = query
 
 interface Whitdrawable {
   address: string;
-  blockTime: number;
+  blockTime: string;
 }
 
 const getWhitdrawable = query
@@ -379,7 +380,7 @@ const getWhitdrawable = query
       lcd: lcd,
       bAsset: "bluna",
       address: accAddress(address),
-      block_time: blockTime,
+      block_time: int(blockTime),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });

@@ -25,6 +25,7 @@ import {
 } from "../../anchor-js/queries";
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
+import int = Parse.int;
 
 const menu = createExecMenu(
   "liquidation",
@@ -33,7 +34,7 @@ const menu = createExecMenu(
 
 interface RetractBid {
   collateralToken: string;
-  amount?: number;
+  amount?: string;
 }
 const liquidationRetractBid = menu
   .command("retract-bid")
@@ -52,7 +53,7 @@ const liquidationRetractBid = menu
     const msg = fabricateRetractBid({
       address: userAddress,
       collateral_token: collateralToken,
-      amount: amount,
+      amount: int(amount),
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -90,8 +91,8 @@ interface UpdateConfig {
   safeRatio?: Dec;
   bidFee?: Dec;
   maxPremiumRate?: Dec;
-  liquidationThreshold?: number;
-  priceTimeframe: number;
+  liquidationThreshold?: string;
+  priceTimeframe: string;
 }
 const liquidationUpdateConfig = menu
   .command("update-config")
@@ -140,8 +141,8 @@ const liquidationUpdateConfig = menu
         safe_ratio: safeRatio,
         bid_fee: bidFee,
         max_premium_rate: maxPremiumRate,
-        liquidation_threshold: liquidationThreshold,
-        price_timeframe: priceTimeframe,
+        liquidation_threshold: int(liquidationThreshold),
+        price_timeframe: int(priceTimeframe),
       })(addressProvider);
       await handleExecCommand(menu, msg);
     }
@@ -183,7 +184,7 @@ const getBid = query
 interface BidsByUser {
   bidder: string;
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getBidsByUser = query
@@ -204,7 +205,7 @@ const getBidsByUser = query
       lcd,
       bidder: accAddress(bidder),
       startAfter: accAddress(startAfter),
-      limit,
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryBidsByUser);
   });
@@ -212,7 +213,7 @@ const getBidsByUser = query
 interface BidsByCollateral {
   collateralToken: string;
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getBidsByCollateral = query
@@ -238,7 +239,7 @@ const getBidsByCollateral = query
       lcd,
       collateralToken: accAddress(collateralToken),
       startAfter: accAddress(startAfter),
-      limit,
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryBidsByCollateral);
   });

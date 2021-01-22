@@ -203,7 +203,7 @@ const query = createQueryMenu("overseer", "Anchor overseer contract queries");
 
 interface AllCollaterals {
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getAllCollaterals = query
@@ -220,14 +220,14 @@ const getAllCollaterals = query
       lcd,
       overseer: "overseer",
       startAfter: accAddress(startAfter),
-      limit,
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryAllCollaterals);
   });
 
 interface BorrowLimit {
   borrower: string;
-  blockTime?: number;
+  blockTime?: string;
 }
 
 const getBorrowLimit = query
@@ -246,7 +246,7 @@ const getBorrowLimit = query
       lcd,
       overseer: "overseer",
       borrower: accAddress(borrower),
-      blockTime,
+      blockTime: int(blockTime),
     })(addressProvider);
     await handleQueryCommand(query, queryBorrowLimit);
   });
@@ -320,7 +320,7 @@ const getEpochState = query
 interface QueryWhitelist {
   collateralToken?: string;
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getWhitelist = query
@@ -347,7 +347,7 @@ const getWhitelist = query
       overseer: "overseer",
       collateralToken: accAddress(collateralToken),
       startAfter: accAddress(startAfter),
-      limit,
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryWhitelist);
   });

@@ -29,6 +29,7 @@ import {
 } from "../../anchor-js/queries";
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
+import int = Parse.int;
 
 const menu = createExecMenu(
   "market",
@@ -161,7 +162,7 @@ const getConfig = query
   });
 
 interface EpochState {
-  blockHeight?: number;
+  blockHeight?: string;
 }
 
 const getEpochState = query
@@ -178,14 +179,14 @@ const getEpochState = query
     const queryEpochState = await queryMarketEpochState({
       lcd,
       market: "market",
-      blockHeight,
+      blockHeight: int(blockHeight),
     })(addressProvider);
     await handleQueryCommand(query, queryEpochState);
   });
 
 interface Liabilities {
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getLiabilities = query
@@ -202,7 +203,7 @@ const getLiabilities = query
       lcd,
       market: "market",
       startAfter: accAddress(startAfter),
-      limit,
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryLiabilities);
   });
@@ -230,7 +231,7 @@ const getLiability = query
 
 interface LoanAmount {
   borrower: string;
-  blockHeight: number;
+  blockHeight: string;
 }
 
 const getLoanAmount = query
@@ -252,7 +253,7 @@ const getLoanAmount = query
       lcd,
       market: "market",
       borrower: accAddress(borrower),
-      blockHeight,
+      blockHeight: int(blockHeight),
     })(addressProvider);
     await handleQueryCommand(query, queryLoanAmount);
   });

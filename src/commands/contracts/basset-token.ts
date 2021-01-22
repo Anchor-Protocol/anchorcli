@@ -28,6 +28,7 @@ import { queryTokenInfo } from "../../anchor-js/queries";
 import { queryTokenAllowance } from "../../anchor-js/queries/basset/token-allowance";
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
+import int = Parse.int;
 
 const menu = createExecMenu(
   "basset-token",
@@ -275,7 +276,7 @@ const getAllowance = query
 interface AllAllowances {
   owner: string;
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getAllowances = query
@@ -294,14 +295,14 @@ const getAllowances = query
       bAsset: "bluna",
       owner: accAddress(owner),
       startAfter: startAfter,
-      lim: +limit,
+      lim: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
 
 interface AllAccounts {
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getAccounts = query
@@ -321,7 +322,7 @@ const getAccounts = query
       lcd: lcd,
       bAsset: "bluna",
       startAfter: accAddress(startAfter),
-      lim: +limit,
+      lim: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });

@@ -20,6 +20,7 @@ import {
 import { queryRewardAccrued } from "../../anchor-js/queries";
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
+import int = Parse.int;
 
 const menu = createExecMenu(
   "basset-reward",
@@ -122,7 +123,7 @@ const getHolder = query
 
 interface AllHistory {
   startAfter?: string;
-  limit?: number;
+  limit?: string;
 }
 
 const getHolders = query
@@ -139,7 +140,7 @@ const getHolders = query
       lcd: lcd,
       bAsset: "bluna",
       startAfter: startAfter,
-      lim: +limit,
+      lim: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
