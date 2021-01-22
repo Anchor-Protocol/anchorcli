@@ -1,19 +1,19 @@
 import { AddressProvider } from "./types";
 
 export class AddressProviderFromMantle implements AddressProvider.Provider {
-  bAssetReward(denom: string): string {
+  bAssetReward(): string {
     throw new Error("Method not implemented.");
   }
-  bAssetHub(denom: string): string {
+  bAssetHub(): string {
     throw new Error("Method not implemented.");
   }
-  bAssetToken(denom: string): string {
+  bAssetToken(): string {
     throw new Error("Method not implemented.");
   }
-  bAsset(denom: string): string {
+  bAsset(): string {
     throw new Error("Method not implemented.");
   }
-  market(denom: string): string {
+  market(): string {
     throw new Error("Method not implemented.");
   }
   custody(): string {

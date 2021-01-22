@@ -4,19 +4,19 @@ import { AddressProvider } from "./types";
 console.log(process.env);
 
 export class AddressProviderFromEnvVar implements AddressProvider.Provider {
-  bAssetReward(denom: string): string {
+  bAssetReward(): string {
     return getFromEnv("bAssetReward");
   }
-  bAssetHub(denom: string): string {
+  bAssetHub(): string {
     return getFromEnv("bLuna");
   }
-  bAssetToken(denom: string): string {
+  bAssetToken(): string {
     return getFromEnv("bAssetToken");
   }
-  bAsset(denom: string): string {
+  bAsset(): string {
     return getFromEnv("bAsset");
   }
-  market(denom: string): string {
+  market(): string {
     return getFromEnv("mmMarket");
   }
   custody(): string {
