@@ -38,7 +38,7 @@ const feedPrice = menu
   .description("Feeds new price data")
   .requiredOption("--prices <json>", "Vector of assets and their prices")
   .action(async ({ prices }: FeedPrice) => {
-    const key = new CLIKey({ keyName: feedPrice.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)

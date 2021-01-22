@@ -45,7 +45,7 @@ const borrowStable = menu
   .requiredOption("--amount <string>", "Amount of stablecoins to borrow")
   .option("--to <string>", "Withdrawal address for borrowed stablecoins")
   .action(async ({ amount, to }: BorrowStable) => {
-    const key = new CLIKey({ keyName: borrowStable.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)

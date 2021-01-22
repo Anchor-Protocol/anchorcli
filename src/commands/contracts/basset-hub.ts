@@ -1,5 +1,8 @@
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { fabricatebAssetBond } from "../../anchor-js/fabricators";
+import {
+  fabricatebAssetBond,
+  fabricatebCheckSlashing,
+} from "../../anchor-js/fabricators";
 import { fabricatebAssetUpdateGlobalIndex } from "../../anchor-js/fabricators/basset/basset-update-global-index";
 import {
   fabricatebAssetBurn,
@@ -74,6 +77,22 @@ const global_index = menu
       resolveChainIDToNetworkName(menu.chainId)
     );
     const msgs = fabricatebAssetUpdateGlobalIndex({
+      address: userAddress,
+      bAsset: "bluna",
+    })(addressProvider);
+    await handleExecCommand(menu, msgs);
+  });
+
+const checkSlashing = menu
+  .command("check-slashing")
+  .description("Check if a slashing event occurred ")
+  .action(async () => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const msgs = fabricatebCheckSlashing({
       address: userAddress,
       bAsset: "bluna",
     })(addressProvider);
@@ -218,7 +237,7 @@ const unbond = menu
   .description("Burn and unbond a corresponding amount of asset")
   .requiredOption("--amount <string>", "The amount for unbonding")
   .action(async ({ amount }: Unbond) => {
-    const key = new CLIKey({ keyName: unbond.from });
+    const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -230,11 +249,6 @@ const unbond = menu
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
-
-//TODO:
-// 1- Add deregister validator
-// 2- Add check slashing
-// 3- Add queries
 
 const query = createQueryMenu(
   "basset-hub",

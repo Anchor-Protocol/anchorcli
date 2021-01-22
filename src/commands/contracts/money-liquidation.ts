@@ -127,7 +127,7 @@ const liquidationUpdateConfig = menu
       liquidationThreshold,
       priceTimeframe,
     }: UpdateConfig) => {
-      const key = new CLIKey({ keyName: liquidationUpdateConfig.from });
+      const key = new CLIKey({ keyName: menu.from });
       const userAddress = key.accAddress;
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId)

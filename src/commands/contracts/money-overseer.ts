@@ -183,7 +183,7 @@ const updateWhiteList = menu
   )
   .action(
     async ({ collateralToken, custodyContract, ltv }: UpdateWhiteList) => {
-      const key = new CLIKey({ keyName: updateWhiteList.from });
+      const key = new CLIKey({ keyName: menu.from });
       const userAddress = key.accAddress;
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId)

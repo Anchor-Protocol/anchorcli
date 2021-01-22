@@ -28,3 +28,5 @@ export * from "./money-market/overseer-execute-epoch";
 export * from "./money-market/oracle-feed-price";
 export * from "./money-market/oracle-update-config";
 export * from "./money-market/liquidation-update-config";
+export * from "./basset/basset-check-slashing";
+export * from "./basset/basset-deregister-validator";
