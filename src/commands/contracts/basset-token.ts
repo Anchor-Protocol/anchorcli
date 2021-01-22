@@ -29,6 +29,7 @@ import { queryTokenAllowance } from "../../anchor-js/queries/basset/token-allowa
 import { Parse } from "../../util/parse-input";
 import accAddress = Parse.accAddress;
 import int = Parse.int;
+import { fabricatebAssetSend } from "../../anchor-js/fabricators/basset/basset-send";
 
 const menu = createExecMenu(
   "basset-token",
@@ -87,21 +88,46 @@ const transferFrom = menu
     await handleExecCommand(menu, msg);
   });
 
-// TODO: add send
-// send depends on send in anchor js
+interface Send {
+  amount: string;
+  contract: string;
+  msg?: object;
+}
+const send = menu
+  .command("send")
+  .description("Send bAsset to a contract")
+  .requiredOption("--amount <string>", "Amount of asset to send")
+  .requiredOption("--contract <AccAddress>", "contract recipient")
+  .option("--msg <json>", "string of JSON Receive hook to run")
+  .action(async ({ amount, contract, msg }: Send) => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId)
+    );
+    const message = fabricatebAssetSend({
+      address: userAddress,
+      amount: amount,
+      bAsset: "bluna",
+      contract: contract,
+      msg: msg,
+    })(addressProvider);
+    await handleExecCommand(menu, message);
+  });
 
 interface SendFrom {
   amount: string;
   owner: string;
   contract: string;
-  msg?: string;
+  msg?: object;
 }
 const sendFrom = menu
   .command("send-from")
   .description("Send bAsset to a contract from the user's allowance")
-  .requiredOption("--owner <AccAddress>")
-  .requiredOption("--amount <string>")
-  .requiredOption("--recipient <AccAddress>")
+  .requiredOption("--owner <AccAddress>", "owner to spend from")
+  .requiredOption("--amount <string>", "Amount of asset to send")
+  .requiredOption("--contract <AccAddress>", "contract recipient")
+  .option("--msg <json>", "string of JSON Receive hook to run")
   .action(async ({ amount, owner, contract, msg }: SendFrom) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
@@ -114,7 +140,7 @@ const sendFrom = menu
       bAsset: "bluna",
       contract: contract,
       owner: owner,
-      msg: Buffer.from(JSON.stringify(msg)).toString("base64"),
+      msg: msg,
     })(addressProvider);
     await handleExecCommand(menu, message);
   });
@@ -127,8 +153,8 @@ interface BurnFrom {
 const burnFrom = menu
   .command("burn-from")
   .description("burn bAsset from the user's allowance")
-  .requiredOption("--owner <AccAddress>")
-  .requiredOption("--amount <string>")
+  .requiredOption("--owner <AccAddress>", "Account to burn from")
+  .requiredOption("--amount <string>", "Amount of asset to burn")
   .action(async ({ amount, owner }: BurnFrom) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
