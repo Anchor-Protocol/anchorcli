@@ -30,3 +30,6 @@ export * from "./money-market/oracle-update-config";
 export * from "./money-market/liquidation-update-config";
 export * from "./basset/basset-check-slashing";
 export * from "./basset/basset-deregister-validator";
+export * from "./terraswap/create-pair";
+export * from "./terraswap/provide-liquidity";
+export * from "./terraswap/swap";

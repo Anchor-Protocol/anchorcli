@@ -1,41 +1,63 @@
 import { reactifyEnv } from "./react-app-prefix";
 import { AddressProvider } from "./types";
 
-console.log(process.env);
+//console.log(process.env);
 
 export class AddressProviderFromEnvVar implements AddressProvider.Provider {
   bAssetReward(): string {
     return getFromEnv("bAssetReward");
   }
+
   bAssetHub(): string {
     return getFromEnv("bLuna");
   }
+
   bAssetToken(): string {
     return getFromEnv("bAssetToken");
   }
+
   bAsset(): string {
     return getFromEnv("bAsset");
   }
+
   market(): string {
     return getFromEnv("mmMarket");
   }
+
   custody(): string {
     return getFromEnv("mmCustody");
   }
+
   overseer(): string {
     return getFromEnv("mmOverseer");
   }
+
   aToken(): string {
     return getFromEnv("aUST");
   }
+
   oracle(): string {
     return getFromEnv("mmOracle");
   }
+
   interest(): string {
     return getFromEnv("mmInterest");
   }
+
   liquidation(): string {
     return getFromEnv("mmLiquidation");
+  }
+
+  terraswapFactory(): string {
+    return getFromEnv("terraswapFactory");
+  }
+
+  terraswapPair(): string {
+    return getFromEnv("terraswapPair");
+  }
+
+  blunaBurn(nativeDenom: string): string {
+    return JSON.parse(getFromEnv("bLunaBurn"))[nativeDenom];
   }
 }
 

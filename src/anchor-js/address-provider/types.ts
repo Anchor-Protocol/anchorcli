@@ -12,5 +12,8 @@ export namespace AddressProvider {
     oracle(): string;
     interest(): string;
     liquidation(): string;
+    terraswapFactory(): string;
+    terraswapPair(): string;
+    blunaBurn(quote: string): string;
   }
 }

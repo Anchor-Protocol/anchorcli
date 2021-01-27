@@ -18,4 +18,5 @@ export interface Contracts {
   anchorToken: string;
   terraswapFactory: string;
   terraswapPair: string;
+  blunaBurn: { [nativeDenom: string]: string };
 }

@@ -7,6 +7,7 @@ import Market from "./money-market";
 import Custody from "./money-custody";
 import Overseer from "./money-overseer";
 import Interset from "./money-interest";
+import Terraswap from "./terraswap";
 export const anchor = [
   Hub,
   Reward,
@@ -17,4 +18,5 @@ export const anchor = [
   Custody,
   Overseer,
   Interset,
+  Terraswap,
 ];

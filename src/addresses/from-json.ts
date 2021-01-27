@@ -62,4 +62,18 @@ export class AddressProviderFromJSON implements AddressProvider.Provider {
   liquidation(): string {
     return this.addressesMap.mmLiquidation;
   }
+  terraswapFactory(): string {
+    return this.addressesMap.terraswapFactory;
+  }
+  terraswapPair(): string {
+    return this.addressesMap.terraswapPair;
+  }
+
+  blunaBurn(quote: string): string {
+    const address = this.addressesMap.blunaBurn[quote];
+    if (typeof address === "undefined") {
+      throw new Error(`there is not address for ${quote}`);
+    }
+    return address;
+  }
 }
