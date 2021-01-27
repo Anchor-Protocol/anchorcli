@@ -4,7 +4,6 @@ import {
   handleExecCommand,
 } from "../../util/contract-menu";
 import {
-  fabricatebAssetBond,
   fabricatebSwapbLuna,
   fabricatebTerraSwapCreatePair,
   fabricateTerraSwapProvideLiquidity,
@@ -14,8 +13,6 @@ import {
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import {Parse} from "../../util/parse-input";
-import int = Parse.int;
 
 const menu = createExecMenu(
   "terraswap",
@@ -29,7 +26,7 @@ interface CreatePair {
 const create_pair = menu
   .command("create-pair")
   .description("Create LP token contract")
-  .requiredOption("--denom", "Supported native token")
+  .requiredOption("--denom <string>", "Supported native token")
   .action(async ({ denom }: CreatePair) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
@@ -48,6 +45,7 @@ interface provideLiquidityArgs {
     tokenAmount: string;
     nativeAmount: string;
   slippageTolerance?: string;
+  quote: string;
 }
 
 const provideLiquidity = menu
@@ -57,7 +55,7 @@ const provideLiquidity = menu
     .requiredOption("--native-amount <string>", "second side of liquidity pool e.g. 1000uusd")
   .option("--slippage-tolerance <Dec>", "")
   .action(
-    async ({slippageTolerance, tokenAmount, nativeAmount }: provideLiquidityArgs) => {
+    async ({slippageTolerance, tokenAmount, nativeAmount, quote }: provideLiquidityArgs) => {
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId)
       );
@@ -66,7 +64,7 @@ const provideLiquidity = menu
       const message = fabricateTerraSwapProvideLiquidity({
         address: userAddress,
         slippageTolerance: slippageTolerance,
-        quote: "uluna",
+        quote: quote,
         bAsset: "bluna",
         tokenAmount: tokenAmount,
           nativeAmount: nativeAmount
@@ -79,24 +77,25 @@ interface swapArgs {
   to?: string;
   beliefPrice?: string;
   maxSpread?: string;
-  amount: number;
+  amount: string;
 }
 const swap = menu
   .command("swap")
   .description("Swap one asset for another using Terraswap")
-  .requiredOption("--amount", "bAsset amount to swap")
-  .option("--to", "ccount to send swapped funds to")
-  .option("--max-spread", "")
-  .option("--belief-price", "")
+  .requiredOption("--amount <string>", "bAsset amount to swap")
+  .option("--to <AccAddress>", "ccount to send swapped funds to")
+  .option("--max-spread <Dec>", "")
+  .option("--belief-price <Dec>", "")
   .action(async ({ to, beliefPrice, maxSpread, amount }: swapArgs) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
+    console.log(amount);
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const pair_message = fabricatebSwapbLuna({
       address: userAddress,
-      amount: +amount,
+      amount: amount,
       bAsset: "bluna",
       to: to,
       beliefPrice: beliefPrice,
