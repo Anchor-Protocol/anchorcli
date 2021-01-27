@@ -4,7 +4,6 @@ import {
   handleExecCommand,
 } from "../../util/contract-menu";
 import {
-  Asset,
   fabricatebAssetBond,
   fabricatebSwapbLuna,
   fabricatebTerraSwapCreatePair,
@@ -15,6 +14,8 @@ import {
   resolveChainIDToNetworkName,
 } from "../../addresses/from-json";
 import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
+import {Parse} from "../../util/parse-input";
+import int = Parse.int;
 
 const menu = createExecMenu(
   "terraswap",
@@ -44,22 +45,19 @@ const create_pair = menu
   });
 
 interface provideLiquidityArgs {
-  asset: Asset[];
-  slippageTolerance: string;
-  amount: string;
+    tokenAmount: string;
+    nativeAmount: string;
+  slippageTolerance?: string;
 }
 
 const provideLiquidity = menu
   .command("provide-liquidity")
   .description("Provide liquidity to a Terraswap pool")
-  .requiredOption("--amount <string>", "")
-  .requiredOption("--slippage-tolerance <Dec>", "")
-  .requiredOption(
-    "--asset <json>",
-    "first/second side of liquidity pool e.g. 1000bluna and 1000uusd"
-  )
+  .requiredOption("--token-amount <string>", "first side of liquidity pool e.g. 1000bluna")
+    .requiredOption("--native-amount <string>", "second side of liquidity pool e.g. 1000uusd")
+  .option("--slippage-tolerance <Dec>", "")
   .action(
-    async ({ asset, slippageTolerance, amount }: provideLiquidityArgs) => {
+    async ({slippageTolerance, tokenAmount, nativeAmount }: provideLiquidityArgs) => {
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId)
       );
@@ -68,10 +66,10 @@ const provideLiquidity = menu
       const message = fabricateTerraSwapProvideLiquidity({
         address: userAddress,
         slippageTolerance: slippageTolerance,
-        asset: asset,
-        quote: "blunaLuna",
+        quote: "uluna",
         bAsset: "bluna",
-        amount: amount,
+        tokenAmount: tokenAmount,
+          nativeAmount: nativeAmount
       })(addressProvider);
       await handleExecCommand(menu, message);
     }
@@ -81,7 +79,7 @@ interface swapArgs {
   to?: string;
   beliefPrice?: string;
   maxSpread?: string;
-  amount: string;
+  amount: number;
 }
 const swap = menu
   .command("swap")
@@ -98,7 +96,7 @@ const swap = menu
     const userAddress = key.accAddress;
     const pair_message = fabricatebSwapbLuna({
       address: userAddress,
-      amount: amount,
+      amount: +amount,
       bAsset: "bluna",
       to: to,
       beliefPrice: beliefPrice,

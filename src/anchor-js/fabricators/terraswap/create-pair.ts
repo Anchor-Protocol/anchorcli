@@ -20,7 +20,7 @@ export const fabricatebTerraSwapCreatePair = ({
 
   const bAssetTokenAddress = addressProvider.bAssetToken(bAsset);
   const terrawswapFactory = addressProvider.terraswapFactory();
-
+  const a = nativeToken;
   return [
     new MsgExecuteContract(address, terrawswapFactory, {
       create_pair: {
@@ -32,7 +32,7 @@ export const fabricatebTerraSwapCreatePair = ({
           },
           {
             native_token: {
-              denom: nativeToken,
+              denom: "uluna",
             },
           },
         ],
