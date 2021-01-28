@@ -98,22 +98,24 @@ interface swapArgs {
   beliefPrice?: string;
   maxSpread?: string;
   amount: string;
-  contractAddr: string;
+  denom: string;
 }
 const swapNative = menu
   .command("swap-native")
   .description("Swap native asset to cw20 asset another using Terraswap")
-  .requiredOption("--amount <string>", "native amount to swap")
+  .requiredOption("--denom <string>", "Native denom")
+  .requiredOption("--amount <string>", "Native amount to swap")
   .option("--to <AccAddress>", "Account to send swapped funds to")
   .option("--max-spread <Dec>", "")
   .option("--belief-price <Dec>", "")
-  .action(async ({ to, beliefPrice, maxSpread, amount }: swapArgs) => {
+  .action(async ({ to, beliefPrice, maxSpread, amount, denom }: swapArgs) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId)
     );
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const pair_message = fabricatebSwapLuna({
+      denom,
       address: userAddress,
       amount: amount,
       to: to,
