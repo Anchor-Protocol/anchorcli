@@ -1,9 +1,11 @@
 node_modules/
 yarn-error.log
 keystore.db
-yarn.locke
 
 # IDEs
 *.iml
 .idea
 .DS_Store
+
+# artifacts
+dist
