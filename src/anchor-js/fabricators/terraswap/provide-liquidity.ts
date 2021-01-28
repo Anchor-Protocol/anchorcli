@@ -1,8 +1,14 @@
-import {Coin, Dec,  Coins, Int, MsgExecuteContract} from "@terra-money/terra.js";
+import {
+  Coin,
+  Dec,
+  Coins,
+  Int,
+  MsgExecuteContract,
+} from "@terra-money/terra.js";
 import { validateInput } from "../../utils/validate-input";
 import { validateAddress } from "../../utils/validation/address";
 import { AddressProvider } from "../../address-provider/types";
-import {validateIsGreaterThanZero} from "../../utils/validation/number";
+import { validateIsGreaterThanZero } from "../../utils/validation/number";
 
 interface Option {
   address: string;
@@ -13,26 +19,33 @@ interface Option {
   slippageTolerance?: string;
 }
 
-
 export const fabricateTerraSwapProvideLiquidity = ({
   address,
   slippageTolerance,
-  bAsset, tokenAmount,nativeAmount,
+  bAsset,
+  tokenAmount,
+  nativeAmount,
   quote,
 }: Option) => (
   addressProvider: AddressProvider.Provider
 ): MsgExecuteContract[] => {
   validateInput([
-      validateAddress(address),
+    validateAddress(address),
     validateIsGreaterThanZero(tokenAmount),
-    validateIsGreaterThanZero(nativeAmount)]);
+    validateIsGreaterThanZero(nativeAmount),
+  ]);
 
   const pairAddress = addressProvider.terraswapPair();
   const tokenAddress = addressProvider.bAssetToken(bAsset);
 
-  const coins = new Coins([new Coin(quote, new Int(new Dec(nativeAmount).mul(1000000)).toString())]);
+  const coins = new Coins([
+    new Coin(quote, new Int(new Dec(nativeAmount).mul(1000000)).toString()),
+  ]);
   return [
-    new MsgExecuteContract(address, pairAddress, {
+    new MsgExecuteContract(
+      address,
+      pairAddress,
+      {
         provide_liquidity: {
           assets: [
             {
@@ -52,10 +65,10 @@ export const fabricateTerraSwapProvideLiquidity = ({
               amount: new Int(new Dec(nativeAmount).mul(1000000)).toString(),
             },
           ],
-          slippage_tolerance: slippageTolerance ,
+          slippage_tolerance: slippageTolerance,
         },
       },
-        coins
-        ),
+      coins
+    ),
   ];
 };

@@ -70,7 +70,6 @@ export class AddressProviderFromJSON implements AddressProvider.Provider {
   }
 
   blunaBurn(quote: string): string {
-    console.log("I am here", quote);
     const address = this.addressesMap.blunaBurn[quote];
     if (typeof address === "undefined") {
       throw new Error(`there is not address for ${quote}`);
