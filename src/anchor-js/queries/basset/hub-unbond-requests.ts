@@ -1,5 +1,5 @@
-import { LCDClient } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { LCDClient } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -12,7 +12,7 @@ interface UnbondResponse {
 }
 
 export const queryHubUnbond = ({ lcd, bAsset, address }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<UnbondResponse> => {
   const bAssetContractAddress = addressProvider.bAssetHub(bAsset);
   let reponse: UnbondResponse = await lcd.wasm.contractQuery(
@@ -21,7 +21,7 @@ export const queryHubUnbond = ({ lcd, bAsset, address }: Option) => async (
       unbond_requests: {
         address: address,
       },
-    }
+    },
   );
   return reponse;
 };

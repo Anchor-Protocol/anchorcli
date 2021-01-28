@@ -1,5 +1,5 @@
-import { LCDClient } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { LCDClient } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -16,7 +16,7 @@ export const queryMarketEpochState = ({
   market,
   blockHeight,
 }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<EpochStateResponse> => {
   const marketContractAddress = addressProvider.market(market);
   let response: EpochStateResponse = await lcd.wasm.contractQuery(
@@ -25,7 +25,7 @@ export const queryMarketEpochState = ({
       epoch_state: {
         block_height: +blockHeight,
       },
-    }
+    },
   );
   return response;
 };

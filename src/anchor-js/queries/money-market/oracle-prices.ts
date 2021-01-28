@@ -1,5 +1,5 @@
-import { LCDClient } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { LCDClient } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -11,7 +11,7 @@ interface PricesResponse {
 }
 
 export const queryOraclePrices = ({ lcd, startAfter, limit }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<PricesResponse> => {
   const oracleContractAddress = addressProvider.oracle();
   let response: PricesResponse = await lcd.wasm.contractQuery(
@@ -21,7 +21,7 @@ export const queryOraclePrices = ({ lcd, startAfter, limit }: Option) => async (
         start_after: startAfter,
         limit: +limit,
       },
-    }
+    },
   );
   return response;
 };

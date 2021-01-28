@@ -1,5 +1,5 @@
-import { AccAddress, Coins, Dec, Int } from "@terra-money/terra.js";
-import * as _ from "lodash";
+import { AccAddress, Coins, Dec, Int } from '@terra-money/terra.js';
+import * as _ from 'lodash';
 
 export type InputParser<T> = (input?: string) => T;
 

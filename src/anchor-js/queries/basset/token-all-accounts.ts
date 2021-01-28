@@ -1,5 +1,5 @@
-import { LCDClient } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { LCDClient } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -18,7 +18,7 @@ export const queryTokenAllAccounts = ({
   startAfter,
   lim,
 }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<AllAccounts> => {
   const bAssetContractAddress = addressProvider.bAssetToken(bAsset);
   let reponse: AllAccounts = await lcd.wasm.contractQuery(
@@ -28,7 +28,7 @@ export const queryTokenAllAccounts = ({
         start_after: startAfter,
         limit: +lim,
       },
-    }
+    },
   );
   return reponse;
 };

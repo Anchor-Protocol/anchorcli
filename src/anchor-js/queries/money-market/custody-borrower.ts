@@ -1,5 +1,5 @@
-import { LCDClient } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { LCDClient } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -17,7 +17,7 @@ export const queryCustodyBorrower = ({
   custody,
   address,
 }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<BorrowerResponse> => {
   const custodyContractAddress = addressProvider.custody(custody);
   let response: BorrowerResponse = await lcd.wasm.contractQuery(
@@ -26,7 +26,7 @@ export const queryCustodyBorrower = ({
       borrower: {
         address: address,
       },
-    }
+    },
   );
   return response;
 };

@@ -1,11 +1,11 @@
-import { Dec, Int, MsgExecuteContract } from "@terra-money/terra.js";
-import { validateInput } from "../../utils/validate-input";
-import { validateAddress } from "../../utils/validation/address";
+import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
+import { validateInput } from '../../utils/validate-input';
+import { validateAddress } from '../../utils/validation/address';
 import {
   validateIsGreaterThanZero,
   validateIsNumber,
-} from "../../utils/validation/number";
-import { AddressProvider } from "../../address-provider/types";
+} from '../../utils/validation/number';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   address: string;
@@ -24,7 +24,7 @@ export const fabricatebAssetSendFrom = ({
   owner,
   msg,
 }: Option) => (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
@@ -43,7 +43,7 @@ export const fabricatebAssetSendFrom = ({
         owner: owner,
         contract: contract,
         amount: new Int(new Dec(amount).mul(1000000)).toString(),
-        msg: Buffer.from(JSON.stringify(msg)).toString("base64"),
+        msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
       },
     }),
   ];

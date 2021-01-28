@@ -1,4 +1,4 @@
-import { InputEntry } from "../validate-input";
+import { InputEntry } from '../validate-input';
 
 export const validateIsNumber = (n: number | string): InputEntry => [
   () => !Number.isNaN(n),
@@ -11,6 +11,6 @@ export const validateIsGreaterThanZero = (n: number | string): InputEntry => [
 ];
 
 export const validateIsStringPrecision = (n: string): InputEntry => [
-  () => !Number.isNaN(n) && n.toString().split(".").length === 2,
+  () => !Number.isNaN(n) && n.toString().split('.').length === 2,
   `number should be in precision format: ${n}.`,
 ];

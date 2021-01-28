@@ -1,10 +1,10 @@
-import { MsgExecuteContract } from "@terra-money/terra.js";
-import { validateAddress } from "../../utils/validation/address";
-import { validateInput } from "../../utils/validate-input";
-import { validateIsNumber } from "../../utils/validation/number";
-import { validateWhitelistedMarket } from "../../utils/validation/market";
-import { validateIsGreaterThanZero } from "../../utils/validation/number";
-import { AddressProvider } from "../../address-provider/types";
+import { MsgExecuteContract } from '@terra-money/terra.js';
+import { validateAddress } from '../../utils/validation/address';
+import { validateInput } from '../../utils/validate-input';
+import { validateIsNumber } from '../../utils/validation/number';
+import { validateWhitelistedMarket } from '../../utils/validation/market';
+import { validateIsGreaterThanZero } from '../../utils/validation/number';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   address: string;
@@ -27,7 +27,7 @@ export const fabricateBorrow = ({
   amount,
   withdrawTo,
 }: Option) => (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): MsgExecuteContract[] => {
   validateInput([
     validateWhitelistedMarket(market),

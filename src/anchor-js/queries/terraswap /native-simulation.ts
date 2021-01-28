@@ -1,5 +1,5 @@
-import { Dec, Int, LCDClient } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { Dec, Int, LCDClient } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -13,7 +13,7 @@ interface SimulationResponse {
 }
 
 export const queryNativeSimulation = ({ lcd, denom, amount }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<SimulationResponse> => {
   const pairContractAddress = addressProvider.terraswapPair();
   let reponse: SimulationResponse = await lcd.wasm.contractQuery(
@@ -29,7 +29,7 @@ export const queryNativeSimulation = ({ lcd, denom, amount }: Option) => async (
           amount: new Int(new Dec(amount).mul(1000000)).toString(),
         },
       },
-    }
+    },
   );
   return reponse;
 };

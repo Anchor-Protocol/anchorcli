@@ -1,8 +1,8 @@
-import { InputEntry } from "../validate-input";
+import { InputEntry } from '../validate-input';
 // @ts-ignore
-import bassetConstants from "../../constants/basset.json";
+import bassetConstants from '../../constants/basset.json';
 
 export const validateWhitelistedBAsset = (symbol: string): InputEntry => [
-  () => bassetConstants.bluna && symbol.toLocaleLowerCase() === "bluna",
+  () => bassetConstants.bluna && symbol.toLocaleLowerCase() === 'bluna',
   `unknown bAsset symbol ${symbol}.`,
 ];

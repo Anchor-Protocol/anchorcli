@@ -1,5 +1,5 @@
-import { LCDClient, MsgExecuteContract } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { LCDClient, MsgExecuteContract } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -10,14 +10,14 @@ interface WhitelistedValResponse {
 }
 
 export const queryHubWhiteVals = ({ lcd, bAsset }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<WhitelistedValResponse> => {
   const bAssetContractAddress = addressProvider.bAssetHub(bAsset);
   let reponse: WhitelistedValResponse = await lcd.wasm.contractQuery(
     bAssetContractAddress,
     {
       whitelisted_validators: {},
-    }
+    },
   );
   return reponse;
 };

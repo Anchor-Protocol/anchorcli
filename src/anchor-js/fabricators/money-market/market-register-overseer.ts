@@ -1,7 +1,7 @@
-import { MsgExecuteContract } from "@terra-money/terra.js";
-import { validateInput } from "../../utils/validate-input";
-import { validateAddress } from "../../utils/validation/address";
-import { AddressProvider } from "../../address-provider/types";
+import { MsgExecuteContract } from '@terra-money/terra.js';
+import { validateInput } from '../../utils/validate-input';
+import { validateAddress } from '../../utils/validation/address';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   address: string;
@@ -14,7 +14,7 @@ export const fabricatebMarketRegOverseer = ({
   overseer_contract,
   market,
 }: Option) => (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): MsgExecuteContract[] => {
   validateInput([validateAddress(address), validateAddress(overseer_contract)]);
 

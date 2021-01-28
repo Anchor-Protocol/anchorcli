@@ -1,5 +1,5 @@
-import { LCDClient } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { LCDClient } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -15,14 +15,14 @@ export const queryOverseerDistributionParams = ({
   lcd,
   overseer,
 }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<DistributionParamsResponse> => {
   const overseerContractAddress = addressProvider.overseer(overseer);
   let response: DistributionParamsResponse = await lcd.wasm.contractQuery(
     overseerContractAddress,
     {
       distribution_params: {},
-    }
+    },
   );
   return response;
 };

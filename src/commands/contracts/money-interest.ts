@@ -1,4 +1,4 @@
-import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
+import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 
 import {
   createExecMenu,
@@ -6,23 +6,23 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
-import { Dec } from "@terra-money/terra.js";
-import { fabricatebInterestConfig } from "../../anchor-js/fabricators/money-market/interest-update-config";
+} from '../../util/contract-menu';
+import { Dec } from '@terra-money/terra.js';
+import { fabricatebInterestConfig } from '../../anchor-js/fabricators/money-market/interest-update-config';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from '../../addresses/from-json';
 import {
   queryInterestModelBorrowRate,
   queryInterestModelConfig,
-} from "../../anchor-js/queries";
-import { Parse } from "../../util/parse-input";
+} from '../../anchor-js/queries';
+import { Parse } from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 
 const menu = createExecMenu(
-  "interest",
-  "Anchor MoneyMarket Interest contract functions"
+  'interest',
+  'Anchor MoneyMarket Interest contract functions',
 );
 
 interface Config {
@@ -32,25 +32,25 @@ interface Config {
 }
 
 const updateConfig = menu
-  .command("update-config")
-  .description("Updates the configuration of the interest model contract")
+  .command('update-config')
+  .description('Updates the configuration of the interest model contract')
   .option(
-    "--owner <AccAddress>",
-    "Address of contract owner that can update model parameters"
+    '--owner <AccAddress>',
+    'Address of contract owner that can update model parameters',
   )
   .option(
-    "--base-rate <Dec>",
-    "Minimum per-block interest rate applied to borrows"
+    '--base-rate <Dec>',
+    'Minimum per-block interest rate applied to borrows',
   )
   .option(
-    "interest-multiplier <Dec>",
-    "Multiplier between utilization ratio and per-block borrow rate"
+    'interest-multiplier <Dec>',
+    'Multiplier between utilization ratio and per-block borrow rate',
   )
   .action(async ({ owner, baseRate, interestMultiplier }: Config) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricatebInterestConfig({
       address: userAddress,
@@ -61,7 +61,7 @@ const updateConfig = menu
     await handleExecCommand(menu, msg);
   });
 
-const query = createQueryMenu("interest", "Anchor interest contract queries");
+const query = createQueryMenu('interest', 'Anchor interest contract queries');
 
 interface BorrowRate {
   marketBalance: string;
@@ -70,24 +70,24 @@ interface BorrowRate {
 }
 
 const getBorrowRate = query
-  .command("borrow-rate")
+  .command('borrow-rate')
   .description(
-    "Get the calculated per-block borrow rate, based on fed in market conditions"
+    'Get the calculated per-block borrow rate, based on fed in market conditions',
   )
-  .requiredOption("--market-balance <int>", "Stablecoin balance of Market")
+  .requiredOption('--market-balance <int>', 'Stablecoin balance of Market')
   .requiredOption(
-    "--total-liabilities <Dec>",
-    "Total amount of borrower liabilities"
+    '--total-liabilities <Dec>',
+    'Total amount of borrower liabilities',
   )
   .requiredOption(
-    "--total-reserves <Dec>",
-    "Amount of Market contract reserves"
+    '--total-reserves <Dec>',
+    'Amount of Market contract reserves',
   )
   .action(
     async ({ marketBalance, totalLiabilities, totalReserves }: BorrowRate) => {
       const lcd = getLCDClient();
       const addressProvider = new AddressProviderFromJSON(
-        resolveChainIDToNetworkName(query.chainId)
+        resolveChainIDToNetworkName(query.chainId),
       );
       const queryBorrowRate = await queryInterestModelBorrowRate({
         lcd,
@@ -96,19 +96,19 @@ const getBorrowRate = query
         totalReserves,
       })(addressProvider);
       await handleQueryCommand(query, queryBorrowRate);
-    }
+    },
   );
 
 const getConfig = query
-  .command("config")
-  .description("Get the interest model contract configuration")
+  .command('config')
+  .description('Get the interest model contract configuration')
   .action(async ({}: Config) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const queryConfig = await queryInterestModelConfig({ lcd })(
-      addressProvider
+      addressProvider,
     );
     await handleQueryCommand(query, queryConfig);
   });

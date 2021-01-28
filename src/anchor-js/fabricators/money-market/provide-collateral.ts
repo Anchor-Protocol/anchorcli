@@ -1,12 +1,12 @@
-import { Dec, Int, MsgExecuteContract } from "@terra-money/terra.js";
-import { createHookMsg } from "../../utils/cw20/create-hook-msg";
-import { validateInput } from "../../utils/validate-input";
-import { validateAddress } from "../../utils/validation/address";
-import { validateWhitelistedBAsset } from "../../utils/validation/basset";
+import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
+import { createHookMsg } from '../../utils/cw20/create-hook-msg';
+import { validateInput } from '../../utils/validate-input';
+import { validateAddress } from '../../utils/validation/address';
+import { validateWhitelistedBAsset } from '../../utils/validation/basset';
 
-import { validateWhitelistedMarket } from "../../utils/validation/market";
-import { validateIsGreaterThanZero } from "../../utils/validation/number";
-import { AddressProvider } from "../../address-provider/types";
+import { validateWhitelistedMarket } from '../../utils/validation/market';
+import { validateIsGreaterThanZero } from '../../utils/validation/number';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   address: string;
@@ -30,7 +30,7 @@ export const fabricateProvideCollateral = ({
   symbol,
   amount,
 }: Option) => (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),

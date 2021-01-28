@@ -1,9 +1,9 @@
-import { Dec, MsgExecuteContract } from "@terra-money/terra.js";
-import { validateAddress } from "../../utils/validation/address";
-import { validateInput } from "../../utils/validate-input";
-import { validateTrue } from "../../utils/validation/true";
-import { validateIsNumber } from "../../utils/validation/number";
-import { AddressProvider } from "../../address-provider/types";
+import { Dec, MsgExecuteContract } from '@terra-money/terra.js';
+import { validateAddress } from '../../utils/validation/address';
+import { validateInput } from '../../utils/validate-input';
+import { validateTrue } from '../../utils/validation/true';
+import { validateIsNumber } from '../../utils/validation/number';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   address: string;
@@ -28,7 +28,7 @@ export const fabricateLiquidationConfig = ({
   liquidation_threshold,
   price_timeframe,
 }: Option) => (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),

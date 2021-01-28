@@ -1,11 +1,11 @@
-import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
+import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import {
   createExecMenu,
   createQueryMenu,
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from '../../util/contract-menu';
 import {
   fabricatebAssetBurnFrom,
   fabricatebAssetdDecreaseAllowance,
@@ -13,27 +13,27 @@ import {
   fabricatebAssetSendFrom,
   fabricatebAssetTransfer,
   fabricatebAssetTransferFrom,
-} from "../../anchor-js/fabricators";
+} from '../../anchor-js/fabricators';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from '../../addresses/from-json';
 import {
   queryTokenAllAccounts,
   queryTokenAllAllowance,
   queryTokenBalance,
   queryTokenMinter,
-} from "../../anchor-js/queries";
-import { queryTokenInfo } from "../../anchor-js/queries";
-import { queryTokenAllowance } from "../../anchor-js/queries/basset/token-allowance";
-import { Parse } from "../../util/parse-input";
+} from '../../anchor-js/queries';
+import { queryTokenInfo } from '../../anchor-js/queries';
+import { queryTokenAllowance } from '../../anchor-js/queries/basset/token-allowance';
+import { Parse } from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
-import { fabricatebAssetSend } from "../../anchor-js/fabricators/basset/basset-send";
+import { fabricatebAssetSend } from '../../anchor-js/fabricators/basset/basset-send';
 
 const menu = createExecMenu(
-  "basset-token",
-  "Anchor bAsset token contract functions"
+  'basset-token',
+  'Anchor bAsset token contract functions',
 );
 
 interface Transfer {
@@ -42,21 +42,21 @@ interface Transfer {
 }
 
 const transfer = menu
-  .command("transfer")
-  .description("Transfer bAsset to other users")
-  .requiredOption("--amount <string>", "Amount to send to recipient")
-  .requiredOption("--recipient <AccAddress>", "Recipient address")
+  .command('transfer')
+  .description('Transfer bAsset to other users')
+  .requiredOption('--amount <string>', 'Amount to send to recipient')
+  .requiredOption('--recipient <AccAddress>', 'Recipient address')
   .action(async ({ amount, recipient }: Transfer) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricatebAssetTransfer({
       address: userAddress,
       amount: amount,
       recipient: recipient,
-      bAsset: "bluna",
+      bAsset: 'bluna',
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -67,22 +67,22 @@ interface TransferFrom {
   owner: string;
 }
 const transferFrom = menu
-  .command("transfer-from")
+  .command('transfer-from')
   .description("Transfer bAsset to other users from the user's allowance")
-  .requiredOption("--owner <AccAddress>", "Address of the owner of allowance")
-  .requiredOption("--amount <string>", "Amount to transfer")
-  .requiredOption("--recipient <AccAddress>", "Recipient address")
+  .requiredOption('--owner <AccAddress>', 'Address of the owner of allowance')
+  .requiredOption('--amount <string>', 'Amount to transfer')
+  .requiredOption('--recipient <AccAddress>', 'Recipient address')
   .action(async ({ amount, recipient, owner }: TransferFrom) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricatebAssetTransferFrom({
       address: userAddress,
       amount: amount,
       recipient: recipient,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       owner: owner,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -94,21 +94,21 @@ interface Send {
   msg?: object;
 }
 const send = menu
-  .command("send")
-  .description("Send bAsset to a contract")
-  .requiredOption("--amount <string>", "Amount of asset to send")
-  .requiredOption("--contract <AccAddress>", "contract recipient")
-  .option("--msg <json>", "string of JSON Receive hook to run")
+  .command('send')
+  .description('Send bAsset to a contract')
+  .requiredOption('--amount <string>', 'Amount of asset to send')
+  .requiredOption('--contract <AccAddress>', 'contract recipient')
+  .option('--msg <json>', 'string of JSON Receive hook to run')
   .action(async ({ amount, contract, msg }: Send) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const message = fabricatebAssetSend({
       address: userAddress,
       amount: amount,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       contract: contract,
       msg: msg,
     })(addressProvider);
@@ -122,22 +122,22 @@ interface SendFrom {
   msg?: object;
 }
 const sendFrom = menu
-  .command("send-from")
+  .command('send-from')
   .description("Send bAsset to a contract from the user's allowance")
-  .requiredOption("--owner <AccAddress>", "owner to spend from")
-  .requiredOption("--amount <string>", "Amount of asset to send")
-  .requiredOption("--contract <AccAddress>", "contract recipient")
-  .option("--msg <json>", "string of JSON Receive hook to run")
+  .requiredOption('--owner <AccAddress>', 'owner to spend from')
+  .requiredOption('--amount <string>', 'Amount of asset to send')
+  .requiredOption('--contract <AccAddress>', 'contract recipient')
+  .option('--msg <json>', 'string of JSON Receive hook to run')
   .action(async ({ amount, owner, contract, msg }: SendFrom) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const message = fabricatebAssetSendFrom({
       address: userAddress,
       amount: amount,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       contract: contract,
       owner: owner,
       msg: msg,
@@ -151,20 +151,20 @@ interface BurnFrom {
 }
 
 const burnFrom = menu
-  .command("burn-from")
+  .command('burn-from')
   .description("burn bAsset from the user's allowance")
-  .requiredOption("--owner <AccAddress>", "Account to burn from")
-  .requiredOption("--amount <string>", "Amount of asset to burn")
+  .requiredOption('--owner <AccAddress>', 'Account to burn from')
+  .requiredOption('--amount <string>', 'Amount of asset to burn')
   .action(async ({ amount, owner }: BurnFrom) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricatebAssetBurnFrom({
       address: userAddress,
       amount: amount,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       owner: owner,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -179,21 +179,21 @@ interface Allowance {
 }
 
 const increaseAllowance = menu
-  .command("increase-allowance")
+  .command('increase-allowance')
   .description("burn bAsset from the user's allowance")
-  .requiredOption("--spender <AccAddress>", "Spender address")
-  .requiredOption("--amount <string>", "Amount to increase")
-  .option("--expires <json>", "Expires at")
+  .requiredOption('--spender <AccAddress>', 'Spender address')
+  .requiredOption('--amount <string>', 'Amount to increase')
+  .option('--expires <json>', 'Expires at')
   .action(async ({ amount, spender, expires }: Allowance) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricatebAssetIncreaseAllowance({
       address: userAddress,
       amount: amount,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       spender: spender,
       expires: expires,
     })(addressProvider);
@@ -201,21 +201,21 @@ const increaseAllowance = menu
   });
 
 const decreaseAllowance = menu
-  .command("decrease-allowance")
+  .command('decrease-allowance')
   .description("burn bAsset from the user's allowance")
-  .requiredOption("--sepender <AccAddress>", "Spender address")
-  .requiredOption("--amount <string>", "Amount to increase")
-  .option("--expires <json>", "Expires at")
+  .requiredOption('--sepender <AccAddress>', 'Spender address')
+  .requiredOption('--amount <string>', 'Amount to increase')
+  .option('--expires <json>', 'Expires at')
   .action(async ({ amount, spender, expires }: Allowance) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricatebAssetdDecreaseAllowance({
       address: userAddress,
       amount: amount,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       spender: spender,
       expires: expires,
     })(addressProvider);
@@ -223,20 +223,20 @@ const decreaseAllowance = menu
   });
 
 const query = createQueryMenu(
-  "basset-token",
-  "Anchor bAsset token  contract queries"
+  'basset-token',
+  'Anchor bAsset token  contract queries',
 );
 
 const getTokenInfo = query
-  .command("token-info")
-  .description("Get information about the token")
+  .command('token-info')
+  .description('Get information about the token')
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
-    const query_token = await queryTokenInfo({ lcd: lcd, bAsset: "bluna" })(
-      addressProvider
+    const query_token = await queryTokenInfo({ lcd: lcd, bAsset: 'bluna' })(
+      addressProvider,
     );
     await handleQueryCommand(query, query_token);
   });
@@ -246,32 +246,32 @@ interface Balance {
 }
 
 const getBalance = query
-  .command("balance")
-  .description("Get the current balance of the address")
-  .option("--address <AccAddress>", "Address of user")
+  .command('balance')
+  .description('Get the current balance of the address')
+  .option('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: Balance) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const balance_query = await queryTokenBalance({
       lcd: lcd,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, balance_query);
   });
 
 const getMinter = query
-  .command("minter")
-  .description("Get who can mint and how much")
+  .command('minter')
+  .description('Get who can mint and how much')
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
-    const query_minter = await queryTokenMinter({ lcd: lcd, bAsset: "bluna" })(
-      addressProvider
+    const query_minter = await queryTokenMinter({ lcd: lcd, bAsset: 'bluna' })(
+      addressProvider,
     );
     await handleQueryCommand(query, query_minter);
   });
@@ -281,18 +281,18 @@ interface AllowanceArgs {
   spender: string;
 }
 const getAllowance = query
-  .command("allowance")
-  .description("Get how much spender can use from owner account")
-  .option("--owner <AccAddress>", "Address of owner")
-  .option("--spender <AccAddress>", "Address of spender")
+  .command('allowance')
+  .description('Get how much spender can use from owner account')
+  .option('--owner <AccAddress>', 'Address of owner')
+  .option('--spender <AccAddress>', 'Address of spender')
   .action(async ({ owner, spender }: AllowanceArgs) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const allowance_query = await queryTokenAllowance({
       lcd: lcd,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       owner: accAddress(owner),
       spender: accAddress(spender),
     })(addressProvider);
@@ -306,19 +306,19 @@ interface AllAllowances {
 }
 
 const getAllowances = query
-  .command("all-allowances")
-  .description("Get all allowances this owner has approved")
-  .option("--owner <AccAddress>", "Address of the owner")
-  .option("--start-after <int>", "Address of bLuna holder to start query")
-  .option("--limit <int>", "Maximum number of query entries")
+  .command('all-allowances')
+  .description('Get all allowances this owner has approved')
+  .option('--owner <AccAddress>', 'Address of the owner')
+  .option('--start-after <int>', 'Address of bLuna holder to start query')
+  .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ owner, startAfter, limit }: AllAllowances) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const batch_query = await queryTokenAllAllowance({
       lcd: lcd,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       owner: accAddress(owner),
       startAfter: startAfter,
       lim: int(limit),
@@ -332,21 +332,21 @@ interface AllAccounts {
 }
 
 const getAccounts = query
-  .command("all-accounts")
-  .description("Get all accounts that have balances")
+  .command('all-accounts')
+  .description('Get all accounts that have balances')
   .option(
-    "--start-after <AccAddress>",
-    "Address of bLuna holder to start query"
+    '--start-after <AccAddress>',
+    'Address of bLuna holder to start query',
   )
-  .option("--limit <int>", "Maximum number of query entries")
+  .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: AllAccounts) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const batch_query = await queryTokenAllAccounts({
       lcd: lcd,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       startAfter: accAddress(startAfter),
       lim: int(limit),
     })(addressProvider);

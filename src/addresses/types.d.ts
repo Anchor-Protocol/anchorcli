@@ -1,4 +1,4 @@
-import { LCDClientConfig } from "@terra-money/terra.js";
+import { LCDClientConfig } from '@terra-money/terra.js';
 
 export interface AnchorConfig {
   lcd: LCDClientConfig;

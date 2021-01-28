@@ -1,11 +1,11 @@
-import { Coins, LCDClient, LCDClientConfig } from "@terra-money/terra.js";
-import { Numeric } from "@terra-money/terra.js/dist/core/numeric";
-import * as path from "path";
-import { homedir } from "os";
-import * as fs from "fs";
-import { AnchorConfig, Contracts } from "addresses/types";
+import { Coins, LCDClient, LCDClientConfig } from '@terra-money/terra.js';
+import { Numeric } from '@terra-money/terra.js/dist/core/numeric';
+import * as path from 'path';
+import { homedir } from 'os';
+import * as fs from 'fs';
+import { AnchorConfig, Contracts } from 'addresses/types';
 
-export const configFilePath = path.join(homedir(), ".anchorcli_contracts.json");
+export const configFilePath = path.join(homedir(), '.anchorcli_contracts.json');
 
 export const config = (() => {
   try {
@@ -22,18 +22,18 @@ export const config = (() => {
 export function loadConfig(): AnchorConfig {
   if (!fs.existsSync(configFilePath)) {
     let config: AnchorConfig = JSON.parse(
-      fs.readFileSync("src/addresses/anchor-config.json").toString()
+      fs.readFileSync('src/addresses/anchor-config.json').toString(),
     );
     return config;
   } else {
     try {
       const loadedConfig: AnchorConfig = JSON.parse(
-        fs.readFileSync(configFilePath).toString()
+        fs.readFileSync(configFilePath).toString(),
       );
       return loadedConfig;
     } catch (e) {
       throw new Error(
-        `Could not parse config file ${configFilePath}: ${e.message}`
+        `Could not parse config file ${configFilePath}: ${e.message}`,
       );
     }
   }
@@ -42,7 +42,7 @@ export function loadConfig(): AnchorConfig {
 export function saveContractAddresses(newContractAddresses: AnchorConfig) {
   fs.writeFileSync(
     configFilePath,
-    JSON.stringify(newContractAddresses, null, 2)
+    JSON.stringify(newContractAddresses, null, 2),
   );
 }
 

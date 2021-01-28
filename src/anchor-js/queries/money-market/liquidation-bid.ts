@@ -1,5 +1,5 @@
-import { LCDClient } from "@terra-money/terra.js";
-import { AddressProvider } from "../../address-provider/types";
+import { LCDClient } from '@terra-money/terra.js';
+import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   lcd: LCDClient;
@@ -18,14 +18,14 @@ export const queryLiquidationBid = ({
   collateralToken,
   bidder,
 }: Option) => async (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): Promise<BidResponse> => {
   const liquidationContractAddress = addressProvider.liquidation();
   let response: BidResponse = await lcd.wasm.contractQuery(
     liquidationContractAddress,
     {
       bid: { collateral_token: collateralToken, bidder: bidder },
-    }
+    },
   );
   return response;
 };

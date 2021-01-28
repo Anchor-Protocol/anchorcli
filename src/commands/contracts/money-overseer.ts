@@ -1,4 +1,4 @@
-import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
+import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 
 import {
   createExecMenu,
@@ -6,18 +6,18 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from '../../util/contract-menu';
 import {
   fabricatebOverseerConfig,
   fabricatebOverseerEpoch,
   fabricatebOverseerUpWhiteList,
   fabricatebOverseerWhiteList,
-} from "../../anchor-js/fabricators";
-import { Dec, DistributionParams } from "@terra-money/terra.js";
+} from '../../anchor-js/fabricators';
+import { Dec, DistributionParams } from '@terra-money/terra.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
+} from '../../addresses/from-json';
 import {
   queryOverseerAllCollaterals,
   queryOverseerBorrowLimit,
@@ -26,28 +26,28 @@ import {
   queryOverseerDistributionParams,
   queryOverseerEpochState,
   queryOverseerWhitelist,
-} from "../../anchor-js/queries";
-import { Parse } from "../../util/parse-input";
+} from '../../anchor-js/queries';
+import { Parse } from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 
 const menu = createExecMenu(
-  "overseer",
-  "Anchor MoneyMarket Overseer contract functions"
+  'overseer',
+  'Anchor MoneyMarket Overseer contract functions',
 );
 
 const executeEpochOperation = menu
-  .command("execute_epoch_operations")
-  .description("Execute epoch operations")
+  .command('execute_epoch_operations')
+  .description('Execute epoch operations')
   .action(async () => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricatebOverseerEpoch({
       address: userAddress,
-      overseer: "overseer",
+      overseer: 'overseer',
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -63,33 +63,33 @@ interface Config {
   priceTimeframe?: number;
 }
 const updateConfig = menu
-  .command("update-config")
-  .description("Update the configuration of the contract")
-  .option("--owner-address <AccAddress>", "Address of new contract owner")
-  .option("--oracle-contract <AccAddress>", "Contract address of new Oracle")
+  .command('update-config')
+  .description('Update the configuration of the contract')
+  .option('--owner-address <AccAddress>', 'Address of new contract owner')
+  .option('--oracle-contract <AccAddress>', 'Contract address of new Oracle')
   .option(
-    "--liquidation-contract <AccAddress>",
-    "Contract address of new Liquidation Contract"
+    '--liquidation-contract <AccAddress>',
+    'Contract address of new Liquidation Contract',
   )
   .option(
-    "--distribution-threshold <Dec>",
-    "New threshold per-block deposit rate to trigger interest buffer distribution"
+    '--distribution-threshold <Dec>',
+    'New threshold per-block deposit rate to trigger interest buffer distribution',
   )
   .option(
-    "--target-deposit-rate <Dec>",
-    "New maximum per-block deposit rate before a portion of rewards are set aside as interest buffer"
+    '--target-deposit-rate <Dec>',
+    'New maximum per-block deposit rate before a portion of rewards are set aside as interest buffer',
   )
   .option(
-    "--buffer-distribution-rate <Dec>",
-    "New maximum portion of interest buffer that can be distributed in an epoch"
+    '--buffer-distribution-rate <Dec>',
+    'New maximum portion of interest buffer that can be distributed in an epoch',
   )
   .option(
-    "--epoch-period <int>",
-    "New minimum time delay between epoch operations"
+    '--epoch-period <int>',
+    'New minimum time delay between epoch operations',
   )
   .option(
-    "--price-timeframe <int>",
-    "New window of time before price data is considered outdated"
+    '--price-timeframe <int>',
+    'New window of time before price data is considered outdated',
   )
   .action(
     async ({
@@ -105,11 +105,11 @@ const updateConfig = menu
       const key = new CLIKey({ keyName: menu.from });
       const userAddress = key.accAddress;
       const addressProvider = new AddressProviderFromJSON(
-        resolveChainIDToNetworkName(menu.chainId)
+        resolveChainIDToNetworkName(menu.chainId),
       );
       const msg = fabricatebOverseerConfig({
         address: userAddress,
-        overseer: "overseer",
+        overseer: 'overseer',
         owner_addr: ownerAddress,
         oracle_contract: oracleContract,
         liquidation_contract: liquidationContract,
@@ -120,7 +120,7 @@ const updateConfig = menu
         price_timeframe: +priceTimeframe,
       })(addressProvider);
       await handleExecCommand(menu, msg);
-    }
+    },
   );
 
 interface WhiteList {
@@ -130,29 +130,29 @@ interface WhiteList {
 }
 
 const whiteList = menu
-  .command("whitelist")
-  .description("Whitelist a new collateral accepted in the money market")
+  .command('whitelist')
+  .description('Whitelist a new collateral accepted in the money market')
   .requiredOption(
-    "--collateral-token <AccAddress>",
-    "Cw20 token contract address of collateral"
+    '--collateral-token <AccAddress>',
+    'Cw20 token contract address of collateral',
   )
   .option(
-    "--custody-contract <AccAddress>",
-    "New Custody contract address of collateral"
+    '--custody-contract <AccAddress>',
+    'New Custody contract address of collateral',
   )
   .option(
-    "--ltv <Dec>",
-    "New maximum loan-to-value ratio allowed for collateral"
+    '--ltv <Dec>',
+    'New maximum loan-to-value ratio allowed for collateral',
   )
   .action(async ({ collateralToken, custodyContract, ltv }: WhiteList) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricatebOverseerWhiteList({
       address: userAddress,
-      overseer: "overseer",
+      overseer: 'overseer',
       collateral_token: collateralToken,
       custody_contract: custodyContract,
       ltv: ltv,
@@ -167,39 +167,39 @@ interface UpdateWhiteList {
 }
 
 const updateWhiteList = menu
-  .command("update_whitelist")
+  .command('update_whitelist')
   .description('Update information for an already whitelisted collateral"')
   .requiredOption(
-    "--collateral-token <AccAddress>",
-    "Cw20 token contract address of collateral"
+    '--collateral-token <AccAddress>',
+    'Cw20 token contract address of collateral',
   )
   .option(
-    "--custody-contract <AccAddress>",
-    "New Custody contract address of collateral"
+    '--custody-contract <AccAddress>',
+    'New Custody contract address of collateral',
   )
   .option(
-    "--ltv <Dec>",
-    "New maximum loan-to-value ratio allowed for collateral"
+    '--ltv <Dec>',
+    'New maximum loan-to-value ratio allowed for collateral',
   )
   .action(
     async ({ collateralToken, custodyContract, ltv }: UpdateWhiteList) => {
       const key = new CLIKey({ keyName: menu.from });
       const userAddress = key.accAddress;
       const addressProvider = new AddressProviderFromJSON(
-        resolveChainIDToNetworkName(menu.chainId)
+        resolveChainIDToNetworkName(menu.chainId),
       );
       const msg = fabricatebOverseerUpWhiteList({
         address: userAddress,
-        overseer: "overseer",
+        overseer: 'overseer',
         collateral_token: collateralToken,
         custody_contract: custodyContract,
         ltv: ltv,
       })(addressProvider);
       await handleExecCommand(menu, msg);
-    }
+    },
   );
 
-const query = createQueryMenu("overseer", "Anchor overseer contract queries");
+const query = createQueryMenu('overseer', 'Anchor overseer contract queries');
 
 interface AllCollaterals {
   startAfter?: string;
@@ -207,18 +207,18 @@ interface AllCollaterals {
 }
 
 const getAllCollaterals = query
-  .command("all-collaterals")
-  .description("Get locked collateral information for all borrowers")
-  .option("--start-after <AccAddress>", "Borrower address of start query")
-  .option("--limit <int>", "Maximum number of query entries")
+  .command('all-collaterals')
+  .description('Get locked collateral information for all borrowers')
+  .option('--start-after <AccAddress>', 'Borrower address of start query')
+  .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: AllCollaterals) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const queryAllCollaterals = await queryOverseerAllCollaterals({
       lcd,
-      overseer: "overseer",
+      overseer: 'overseer',
       startAfter: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);
@@ -231,20 +231,20 @@ interface BorrowLimit {
 }
 
 const getBorrowLimit = query
-  .command("borrow-limit")
+  .command('borrow-limit')
   .description(
-    "Get the borrow limit for the specified borrower. Fails if the oracle price is expired"
+    'Get the borrow limit for the specified borrower. Fails if the oracle price is expired',
   )
-  .requiredOption("--borrower <AccAddress>", "Address of borrower")
-  .option("--block-time <int>", "Current block timestamp")
+  .requiredOption('--borrower <AccAddress>', 'Address of borrower')
+  .option('--block-time <int>', 'Current block timestamp')
   .action(async ({ borrower, blockTime }: BorrowLimit) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const queryBorrowLimit = await queryOverseerBorrowLimit({
       lcd,
-      overseer: "overseer",
+      overseer: 'overseer',
       borrower: accAddress(borrower),
       blockTime: int(blockTime),
     })(addressProvider);
@@ -256,63 +256,63 @@ interface Collaterals {
 }
 
 const getCollaterals = query
-  .command("collaterals")
-  .description("Get locked collateral information for the specified borrower")
-  .requiredOption("--borrower <AccAddress>", "Address of borrower")
+  .command('collaterals')
+  .description('Get locked collateral information for the specified borrower')
+  .requiredOption('--borrower <AccAddress>', 'Address of borrower')
   .action(async ({ borrower }: Collaterals) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const queryCollaterals = await queryOverseerCollaterals({
       lcd,
-      overseer: "overseer",
+      overseer: 'overseer',
       borrower: accAddress(borrower),
     })(addressProvider);
     await handleQueryCommand(query, queryCollaterals);
   });
 
 const getConfig = query
-  .command("config")
-  .description("Get the configuration of the Overseer contract")
+  .command('config')
+  .description('Get the configuration of the Overseer contract')
   .action(async ({}: Config) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const queryConfig = await queryOverseerConfig({
       lcd,
-      overseer: "overseer",
+      overseer: 'overseer',
     })(addressProvider);
     await handleQueryCommand(query, queryConfig);
   });
 
 const getDistributionParams = query
-  .command("distribution-params")
-  .description("Get parameter information related to reward distribution")
+  .command('distribution-params')
+  .description('Get parameter information related to reward distribution')
   .action(async ({}: DistributionParams) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const queryDistributionParams = await queryOverseerDistributionParams({
       lcd,
-      overseer: "overseer",
+      overseer: 'overseer',
     })(addressProvider);
     await handleQueryCommand(query, queryDistributionParams);
   });
 
 const getEpochState = query
-  .command("epoch-state")
-  .description("Get information related to the current epoch")
+  .command('epoch-state')
+  .description('Get information related to the current epoch')
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const queryEpochState = await queryOverseerEpochState({
       lcd,
-      overseer: "overseer",
+      overseer: 'overseer',
     })(addressProvider);
     await handleQueryCommand(query, queryEpochState);
   });
@@ -324,27 +324,27 @@ interface QueryWhitelist {
 }
 
 const getWhitelist = query
-  .command("whitelist")
+  .command('whitelist')
   .description(
-    "Get information about the specified collateral if the collateral_token field is filled. Gets information about all collaterals if the collateral_token field is not filled"
+    'Get information about the specified collateral if the collateral_token field is filled. Gets information about all collaterals if the collateral_token field is not filled',
   )
   .option(
-    "--collateral-token <AccAddress>",
-    "Cw20 Token address of collateral to query information"
+    '--collateral-token <AccAddress>',
+    'Cw20 Token address of collateral to query information',
   )
   .option(
-    "--start-after <AccAddress>",
-    "Collateral Cw20 Token address to start query"
+    '--start-after <AccAddress>',
+    'Collateral Cw20 Token address to start query',
   )
-  .option("--limit <int>", "Maximum number of query entries")
+  .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ collateralToken, startAfter, limit }: QueryWhitelist) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const queryWhitelist = await queryOverseerWhitelist({
       lcd,
-      overseer: "overseer",
+      overseer: 'overseer',
       collateralToken: accAddress(collateralToken),
       startAfter: accAddress(startAfter),
       limit: int(limit),

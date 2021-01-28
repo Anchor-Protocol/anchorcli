@@ -4,28 +4,28 @@ import {
   getLCDClient,
   handleExecCommand,
   handleQueryCommand,
-} from "../../util/contract-menu";
+} from '../../util/contract-menu';
 import {
   fabricatebSwapbLuna,
   fabricatebTerraSwapCreatePair,
   fabricateTerraSwapProvideLiquidity,
-} from "../../anchor-js/fabricators";
+} from '../../anchor-js/fabricators';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
-} from "../../addresses/from-json";
-import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { querySimulation } from "../../anchor-js/queries/terraswap /simulation";
-import { queryNativeSimulation } from "../../anchor-js/queries/terraswap /native-simulation";
-import { queryPool } from "../../anchor-js/queries/terraswap /pool";
-import { queryPair } from "../../anchor-js/queries/terraswap /pairs";
-import { queryReverseNativeSimulation } from "../../anchor-js/queries/terraswap /reverse-native-simulation";
-import { queryReverseTokenSimulation } from "../../anchor-js/queries/terraswap /reverse-token-simulation";
-import { fabricatebSwapLuna } from "../../anchor-js/fabricators/terraswap/swap-native";
+} from '../../addresses/from-json';
+import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
+import { querySimulation } from '../../anchor-js/queries/terraswap /simulation';
+import { queryNativeSimulation } from '../../anchor-js/queries/terraswap /native-simulation';
+import { queryPool } from '../../anchor-js/queries/terraswap /pool';
+import { queryPair } from '../../anchor-js/queries/terraswap /pairs';
+import { queryReverseNativeSimulation } from '../../anchor-js/queries/terraswap /reverse-native-simulation';
+import { queryReverseTokenSimulation } from '../../anchor-js/queries/terraswap /reverse-token-simulation';
+import { fabricatebSwapLuna } from '../../anchor-js/fabricators/terraswap/swap-native';
 
 const menu = createExecMenu(
-  "terraswap",
-  "terraswap, anchor related contract functions"
+  'terraswap',
+  'terraswap, anchor related contract functions',
 );
 
 interface CreatePair {
@@ -33,18 +33,18 @@ interface CreatePair {
 }
 
 const create_pair = menu
-  .command("create-pair")
-  .description("Create LP token contract")
-  .requiredOption("--denom <string>", "Supported native token")
+  .command('create-pair')
+  .description('Create LP token contract')
+  .requiredOption('--denom <string>', 'Supported native token')
   .action(async ({ denom }: CreatePair) => {
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const pair_message = fabricatebTerraSwapCreatePair({
       address: userAddress,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       nativeToken: denom,
     })(addressProvider);
     await handleExecCommand(menu, pair_message);
@@ -58,17 +58,17 @@ interface provideLiquidityArgs {
 }
 
 const provideLiquidity = menu
-  .command("provide-liquidity")
-  .description("Provide liquidity to a Terraswap pool")
+  .command('provide-liquidity')
+  .description('Provide liquidity to a Terraswap pool')
   .requiredOption(
-    "--token-amount <string>",
-    "first side of liquidity pool e.g. 1000bluna"
+    '--token-amount <string>',
+    'first side of liquidity pool e.g. 1000bluna',
   )
   .requiredOption(
-    "--native-amount <string>",
-    "second side of liquidity pool e.g. 1000uusd"
+    '--native-amount <string>',
+    'second side of liquidity pool e.g. 1000uusd',
   )
-  .option("--slippage-tolerance <Dec>", "")
+  .option('--slippage-tolerance <Dec>', '')
   .action(
     async ({
       slippageTolerance,
@@ -77,7 +77,7 @@ const provideLiquidity = menu
       quote,
     }: provideLiquidityArgs) => {
       const addressProvider = new AddressProviderFromJSON(
-        resolveChainIDToNetworkName(menu.chainId)
+        resolveChainIDToNetworkName(menu.chainId),
       );
       const key = new CLIKey({ keyName: menu.from });
       const userAddress = key.accAddress;
@@ -85,12 +85,12 @@ const provideLiquidity = menu
         address: userAddress,
         slippageTolerance: slippageTolerance,
         quote: quote,
-        bAsset: "bluna",
+        bAsset: 'bluna',
         tokenAmount: tokenAmount,
         nativeAmount: nativeAmount,
       })(addressProvider);
       await handleExecCommand(menu, message);
-    }
+    },
   );
 
 interface swapArgs {
@@ -101,16 +101,16 @@ interface swapArgs {
   denom: string;
 }
 const swapNative = menu
-  .command("swap-native")
-  .description("Swap native asset to cw20 asset another using Terraswap")
-  .requiredOption("--denom <string>", "Native denom")
-  .requiredOption("--amount <string>", "Native amount to swap")
-  .option("--to <AccAddress>", "Account to send swapped funds to")
-  .option("--max-spread <Dec>", "")
-  .option("--belief-price <Dec>", "")
+  .command('swap-native')
+  .description('Swap native asset to cw20 asset another using Terraswap')
+  .requiredOption('--denom <string>', 'Native denom')
+  .requiredOption('--amount <string>', 'Native amount to swap')
+  .option('--to <AccAddress>', 'Account to send swapped funds to')
+  .option('--max-spread <Dec>', '')
+  .option('--belief-price <Dec>', '')
   .action(async ({ to, beliefPrice, maxSpread, amount, denom }: swapArgs) => {
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
@@ -132,15 +132,15 @@ interface swapArgs {
   amount: string;
 }
 const swap = menu
-  .command("swap-cw20")
-  .description("Swap cw20 asset to native asset using Terraswap")
-  .requiredOption("--amount <string>", "bAsset amount to swap")
-  .option("--to <AccAddress>", "Account to send swapped funds to")
-  .option("--max-spread <Dec>", "")
-  .option("--belief-price <Dec>", "")
+  .command('swap-cw20')
+  .description('Swap cw20 asset to native asset using Terraswap')
+  .requiredOption('--amount <string>', 'bAsset amount to swap')
+  .option('--to <AccAddress>', 'Account to send swapped funds to')
+  .option('--max-spread <Dec>', '')
+  .option('--belief-price <Dec>', '')
   .action(async ({ to, beliefPrice, maxSpread, amount }: swapArgs) => {
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId)
+      resolveChainIDToNetworkName(menu.chainId),
     );
     console.log(amount);
     const key = new CLIKey({ keyName: menu.from });
@@ -148,7 +148,7 @@ const swap = menu
     const pair_message = fabricatebSwapbLuna({
       address: userAddress,
       amount: amount,
-      bAsset: "bluna",
+      bAsset: 'bluna',
       to: to,
       beliefPrice: beliefPrice,
       maxSpread: maxSpread,
@@ -156,24 +156,24 @@ const swap = menu
     await handleExecCommand(menu, pair_message);
   });
 
-const query = createQueryMenu("terraswap", "Terraswap contract queries");
+const query = createQueryMenu('terraswap', 'Terraswap contract queries');
 
 interface TokenSimulation {
   contractAddr: string;
   amount: string;
 }
 const getRevTokenSimulation = query
-  .command("token-reverse-imulation")
-  .description("Simulate and determine swap price")
+  .command('token-reverse-imulation')
+  .description('Simulate and determine swap price')
   .requiredOption(
-    "--contract-addr <AccAddress>",
-    "Contract address of the asset to swap into"
+    '--contract-addr <AccAddress>',
+    'Contract address of the asset to swap into',
   )
-  .requiredOption("--amount <string>", "Amount of the asset to swap from")
+  .requiredOption('--amount <string>', 'Amount of the asset to swap from')
   .action(async ({ contractAddr, amount }: TokenSimulation) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const reverse_sim_query = await queryReverseTokenSimulation({
       lcd,
@@ -188,14 +188,14 @@ interface NativeSimulation {
   amount: string;
 }
 const getRevNativeTokenSimulation = query
-  .command("native-reverse-simulation")
-  .description("Simulate and determine swap price")
-  .requiredOption("--denom <string>", "Native asset denom to swap into")
-  .requiredOption("--amount <string>", "Amount of the asset to swap into")
+  .command('native-reverse-simulation')
+  .description('Simulate and determine swap price')
+  .requiredOption('--denom <string>', 'Native asset denom to swap into')
+  .requiredOption('--amount <string>', 'Amount of the asset to swap into')
   .action(async ({ denom, amount }: NativeSimulation) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const reverse_sim_query = await queryReverseNativeSimulation({
       lcd,
@@ -206,24 +206,24 @@ const getRevNativeTokenSimulation = query
   });
 
 const getPool = query
-  .command("pool")
-  .description("Get pool information on pair")
+  .command('pool')
+  .description('Get pool information on pair')
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const pool_query = await queryPool({ lcd })(addressProvider);
     await handleQueryCommand(query, pool_query);
   });
 
 const getPair = query
-  .command("pair")
-  .description("Get terraswap pair")
+  .command('pair')
+  .description('Get terraswap pair')
   .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId)
+      resolveChainIDToNetworkName(query.chainId),
     );
     const pair_query = await queryPair({ lcd })(addressProvider);
     await handleQueryCommand(query, pair_query);

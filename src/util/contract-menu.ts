@@ -1,9 +1,9 @@
-import * as commander from "commander";
-import * as _ from "lodash";
-const jsome = require("jsome");
-const yesno = require("yesno");
-import { Parse } from "./parse-input";
-import * as yaml from "yaml";
+import * as commander from 'commander';
+import * as _ from 'lodash';
+const jsome = require('jsome');
+const yesno = require('yesno');
+import { Parse } from './parse-input';
+import * as yaml from 'yaml';
 
 import {
   StdFee,
@@ -11,9 +11,9 @@ import {
   Coins,
   MsgExecuteContract,
   LCDClient,
-} from "@terra-money/terra.js";
-import { CLIKey } from "@terra-money/terra.js/dist/key/CLIKey";
-import { loadConfig } from "./config";
+} from '@terra-money/terra.js';
+import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
+import { loadConfig } from './config';
 
 export function getLCDClient(): LCDClient {
   return new LCDClient(loadConfig().lcd);
@@ -21,53 +21,53 @@ export function getLCDClient(): LCDClient {
 
 export function createExecMenu(
   name: string,
-  description: string
+  description: string,
 ): commander.Command {
   const exec = new commander.Command(name);
   exec
     .description(description)
-    .option("--yaml", "Encode result as YAML instead of JSON")
-    .option("-y,--yes", "Sign transaction without confirming (yes)")
-    .option("--home <string>", "Directory for config of terracli")
-    .option("--from <key-name>", "*Name of key in terracli keyring")
+    .option('--yaml', 'Encode result as YAML instead of JSON')
+    .option('-y,--yes', 'Sign transaction without confirming (yes)')
+    .option('--home <string>', 'Directory for config of terracli')
+    .option('--from <key-name>', '*Name of key in terracli keyring')
     .option(
-      "--generate-only",
-      "Build an unsigned transaction and write it to stdout"
+      '--generate-only',
+      'Build an unsigned transaction and write it to stdout',
     )
     .option(
-      "-G,--generate-msg",
-      "Build an ExecuteMsg (good for including in poll)"
+      '-G,--generate-msg',
+      'Build an ExecuteMsg (good for including in poll)',
     )
-    .option("--base64", "For --generate-msg: returns msg as base64")
+    .option('--base64', 'For --generate-msg: returns msg as base64')
     .option(
-      "-b,--broadcast-mode <string>",
-      "Transaction broadcasting mode (sync|async|block) (default: sync)",
-      "sync"
+      '-b,--broadcast-mode <string>',
+      'Transaction broadcasting mode (sync|async|block) (default: sync)',
+      'sync',
     )
     // StdSignMsg
-    .option("--chain-id <string>", "Chain ID of Terra node")
+    .option('--chain-id <string>', 'Chain ID of Terra node')
     .option(
-      "-a,--account-number <int>",
-      "The account number of the signing account (offline mode)"
+      '-a,--account-number <int>',
+      'The account number of the signing account (offline mode)',
     )
     .option(
-      "-s,--sequence <int>",
-      "The sequence number of the signing account (offline mode)"
+      '-s,--sequence <int>',
+      'The sequence number of the signing account (offline mode)',
     )
-    .option("--memo <string>", "Memo to send along with transaction")
+    .option('--memo <string>', 'Memo to send along with transaction')
     // Fees & Gas
-    .option("--fees <coins>", "Fees to pay along with transaction")
+    .option('--fees <coins>', 'Fees to pay along with transaction')
     .option(
-      "--gas <int|auto>",
-      '*Gas limit to set per-transaction; set to "auto" to calculate required gas automatically'
+      '--gas <int|auto>',
+      '*Gas limit to set per-transaction; set to "auto" to calculate required gas automatically',
     )
     .option(
-      "--gas-adjustment <float>",
-      "Adjustment factor to be multiplied against the estimate returned by the tx simulation"
+      '--gas-adjustment <float>',
+      'Adjustment factor to be multiplied against the estimate returned by the tx simulation',
     )
     .option(
-      "--gas-prices <coins>",
-      "Gas prices to determine the transaction fee (e.g. 10uluna,12.5ukrw)"
+      '--gas-prices <coins>',
+      'Gas prices to determine the transaction fee (e.g. 10uluna,12.5ukrw)',
     );
 
   return exec;
@@ -75,30 +75,30 @@ export function createExecMenu(
 
 export function createQueryMenu(
   name: string,
-  description: string
+  description: string,
 ): commander.Command {
   const query = new commander.Command(name);
   query
     .description(description)
-    .option("--yaml", "Encode result as YAML instead of JSON");
+    .option('--yaml', 'Encode result as YAML instead of JSON');
   return query;
 }
 
 //TODO: Processing LCD & key and Wallet must be implemented
 export async function handleExecCommand(
   exec: commander.Command,
-  msgs: MsgExecuteContract[]
+  msgs: MsgExecuteContract[],
 ) {
   if (!exec.generateMsg) {
     if (exec.from === undefined) {
       throw new Error(
-        `--from <key-name> must be provided if not --generate-msg`
+        `--from <key-name> must be provided if not --generate-msg`,
       );
     }
 
     if (exec.gas === undefined) {
       throw new Error(
-        `--gas <int|auto> must be provided if not --generate-msg`
+        `--gas <int|auto> must be provided if not --generate-msg`,
       );
     }
   }
@@ -106,7 +106,7 @@ export async function handleExecCommand(
   if (exec.generateMsg) {
     if (exec.base64) {
       return console.log(
-        Buffer.from(JSON.stringify(msgs[0].execute_msg)).toString("base64")
+        Buffer.from(JSON.stringify(msgs[0].execute_msg)).toString('base64'),
       );
     }
     return console.log(JSON.stringify(msgs[0].execute_msg));
@@ -119,7 +119,7 @@ export async function handleExecCommand(
   //TODO: chain id can be an input value or
   const chainId: string = exec.chainId;
 
-  const memo: string = exec.memo ? exec.memo : "";
+  const memo: string = exec.memo ? exec.memo : '';
 
   let accountNumber: number;
   let sequence: number;
@@ -129,7 +129,7 @@ export async function handleExecCommand(
     // ensure that both account number and sequence number are set
     if (exec.accountNumber === undefined || exec.sequence == undefined) {
       throw new Error(
-        `both account-number and sequence must be provided if one is provided.`
+        `both account-number and sequence must be provided if one is provided.`,
       );
     }
     accountNumber = Parse.int(exec.accountNumber);
@@ -144,7 +144,7 @@ export async function handleExecCommand(
   let gas: number;
   let feeAmount: Coins;
 
-  if (exec.gas === "auto") {
+  if (exec.gas === 'auto') {
     // estimate gas
     const estimatedFee = (
       await lcd.tx.create(key.accAddress, {
@@ -180,7 +180,7 @@ export async function handleExecCommand(
     sequence,
     new StdFee(gas, feeAmount),
     msgs,
-    memo
+    memo,
   );
 
   if (exec.generateOnly) {
@@ -201,7 +201,7 @@ export async function handleExecCommand(
           msg,
           fee: unsignedTx.fee.toData(),
           memo,
-        })
+        }),
       );
 
       const ok = await yesno({
@@ -210,7 +210,7 @@ export async function handleExecCommand(
       });
 
       if (!ok) {
-        console.log("Process aborted.");
+        console.log('Process aborted.');
         process.exit(1);
       }
     }
@@ -218,18 +218,18 @@ export async function handleExecCommand(
     const signedTx = await key.signTx(unsignedTx);
     let result;
     switch (exec.broadcastMode) {
-      case "sync":
+      case 'sync':
         result = await lcd.tx.broadcastSync(signedTx);
         break;
-      case "async":
+      case 'async':
         result = await lcd.tx.broadcastAsync(signedTx);
         break;
-      case "block":
+      case 'block':
         result = await lcd.tx.broadcast(signedTx);
         break;
       default:
         throw new Error(
-          `invalid broadcast-mode '${exec.broadcastMode}' - must be sync|async|block`
+          `invalid broadcast-mode '${exec.broadcastMode}' - must be sync|async|block`,
         );
     }
     if (exec.yaml) {

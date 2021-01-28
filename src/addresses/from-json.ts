@@ -1,21 +1,21 @@
-import { Contracts } from "./types";
-import { AddressProvider } from "../anchor-js/address-provider/types";
+import { Contracts } from './types';
+import { AddressProvider } from '../anchor-js/address-provider/types';
 
 export enum NETWORKS {
   COLUMBUS4,
   TEQUILA0004,
 }
-import { loadConfig } from "../util/config";
+import { loadConfig } from '../util/config';
 
 const contracts: Contracts = loadConfig().contracts;
 
 const chainIDToNetworkName: any = {
-  "tequila-0004": NETWORKS.TEQUILA0004,
+  'tequila-0004': NETWORKS.TEQUILA0004,
 };
 export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
   const network: NETWORKS =
     chainId === undefined
-      ? chainIDToNetworkName["tequila-0004"]
+      ? chainIDToNetworkName['tequila-0004']
       : chainIDToNetworkName[chainId];
   return network;
 };
@@ -71,7 +71,7 @@ export class AddressProviderFromJSON implements AddressProvider.Provider {
 
   blunaBurn(quote: string): string {
     const address = this.addressesMap.blunaBurn[quote];
-    if (typeof address === "undefined") {
+    if (typeof address === 'undefined') {
       throw new Error(`there is not address for ${quote}`);
     }
     return address;

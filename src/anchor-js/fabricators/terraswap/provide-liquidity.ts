@@ -4,11 +4,11 @@ import {
   Coins,
   Int,
   MsgExecuteContract,
-} from "@terra-money/terra.js";
-import { validateInput } from "../../utils/validate-input";
-import { validateAddress } from "../../utils/validation/address";
-import { AddressProvider } from "../../address-provider/types";
-import { validateIsGreaterThanZero } from "../../utils/validation/number";
+} from '@terra-money/terra.js';
+import { validateInput } from '../../utils/validate-input';
+import { validateAddress } from '../../utils/validation/address';
+import { AddressProvider } from '../../address-provider/types';
+import { validateIsGreaterThanZero } from '../../utils/validation/number';
 
 interface Option {
   address: string;
@@ -27,7 +27,7 @@ export const fabricateTerraSwapProvideLiquidity = ({
   nativeAmount,
   quote,
 }: Option) => (
-  addressProvider: AddressProvider.Provider
+  addressProvider: AddressProvider.Provider,
 ): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
@@ -68,7 +68,7 @@ export const fabricateTerraSwapProvideLiquidity = ({
           slippage_tolerance: slippageTolerance,
         },
       },
-      coins
+      coins,
     ),
   ];
 };
