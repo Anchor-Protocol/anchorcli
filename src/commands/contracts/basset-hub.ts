@@ -50,8 +50,11 @@ interface BondArgs {
 const bond = menu
   .command('bond')
   .description('Bond asset and mint basset')
-  .requiredOption('--amount <string>', '*Asset to be bonded and minted')
-  .requiredOption('--validator <AccAddress>', 'validator to delegate to')
+  .requiredOption(
+    '--amount <string>',
+    'Amount of Asset to be bonded and minted',
+  )
+  .requiredOption('--validator <AccAddress>', 'Validator to delegate to')
   .action(async ({ amount, validator }: BondArgs) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
@@ -86,7 +89,7 @@ const global_index = menu
 
 const checkSlashing = menu
   .command('check-slashing')
-  .description('Check if a slashing event occurred ')
+  .description('Check if a slashing event occurred')
   .action(async () => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
