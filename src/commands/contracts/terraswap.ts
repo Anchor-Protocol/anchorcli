@@ -68,7 +68,10 @@ const provideLiquidity = menu
     '--native-amount <string>',
     'second side of liquidity pool e.g. 1000uusd',
   )
-  .option('--slippage-tolerance <Dec>', '')
+  .option(
+    '--slippage-tolerance <Dec>',
+    'Maximum difference between market and estimated price to execute transaction',
+  )
   .action(
     async ({
       slippageTolerance,
@@ -106,8 +109,11 @@ const swapNative = menu
   .requiredOption('--denom <string>', 'Native denom')
   .requiredOption('--amount <string>', 'Native amount to swap')
   .option('--to <AccAddress>', 'Account to send swapped funds to')
-  .option('--max-spread <Dec>', '')
-  .option('--belief-price <Dec>', '')
+  .option(
+    '--max-spread <Dec>',
+    'Maximum difference between market and estimated price to execute transaction',
+  )
+  .option('--belief-price <Dec>', 'Price submitted at the time of the swap')
   .action(async ({ to, beliefPrice, maxSpread, amount, denom }: swapArgs) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
@@ -136,8 +142,11 @@ const swap = menu
   .description('Swap cw20 asset to native asset using Terraswap')
   .requiredOption('--amount <string>', 'bAsset amount to swap')
   .option('--to <AccAddress>', 'Account to send swapped funds to')
-  .option('--max-spread <Dec>', '')
-  .option('--belief-price <Dec>', '')
+  .option(
+    '--max-spread <Dec>',
+    'Maximum difference between market and estimated price to execute transaction',
+  )
+  .option('--belief-price <Dec>', 'Price submitted at the time of the swap')
   .action(async ({ to, beliefPrice, maxSpread, amount }: swapArgs) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),

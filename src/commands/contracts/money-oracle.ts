@@ -36,7 +36,7 @@ interface FeedPrice {
 }
 
 const feedPrice = menu
-  .command('feed_price')
+  .command('feed-price')
   .description('Feeds new price data')
   .requiredOption('--prices <json>', 'Vector of assets and their prices')
   .action(async ({ prices }: FeedPrice) => {

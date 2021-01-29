@@ -37,7 +37,7 @@ const menu = createExecMenu(
 );
 
 const executeEpochOperation = menu
-  .command('execute_epoch_operations')
+  .command('execute-epoch-operations')
   .description('Execute epoch operations')
   .action(async () => {
     const key = new CLIKey({ keyName: menu.from });
@@ -167,7 +167,7 @@ interface UpdateWhiteList {
 }
 
 const updateWhiteList = menu
-  .command('update_whitelist')
+  .command('update-whitelist')
   .description('Update information for an already whitelisted collateral"')
   .requiredOption(
     '--collateral-token <AccAddress>',

@@ -43,7 +43,7 @@ const updateConfig = menu
     'Minimum per-block interest rate applied to borrows',
   )
   .option(
-    'interest-multiplier <Dec>',
+    '--interest-multiplier <Dec>',
     'Multiplier between utilization ratio and per-block borrow rate',
   )
   .action(async ({ owner, baseRate, interestMultiplier }: Config) => {
