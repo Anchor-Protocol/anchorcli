@@ -9,9 +9,9 @@ import { validateIsGreaterThanZero } from '../../utils/validation/number';
 import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
-    address: string;
-    market: string;
-    amount: number;
+  address: string;
+  market: string;
+  amount: number;
 }
 
 /**
@@ -23,30 +23,30 @@ interface Option {
  * @param symbol Symbol of collateral to deposit.
  * @param amount Amount of collateral to deposit.
  */
-export const fabricateOverseerLockCollaterall = ({
-                                               address,
-                                               market,
-                                               amount,
-                                           }: Option) => (
-    addressProvider: AddressProvider.Provider,
+export const fabricateOverseerLockCollateral = ({
+  address,
+  market,
+  amount,
+}: Option) => (
+  addressProvider: AddressProvider.Provider,
 ): MsgExecuteContract[] => {
-    validateInput([
-        validateAddress(address),
-        validateWhitelistedMarket(market),
-        validateIsGreaterThanZero(amount),
-    ]);
+  validateInput([
+    validateAddress(address),
+    validateWhitelistedMarket(market),
+    validateIsGreaterThanZero(amount),
+  ]);
 
-    const mmOverseerContract = addressProvider.overseer(market.toLowerCase());
+  const mmOverseerContract = addressProvider.overseer(market.toLowerCase());
 
-    return [
-        // lock_collateral call
-        new MsgExecuteContract(address, mmOverseerContract, {
-            // @see https://github.com/Anchor-Protocol/money-market-contracts/blob/master/contracts/overseer/src/msg.rs#L75
-            lock_collateral: {
-                collaterals: [
-                    [address, new Int(new Dec(amount).mul(1000000)).toString()],
-                ],
-            },
-        }),
-    ];
+  return [
+    // lock_collateral call
+    new MsgExecuteContract(address, mmOverseerContract, {
+      // @see https://github.com/Anchor-Protocol/money-market-contracts/blob/master/contracts/overseer/src/msg.rs#L75
+      lock_collateral: {
+        collaterals: [
+          [address, new Int(new Dec(amount).mul(1000000)).toString()],
+        ],
+      },
+    }),
+  ];
 };

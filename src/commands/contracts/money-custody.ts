@@ -6,7 +6,10 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
-import { fabricatebCustodyConfig } from '../../anchor-js/fabricators';
+import {
+  fabricatebCustodyConfig,
+  fabricateCustodyWithdrawCollateral,
+} from '../../anchor-js/fabricators';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -46,6 +49,34 @@ const updateConfig = menu
       address: userAddress,
       custody: 'custody',
       liquidation_contract: liquidationContract,
+    })(addressProvider);
+    await handleExecCommand(menu, msg);
+  });
+
+interface Withdraw {
+  amount?: string;
+}
+
+const withdraw_collateral = menu
+  .command('withdraw-collateral')
+  .description('Withdraw specified amount of spendable collateral')
+  .requiredOption('--amount <string>', '')
+  .action(async ({ amount }: Withdraw) => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+    let redeem_all = false;
+    if (amount === undefined) {
+      redeem_all = true;
+    }
+
+    const msg = fabricateCustodyWithdrawCollateral({
+      address: userAddress,
+      market: 'custody',
+      redeem_all: redeem_all,
+      amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });

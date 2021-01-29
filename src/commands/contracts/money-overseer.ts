@@ -12,6 +12,8 @@ import {
   fabricatebOverseerEpoch,
   fabricatebOverseerUpWhiteList,
   fabricatebOverseerWhiteList,
+  fabricateOverseerLockCollateral,
+  fabricateOverseerUnlockCollateral,
 } from '../../anchor-js/fabricators';
 import { Dec, DistributionParams } from '@terra-money/terra.js';
 import {
@@ -48,6 +50,43 @@ const executeEpochOperation = menu
     const msg = fabricatebOverseerEpoch({
       address: userAddress,
       overseer: 'overseer',
+    })(addressProvider);
+    await handleExecCommand(menu, msg);
+  });
+
+const lockCollateral = menu
+  .command('lock-collateral')
+  .description('Lock specified amount of collateral deposited')
+  .requiredOption('--amount <string>', 'Amount of token')
+  .action(async ({ amount }) => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+    const msg = fabricateOverseerLockCollateral({
+      address: userAddress,
+      market: 'overseer',
+      amount: amount,
+    })(addressProvider);
+    await handleExecCommand(menu, msg);
+  });
+
+const unlockCollateral = menu
+  .command('unlock-collateral')
+  .description('Unlock specified amount of collateral unlocked')
+  .requiredOption('--amount <string>', 'Amount of token')
+  .action(async ({ amount }) => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+    const msg = fabricateOverseerUnlockCollateral({
+      address: userAddress,
+      market: 'overseer',
+      redeem_all: true,
+      amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
