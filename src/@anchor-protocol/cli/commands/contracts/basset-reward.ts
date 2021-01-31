@@ -6,7 +6,7 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from '../../util/contract-menu';
-import { fabricatebAssetClaim } from '../../anchor-js/fabricators';
+import { fabricatebAssetClaim } from '@anchor-protocol/anchor.js/fabricators';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -16,9 +16,9 @@ import {
   queryRewardHolder,
   queryRewardHolders,
   queryRewardState,
-} from '../../anchor-js/queries';
-import { queryRewardAccrued } from '../../anchor-js/queries';
-import { Parse } from '../../util/parse-input';
+} from '@anchor-protocol/anchor.js/queries';
+import { queryRewardAccrued } from '@anchor-protocol/anchor.js/queries';
+import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 

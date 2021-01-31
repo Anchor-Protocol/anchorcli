@@ -9,7 +9,7 @@ import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import {
   fabricatebCustodyConfig,
   fabricateCustodyWithdrawCollateral,
-} from '../../anchor-js/fabricators';
+} from '@anchor-protocol/anchor.js/fabricators';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -18,8 +18,8 @@ import {
   queryCustodyBorrower,
   queryCustodyBorrowers,
   queryCustodyConfig,
-} from '../../anchor-js/queries';
-import { Parse } from '../../util/parse-input';
+} from '@anchor-protocol/anchor.js/queries';
+import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 

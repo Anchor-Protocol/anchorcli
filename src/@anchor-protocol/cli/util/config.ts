@@ -3,7 +3,7 @@ import { Numeric } from '@terra-money/terra.js/dist/core/numeric';
 import * as path from 'path';
 import { homedir } from 'os';
 import * as fs from 'fs';
-import { AnchorConfig, Contracts } from 'addresses/types';
+import { AnchorConfig, Contracts } from '../addresses/types';
 
 export const configFilePath = path.join(homedir(), '.anchorcli_contracts.json');
 

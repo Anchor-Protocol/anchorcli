@@ -9,3 +9,4 @@ keystore.db
 
 # artifacts
 dist
+out

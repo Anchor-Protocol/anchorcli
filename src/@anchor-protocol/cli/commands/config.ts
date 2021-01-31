@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { config, saveContractAddresses } from '../util/config';
 import * as dotProp from 'dot-prop';
-import { AnchorConfig } from 'addresses/types';
+import { AnchorConfig } from '../addresses/types';
 
 export const command = new Command('config');
 

@@ -13,7 +13,7 @@ import {
   fabricateDepositStableCoin,
   fabricateRedeemStable,
   fabricateRepay,
-} from '../../anchor-js/fabricators';
+} from '@anchor-protocol/anchor.js/fabricators';
 import { Dec } from '@terra-money/terra.js';
 import {
   AddressProviderFromJSON,
@@ -26,8 +26,8 @@ import {
   queryMarketLiability,
   queryMarketLoanAmount,
   queryMarketState,
-} from '../../anchor-js/queries';
-import { Parse } from '../../util/parse-input';
+} from '@anchor-protocol/anchor.js/queries';
+import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 

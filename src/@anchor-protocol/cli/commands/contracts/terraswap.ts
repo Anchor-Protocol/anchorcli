@@ -9,19 +9,19 @@ import {
   fabricatebSwapbLuna,
   fabricatebTerraSwapCreatePair,
   fabricateTerraSwapProvideLiquidity,
-} from '../../anchor-js/fabricators';
+} from '@anchor-protocol/anchor.js/fabricators';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
-import { querySimulation } from '../../anchor-js/queries/terraswap/simulation';
-import { queryNativeSimulation } from '../../anchor-js/queries/terraswap/native-simulation';
-import { queryPool } from '../../anchor-js/queries/terraswap/pool';
-import { queryPair } from '../../anchor-js/queries/terraswap/pairs';
-import { queryReverseNativeSimulation } from '../../anchor-js/queries/terraswap/reverse-native-simulation';
-import { queryReverseTokenSimulation } from '../../anchor-js/queries/terraswap/reverse-token-simulation';
-import { fabricatebSwapLuna } from '../../anchor-js/fabricators/terraswap/swap-native';
+import { querySimulation } from '@anchor-protocol/anchor.js/queries/terraswap/simulation';
+import { queryNativeSimulation } from '@anchor-protocol/anchor.js/queries/terraswap/native-simulation';
+import { queryPool } from '@anchor-protocol/anchor.js/queries/terraswap/pool';
+import { queryPair } from '@anchor-protocol/anchor.js/queries/terraswap/pairs';
+import { queryReverseNativeSimulation } from '@anchor-protocol/anchor.js/queries/terraswap/reverse-native-simulation';
+import { queryReverseTokenSimulation } from '@anchor-protocol/anchor.js/queries/terraswap/reverse-token-simulation';
+import { fabricatebSwapLuna } from '@anchor-protocol/anchor.js/fabricators/terraswap/swap-native';
 
 const menu = createExecMenu(
   'terraswap',

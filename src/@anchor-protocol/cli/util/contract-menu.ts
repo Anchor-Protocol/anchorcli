@@ -1,8 +1,7 @@
 import * as commander from 'commander';
-import * as _ from 'lodash';
-const jsome = require('jsome');
-const yesno = require('yesno');
-import { Parse } from './parse-input';
+import * as jsome from 'jsome';
+import * as yesno from 'yesno';
+import * as Parse from './parse-input';
 import * as yaml from 'yaml';
 
 import {

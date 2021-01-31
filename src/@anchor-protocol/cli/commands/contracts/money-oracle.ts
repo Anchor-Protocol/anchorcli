@@ -11,7 +11,7 @@ import { Dec } from '@terra-money/terra.js';
 import {
   fabricatebOracleConfig,
   fabricatebOracleFeedPrice,
-} from '../../anchor-js/fabricators';
+} from '@anchor-protocol/anchor.js/fabricators';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -20,8 +20,8 @@ import {
   queryOracleConfig,
   queryOraclePrice,
   queryOraclePrices,
-} from '../../anchor-js/queries';
-import { Parse } from '../../util/parse-input';
+} from '@anchor-protocol/anchor.js/queries';
+import * as Parse from '../../util/parse-input';
 import int = Parse.int;
 
 const menu = createExecMenu(

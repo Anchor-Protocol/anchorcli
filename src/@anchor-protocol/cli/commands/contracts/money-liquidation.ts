@@ -6,11 +6,11 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from '../../util/contract-menu';
-import { fabricateRetractBid } from '../../anchor-js/fabricators/money-market/liquidation-retract-bid';
+import { fabricateRetractBid } from '@anchor-protocol/anchor.js/fabricators/money-market/liquidation-retract-bid';
 import {
   fabricateLiquidationConfig,
   fabricateSubmitBid,
-} from '../../anchor-js/fabricators';
+} from '@anchor-protocol/anchor.js/fabricators';
 import { Dec } from '@terra-money/terra.js';
 import {
   AddressProviderFromJSON,
@@ -22,8 +22,8 @@ import {
   queryLiquidationBidsByCollateral,
   queryLiquidationConfig,
   queryLiquidationLiquidationAmount,
-} from '../../anchor-js/queries';
-import { Parse } from '../../util/parse-input';
+} from '@anchor-protocol/anchor.js/queries';
+import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 
