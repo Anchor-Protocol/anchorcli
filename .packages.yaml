@@ -1,3 +1,10 @@
+'@anchor-protocol/cli':
+  version: 0.1.0 # TODO bumpup version number before build and publish
+  tag: alpha # TODO change to `latest` when official release
+  module: commonjs
+  packageJson:
+    bin:
+      'anchorcli': ./bin/anchorcli
 '@anchor-protocol/*':
   version: 0.1.0 # TODO bumpup version number before build and publish
   tag: alpha # TODO change to `latest` when official release

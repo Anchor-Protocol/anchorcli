@@ -10,3 +10,7 @@ keystore.db
 # artifacts
 dist
 out
+
+# output
+coverage/
+test/storage/

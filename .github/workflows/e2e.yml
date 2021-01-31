@@ -1,4 +1,4 @@
-name: TEST
+name: E2E
 
 on:
   push:
@@ -9,15 +9,15 @@ on:
       - master
 
 jobs:
-  test:
-    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+  e2e:
+    name: E2E ${{ matrix.node }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         node: [12, 14, 15]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
       - name: Clone Repository
@@ -48,17 +48,5 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      - name: Build Test
-        run: yarn run build
-
-      - name: Lint
-        run: yarn run lint
-
-# TODO restore coverage test after set jest
-#      - name: Coverage Test
-#        run: yarn run coverage
-
-#      - name: Upload coverage to Codecov
-#        uses: codecov/codecov-action@v1
-#        with:
-#          files: ./packages/coverage/coverage-final.json # ./{workspace}/coverage/coverage-final.json,./{workspace}/coverage/coverage-final.json...
+      - name: E2E Test
+        run: yarn run e2e
