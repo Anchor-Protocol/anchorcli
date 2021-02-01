@@ -24,7 +24,7 @@
   "dependencies": {
     "commander": "^6.2.0",
     "lodash": "^4.17.20",
-    "@anchor-protocol/anchor.js": "^0.1.0",
+    "@anchor-protocol/anchor.js": "*",
     "@terra-money/terra.js": "^1.3.6",
     "dot-prop": "^6.0.1",
     "jsome": "^2.5.0",
