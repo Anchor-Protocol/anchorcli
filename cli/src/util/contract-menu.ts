@@ -1,6 +1,6 @@
 import * as commander from 'commander';
 //@ts-ignore
-import * as jsome from 'jsome';
+import jsome from 'jsome';
 import * as yesno from 'yesno';
 import * as Parse from './parse-input';
 import * as yaml from 'yaml';
