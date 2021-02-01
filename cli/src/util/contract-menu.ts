@@ -1,5 +1,4 @@
 import * as commander from 'commander';
-//@ts-ignore
 import jsome from 'jsome';
 import * as yesno from 'yesno';
 import * as Parse from './parse-input';
