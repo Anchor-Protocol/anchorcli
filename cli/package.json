@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "publish": "tsc && npm publish"
+    "prepublishOnly": "tsc"
   },
   "dependencies": {
     "commander": "^6.2.0",

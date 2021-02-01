@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "publish": "tsc && npm publish"
+    "prepublishOnly": "tsc"
   },
   "main": "./dist/index.js",
   "publishConfig": {
