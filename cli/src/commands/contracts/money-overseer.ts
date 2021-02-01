@@ -14,7 +14,7 @@ import {
   fabricatebOverseerWhiteList,
   fabricateOverseerLockCollateral,
   fabricateOverseerUnlockCollateral,
-} from '@anchor-protocol/anchor.js/fabricators';
+} from '@anchor-protocol/anchor.js/dist/fabricators';
 import { Dec, DistributionParams } from '@terra-money/terra.js';
 import {
   AddressProviderFromJSON,
@@ -28,7 +28,7 @@ import {
   queryOverseerDistributionParams,
   queryOverseerEpochState,
   queryOverseerWhitelist,
-} from '@anchor-protocol/anchor.js/queries';
+} from '@anchor-protocol/anchor.js/dist/queries';
 import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;

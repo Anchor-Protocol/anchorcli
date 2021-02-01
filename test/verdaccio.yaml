@@ -16,11 +16,11 @@ uplinks:
       maxFreeSockets: 10
 
 packages:
-  'rocket-punch':
+  '@anchor-protocol/anchor.js':
     access: $anonymous
     publish: $anonymous
 
-  '@ssen/*':
+  '@anchor-protocol/cli':
     access: $anonymous
     publish: $anonymous
 

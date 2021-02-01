@@ -1,4 +1,5 @@
 import * as commander from 'commander';
+//@ts-ignore
 import * as jsome from 'jsome';
 import * as yesno from 'yesno';
 import * as Parse from './parse-input';
@@ -203,6 +204,7 @@ export async function handleExecCommand(
         }),
       );
 
+      //@ts-ignore
       const ok = await yesno({
         question: `Confirm and sign transaction with key ${exec.from}? (y/N)`,
         defaultValue: false,

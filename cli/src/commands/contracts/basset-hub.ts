@@ -2,15 +2,15 @@ import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import {
   fabricatebAssetBond,
   fabricatebCheckSlashing,
-} from '@anchor-protocol/anchor.js/fabricators';
-import { fabricatebAssetUpdateGlobalIndex } from '@anchor-protocol/anchor.js/fabricators/basset/basset-update-global-index';
+} from '@anchor-protocol/anchor.js/dist/fabricators';
+import { fabricatebAssetUpdateGlobalIndex } from '@anchor-protocol/anchor.js/dist/fabricators/basset/basset-update-global-index';
 import {
   fabricatebAssetBurn,
   fabricatebAssetConfig,
   fabricatebAssetParams,
   fabricatebAssetWithdrawUnbonded,
   fabricateRegisterValidator,
-} from '@anchor-protocol/anchor.js/fabricators';
+} from '@anchor-protocol/anchor.js/dist/fabricators';
 import {
   createExecMenu,
   createQueryMenu,
@@ -31,10 +31,10 @@ import {
   queryHubUnbond,
   queryHubWhiteVals,
   queryHubWithdrawable,
-} from '@anchor-protocol/anchor.js/queries';
+} from '@anchor-protocol/anchor.js/dist/queries';
 import * as Parse from '../../util/parse-input';
+import { fabricateDeRegisterValidator } from '@anchor-protocol/anchor.js/dist/fabricators/basset/basset-deregister-validator';
 import accAddress = Parse.accAddress;
-import { fabricateDeRegisterValidator } from '@anchor-protocol/anchor.js/fabricators/basset/basset-deregister-validator';
 import int = Parse.int;
 
 const menu = createExecMenu(

@@ -8,7 +8,7 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import { Dec } from '@terra-money/terra.js';
-import { fabricatebInterestConfig } from '@anchor-protocol/anchor.js/fabricators/money-market/interest-update-config';
+import { fabricatebInterestConfig } from '@anchor-protocol/anchor.js/dist/fabricators/money-market/interest-update-config';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -16,7 +16,7 @@ import {
 import {
   queryInterestModelBorrowRate,
   queryInterestModelConfig,
-} from '@anchor-protocol/anchor.js/queries';
+} from '@anchor-protocol/anchor.js/dist/queries';
 import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 

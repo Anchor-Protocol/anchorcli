@@ -22,6 +22,7 @@ function stopLocalRegistry {
 
 function cleanup {
   stopLocalRegistry;
+  npm logout --registry "$LOCAL_REGISTRY_URL"
 }
 
 function handleError {
@@ -54,12 +55,17 @@ grep -q 'http address' <(tail -f "$VERDACCIO_REGISTRY_LOG"); # wating verdaccio
 
 ## LOCAL PUBLISH
 ## ==================================================----------------------------------
-node -r ts-node/register -r tsconfig-paths/register scripts/publish.ts --skip-selection --tag e2e --registry "$LOCAL_REGISTRY_URL";
+# TODO find how to local publish in monorepo
+cd "$ROOT/anchor.js";
+npm publish --tag e2e --registry "$LOCAL_REGISTRY_URL";
+
+cd "$ROOT/cli";
+npm publish --tag e2e --registry "$LOCAL_REGISTRY_URL";
+
+cd "$ROOT";
 
 # TEST
 # ==================================================----------------------------------
-npm install -g @anchor-protocol/cli
-
 # TODO write test scenario
 
 # EXIT

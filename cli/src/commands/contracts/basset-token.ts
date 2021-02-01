@@ -13,7 +13,7 @@ import {
   fabricatebAssetSendFrom,
   fabricatebAssetTransfer,
   fabricatebAssetTransferFrom,
-} from '@anchor-protocol/anchor.js/fabricators';
+} from '@anchor-protocol/anchor.js/dist/fabricators';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -23,13 +23,13 @@ import {
   queryTokenAllAllowance,
   queryTokenBalance,
   queryTokenMinter,
-} from '@anchor-protocol/anchor.js/queries';
-import { queryTokenInfo } from '@anchor-protocol/anchor.js/queries';
-import { queryTokenAllowance } from '@anchor-protocol/anchor.js/queries/basset/token-allowance';
+} from '@anchor-protocol/anchor.js/dist/queries';
+import { queryTokenInfo } from '@anchor-protocol/anchor.js/dist/queries';
+import { queryTokenAllowance } from '@anchor-protocol/anchor.js/dist/queries/basset/token-allowance';
 import * as Parse from '../../util/parse-input';
+import { fabricatebAssetSend } from '@anchor-protocol/anchor.js/dist/fabricators/basset/basset-send';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
-import { fabricatebAssetSend } from '@anchor-protocol/anchor.js/fabricators/basset/basset-send';
 
 const menu = createExecMenu(
   'basset-token',
