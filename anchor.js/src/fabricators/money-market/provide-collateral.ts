@@ -6,13 +6,13 @@ import { validateWhitelistedBAsset } from '../../utils/validation/basset';
 
 import { validateWhitelistedMarket } from '../../utils/validation/market';
 import { validateIsGreaterThanZero } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
   market: string;
   symbol: string;
-  amount: number;
+  amount: string;
 }
 
 /**
@@ -29,9 +29,7 @@ export const fabricateProvideCollateral = ({
   market,
   symbol,
   amount,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
     validateWhitelistedMarket(market),
@@ -61,7 +59,10 @@ export const fabricateProvideCollateral = ({
       // @see https://github.com/Anchor-Protocol/money-market-contracts/blob/master/contracts/overseer/src/msg.rs#L75
       lock_collateral: {
         collaterals: [
-          [address, new Int(new Dec(amount).mul(1000000)).toString()],
+          [
+            bAssetTokenContract,
+            new Int(new Dec(amount).mul(1000000)).toString(),
+          ],
         ],
       },
     }),

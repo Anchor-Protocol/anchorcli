@@ -119,7 +119,7 @@ interface SendFrom {
   amount: string;
   owner: string;
   contract: string;
-  msg?: object;
+  msg?: string;
 }
 const sendFrom = menu
   .command('send-from')
@@ -175,7 +175,9 @@ type Expire = { at_height: number } | { at_time: number } | { never: {} };
 interface Allowance {
   amount: string;
   spender: string;
-  expires?: Expire;
+  expiryHeight?: string;
+  expiryTime?: string;
+  expiryNever?: string;
 }
 
 const increaseAllowance = menu
@@ -183,44 +185,125 @@ const increaseAllowance = menu
   .description("burn bAsset from the user's allowance")
   .requiredOption('--spender <AccAddress>', 'Spender address')
   .requiredOption('--amount <string>', 'Amount to increase')
-  .option('--expires <json>', 'Expires at')
-  .action(async ({ amount, spender, expires }: Allowance) => {
-    const key = new CLIKey({ keyName: menu.from });
-    const userAddress = key.accAddress;
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId),
-    );
-    const msg = fabricatebAssetIncreaseAllowance({
-      address: userAddress,
-      amount: amount,
-      bAsset: 'bluna',
-      spender: spender,
-      expires: expires,
-    })(addressProvider);
-    await handleExecCommand(menu, msg);
-  });
+  .option('--expiry-height <int>', 'block height expiration of allowance')
+  .option('--expiry-time <int>', 'time expiration of allowance (seconds)')
+  .option('--expiry-never', 'never expires')
+  .action(
+    async ({
+      amount,
+      spender,
+      expiryHeight,
+      expiryTime,
+      expiryNever,
+    }: Allowance) => {
+      const key = new CLIKey({ keyName: menu.from });
+      const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId),
+      );
+      let expiry: Expire;
+      if (
+        +!!increaseAllowance.expiryHeight +
+          +!!increaseAllowance.expiryTime +
+          +!!increaseAllowance.expiryNever >=
+        2
+      ) {
+        throw new Error(
+          `can only use one option of --expiry-height, --expiry-time, --expiry-never`,
+        );
+      }
+
+      if (increaseAllowance.expiryHeight) {
+        expiry = {
+          at_height: Parse.int(expiryHeight),
+        };
+      }
+
+      if (increaseAllowance.expiryTime) {
+        expiry = {
+          at_time: Parse.int(expiryTime),
+        };
+      }
+
+      if (expiryNever) {
+        expiry = {
+          never: {},
+        };
+      }
+
+      const msg = fabricatebAssetIncreaseAllowance({
+        address: userAddress,
+        amount: amount,
+        bAsset: 'bluna',
+        spender: spender,
+        expires: expiry,
+      })(addressProvider);
+      await handleExecCommand(menu, msg);
+    },
+  );
 
 const decreaseAllowance = menu
   .command('decrease-allowance')
   .description("burn bAsset from the user's allowance")
-  .requiredOption('--sepender <AccAddress>', 'Spender address')
+  .requiredOption('--spender <AccAddress>', 'Spender address')
   .requiredOption('--amount <string>', 'Amount to increase')
-  .option('--expires <json>', 'Expires at')
-  .action(async ({ amount, spender, expires }: Allowance) => {
-    const key = new CLIKey({ keyName: menu.from });
-    const userAddress = key.accAddress;
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId),
-    );
-    const msg = fabricatebAssetdDecreaseAllowance({
-      address: userAddress,
-      amount: amount,
-      bAsset: 'bluna',
-      spender: spender,
-      expires: expires,
-    })(addressProvider);
-    await handleExecCommand(menu, msg);
-  });
+  .option('--expiry-height <int>', 'block height expiration of allowance')
+  .option('--expiry-time <int>', 'time expiration of allowance (seconds)')
+  .option('--expiry-never', 'never expires')
+  .action(
+    async ({
+      amount,
+      spender,
+      expiryHeight,
+      expiryTime,
+      expiryNever,
+    }: Allowance) => {
+      const key = new CLIKey({ keyName: menu.from });
+      const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId),
+      );
+
+      let expiry: Expire;
+      if (
+        +!!increaseAllowance.expiryHeight +
+          +!!increaseAllowance.expiryTime +
+          +!!increaseAllowance.expiryNever >=
+        2
+      ) {
+        throw new Error(
+          `can only use one option of --expiry-height, --expiry-time, --expiry-never`,
+        );
+      }
+
+      if (increaseAllowance.expiryHeight) {
+        expiry = {
+          at_height: Parse.int(expiryHeight),
+        };
+      }
+
+      if (increaseAllowance.expiryTime) {
+        expiry = {
+          at_time: Parse.int(expiryTime),
+        };
+      }
+
+      if (expiryNever) {
+        expiry = {
+          never: {},
+        };
+      }
+
+      const msg = fabricatebAssetdDecreaseAllowance({
+        address: userAddress,
+        amount: amount,
+        bAsset: 'bluna',
+        spender: spender,
+        expires: expiry,
+      })(addressProvider);
+      await handleExecCommand(menu, msg);
+    },
+  );
 
 const query = createQueryMenu(
   'basset-token',
@@ -248,7 +331,7 @@ interface Balance {
 const getBalance = query
   .command('balance')
   .description('Get the current balance of the address')
-  .option('--address <AccAddress>', 'Address of user')
+  .requiredOption('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: Balance) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
@@ -283,8 +366,8 @@ interface AllowanceArgs {
 const getAllowance = query
   .command('allowance')
   .description('Get how much spender can use from owner account')
-  .option('--owner <AccAddress>', 'Address of owner')
-  .option('--spender <AccAddress>', 'Address of spender')
+  .requiredOption('--owner <AccAddress>', 'Address of owner')
+  .requiredOption('--spender <AccAddress>', 'Address of spender')
   .action(async ({ owner, spender }: AllowanceArgs) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
@@ -308,7 +391,7 @@ interface AllAllowances {
 const getAllowances = query
   .command('all-allowances')
   .description('Get all allowances this owner has approved')
-  .option('--owner <AccAddress>', 'Address of the owner')
+  .requiredOption('--owner <AccAddress>', 'Address of the owner')
   .option('--start-after <int>', 'Address of bLuna holder to start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ owner, startAfter, limit }: AllAllowances) => {

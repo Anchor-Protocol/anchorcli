@@ -37,7 +37,7 @@ const menu = createExecMenu(
 );
 
 interface BorrowStable {
-  amount: number;
+  amount: string;
   to?: string;
 }
 const borrowStable = menu
@@ -72,7 +72,7 @@ const depositStable = menu
     );
     const msg = fabricateDepositStableCoin({
       address: userAddress,
-      symbol: 'market',
+      symbol: 'usd',
       amount: depositStable.amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -90,7 +90,7 @@ const redeemStable = menu
     );
     const msg = fabricateRedeemStable({
       address: userAddress,
-      symbol: 'market',
+      symbol: 'usd',
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);

@@ -3,7 +3,7 @@ import { validateInput } from '../../utils/validate-input';
 import { validateAddress } from '../../utils/validation/address';
 import { validateTrue } from '../../utils/validation/true';
 import { validateIsNumber } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
@@ -29,9 +29,7 @@ export const fabricatebOverseerConfig = ({
   buffer_distribution_rate,
   epoch_period,
   price_timeframe,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
     owner_addr ? validateAddress(owner_addr) : validateTrue,

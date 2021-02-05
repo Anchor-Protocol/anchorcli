@@ -85,7 +85,6 @@ const unlockCollateral = menu
     const msg = fabricateOverseerUnlockCollateral({
       address: userAddress,
       market: 'overseer',
-      redeem_all: true,
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);

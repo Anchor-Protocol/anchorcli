@@ -1,5 +1,5 @@
 import { LCDClient } from '@terra-money/terra.js';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   lcd: LCDClient;
@@ -13,7 +13,7 @@ interface EpochStateResponse {
 }
 
 export const queryOverseerEpochState = ({ lcd, overseer }: Option) => async (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider,
 ): Promise<EpochStateResponse> => {
   const overseerContractAddress = addressProvider.overseer(overseer);
   let response: EpochStateResponse = await lcd.wasm.contractQuery(

@@ -1,5 +1,5 @@
 import { LCDClient } from '@terra-money/terra.js';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   lcd: LCDClient;
@@ -18,7 +18,7 @@ export const queryHubWithdrawable = ({
   address,
   block_time,
 }: Option) => async (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider,
 ): Promise<WithdrableResponse> => {
   const bAssetContractAddress = addressProvider.bAssetHub(bAsset);
   let reponse: WithdrableResponse = await lcd.wasm.contractQuery(

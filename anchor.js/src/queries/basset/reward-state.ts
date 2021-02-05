@@ -1,5 +1,5 @@
 import { LCDClient } from '@terra-money/terra.js';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   lcd: LCDClient;
@@ -13,7 +13,7 @@ interface StateResponse {
 }
 
 export const queryRewardState = ({ lcd, bAsset }: Option) => async (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider,
 ): Promise<StateResponse> => {
   const bAssetContractAddress = addressProvider.bAssetReward(bAsset);
   let reponse: StateResponse = await lcd.wasm.contractQuery(

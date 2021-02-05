@@ -7,7 +7,7 @@ import {
 } from '@terra-money/terra.js';
 import { validateInput } from '../../utils/validate-input';
 import { validateAddress } from '../../utils/validation/address';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 import { validateIsGreaterThanZero } from '../../utils/validation/number';
 
 interface Option {
@@ -26,16 +26,14 @@ export const fabricateTerraSwapProvideLiquidity = ({
   tokenAmount,
   nativeAmount,
   quote,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
     validateIsGreaterThanZero(tokenAmount),
     validateIsGreaterThanZero(nativeAmount),
   ]);
 
-  const pairAddress = addressProvider.terraswapPair();
+  const pairAddress = addressProvider.blunaBurnPair();
   const tokenAddress = addressProvider.bAssetToken(bAsset);
 
   const coins = new Coins([

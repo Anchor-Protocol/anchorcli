@@ -6,7 +6,7 @@ import {
   validateIsNumber,
 } from '../../utils/validation/number';
 import { createHookMsg } from '../../utils/cw20/create-hook-msg';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
@@ -24,9 +24,7 @@ export const fabricatebSwapbLuna = ({
   to,
   beliefPrice,
   maxSpread,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
     validateIsNumber(amount),
@@ -34,7 +32,7 @@ export const fabricatebSwapbLuna = ({
   ]);
 
   const bAssetTokenAddress = addressProvider.bAssetToken(bAsset);
-  const pairAddress = addressProvider.terraswapPair();
+  const pairAddress = addressProvider.blunaBurnPair();
 
   return [
     new MsgExecuteContract(address, bAssetTokenAddress, {

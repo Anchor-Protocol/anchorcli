@@ -1,9 +1,9 @@
 import { reactifyEnv } from './react-app-prefix';
-import { AddressProvider } from './types';
+import { AddressProvider } from './provider';
 
 //console.log(process.env);
 
-export class AddressProviderFromEnvVar implements AddressProvider.Provider {
+export class AddressProviderFromEnvVar implements AddressProvider {
   bAssetReward(): string {
     return getFromEnv('bAssetReward');
   }
@@ -52,12 +52,12 @@ export class AddressProviderFromEnvVar implements AddressProvider.Provider {
     return getFromEnv('terraswapFactory');
   }
 
-  terraswapPair(): string {
-    return getFromEnv('terraswapPair');
+  blunaBurnPair(): string {
+    return getFromEnv('bLunaBurnPair');
   }
 
   blunaBurn(nativeDenom: string): string {
-    return JSON.parse(getFromEnv('bLunaBurn'))[nativeDenom];
+    return getFromEnv(`bLunaBurn${nativeDenom}`);
   }
 }
 

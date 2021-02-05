@@ -1,5 +1,5 @@
 import { LCDClient, MsgExecuteContract } from '@terra-money/terra.js';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   lcd: LCDClient;
@@ -10,7 +10,7 @@ interface WhitelistedValResponse {
 }
 
 export const queryHubWhiteVals = ({ lcd, bAsset }: Option) => async (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider,
 ): Promise<WhitelistedValResponse> => {
   const bAssetContractAddress = addressProvider.bAssetHub(bAsset);
   let reponse: WhitelistedValResponse = await lcd.wasm.contractQuery(

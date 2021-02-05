@@ -1,4 +1,4 @@
-import { AddressProvider } from './types';
+import { AddressProvider } from './provider';
 
 interface JsonData {
   bLunaHub: string;
@@ -16,7 +16,7 @@ interface JsonData {
   blunaBurnuluna: string;
 }
 
-export class AddressProviderFromJson implements AddressProvider.Provider {
+export class AddressProviderFromJson implements AddressProvider {
   constructor(private data: JsonData) {}
 
   bAssetReward(): string {
@@ -63,11 +63,11 @@ export class AddressProviderFromJson implements AddressProvider.Provider {
     return this.data.terraswapFactory;
   }
 
-  terraswapPair(): string {
+  blunaBurnPair(): string {
     return this.data.blunaBurnPair;
   }
 
-  blunaBurn(nativeDenom: string): string {
-    return nativeDenom === 'uluna' ? this.data.blunaBurnuluna : '';
+  blunaBurn(): string {
+    return this.data.blunaBurnuluna;
   }
 }

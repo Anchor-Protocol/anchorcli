@@ -1,11 +1,11 @@
 import { Contracts } from './types';
-import { AddressProvider } from '@anchor-protocol/anchor.js/dist/address-provider/types';
 
 export enum NETWORKS {
   COLUMBUS4,
   TEQUILA0004,
 }
 import { loadConfig } from '../util/config';
+import { AddressProvider } from '@anchor-protocol/anchor.js/dist/address-provider';
 
 const contracts: Contracts = loadConfig().contracts;
 
@@ -25,7 +25,7 @@ const networksMap: { [networkName: string]: Contracts } = {
   [NETWORKS.TEQUILA0004]: contracts,
 };
 
-export class AddressProviderFromJSON implements AddressProvider.Provider {
+export class AddressProviderFromJSON implements AddressProvider {
   addressesMap: Contracts;
 
   constructor(network: NETWORKS) {
@@ -65,7 +65,7 @@ export class AddressProviderFromJSON implements AddressProvider.Provider {
   terraswapFactory(): string {
     return this.addressesMap.terraswapFactory;
   }
-  terraswapPair(): string {
+  blunaBurnPair(): string {
     return this.addressesMap.terraswapPair;
   }
 

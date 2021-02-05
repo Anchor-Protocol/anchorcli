@@ -63,7 +63,7 @@ const bond = menu
     const userAddress = key.accAddress;
     const msgs = fabricatebAssetBond({
       address: userAddress,
-      amount: +amount,
+      amount: amount,
       validator: validator,
       bAsset: 'bluna',
     })(addressProvider);
@@ -348,7 +348,7 @@ const getUnbondRequest = query
   .description(
     'Get the list of Luna unbonding amounts being unbonded for the specified user',
   )
-  .option('--address <AccAddress>', 'Address of user')
+  .requiredOption('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: UnbondRequest) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
@@ -372,8 +372,8 @@ const getWhitdrawable = query
   .description(
     'Get the amount of undelegated Luna that is available for withdrawal',
   )
-  .option('--address <AccAddress>', 'Address of user')
-  .option('--block-time <int>', 'Current block timestamp')
+  .requiredOption('--address <AccAddress>', 'Address of user')
+  .requiredOption('--block-time <int>', 'Current block timestamp')
   .action(async ({ address, blockTime }: Whitdrawable) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(

@@ -11,7 +11,7 @@ import {
   validateIsGreaterThanZero,
   validateIsNumber,
 } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
@@ -29,9 +29,7 @@ export const fabricatebSwapLuna = ({
   beliefPrice,
   maxSpread,
   denom,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
     validateIsNumber(amount),
@@ -40,7 +38,7 @@ export const fabricatebSwapLuna = ({
   const coins = new Coins([
     new Coin(denom, new Int(new Dec(amount).mul(1000000)).toString()),
   ]);
-  const pairAddress = addressProvider.terraswapPair();
+  const pairAddress = addressProvider.blunaBurnPair();
   return [
     new MsgExecuteContract(
       address,
