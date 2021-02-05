@@ -5,7 +5,7 @@ import {
   validateIsGreaterThanZero,
   validateIsNumber,
 } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
@@ -21,9 +21,7 @@ export const fabricatebAssetTransferFrom = ({
   bAsset,
   owner,
   recipient,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
     validateIsNumber(+amount),

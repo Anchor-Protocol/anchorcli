@@ -1,5 +1,5 @@
 import { Dec, Int, LCDClient } from '@terra-money/terra.js';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   lcd: LCDClient;
@@ -10,9 +10,9 @@ interface PoolResponse {
 }
 
 export const queryPool = ({ lcd }: Option) => async (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider,
 ): Promise<PoolResponse> => {
-  const pairContractAddress = addressProvider.terraswapPair();
+  const pairContractAddress = addressProvider.blunaBurnPair();
   let reponse: PoolResponse = await lcd.wasm.contractQuery(
     pairContractAddress,
     {

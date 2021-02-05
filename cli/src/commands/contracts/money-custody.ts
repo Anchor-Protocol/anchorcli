@@ -75,7 +75,6 @@ const withdraw_collateral = menu
     const msg = fabricateCustodyWithdrawCollateral({
       address: userAddress,
       market: 'custody',
-      redeem_all: redeem_all,
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);

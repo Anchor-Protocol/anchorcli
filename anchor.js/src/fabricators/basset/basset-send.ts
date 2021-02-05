@@ -5,7 +5,7 @@ import {
   validateIsGreaterThanZero,
   validateIsNumber,
 } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
@@ -21,9 +21,7 @@ export const fabricatebAssetSend = ({
   bAsset,
   contract,
   msg,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
     validateIsNumber(+amount),
@@ -32,6 +30,10 @@ export const fabricatebAssetSend = ({
   ]);
 
   const bAssetTokenAddress = addressProvider.bAssetToken(bAsset);
+  let message = undefined;
+  if (msg) {
+    message = Buffer.from(JSON.stringify(msg)).toString('base64');
+  }
 
   return [
     new MsgExecuteContract(address, bAssetTokenAddress, {
@@ -39,7 +41,7 @@ export const fabricatebAssetSend = ({
       send: {
         contract: contract,
         amount: new Int(new Dec(amount).mul(1000000)).toString(),
-        msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
+        msg: message,
       },
     }),
   ];

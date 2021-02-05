@@ -1,3 +1,4 @@
+import { AddressProvider } from '../../address-provider/provider';
 import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
 import { validateInput } from '../../utils/validate-input';
 import { validateAddress } from '../../utils/validation/address';
@@ -5,7 +6,6 @@ import {
   validateIsGreaterThanZero,
   validateIsNumber,
 } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
 
 type Expire = { at_height: number } | { at_time: number } | { never: {} };
 
@@ -23,13 +23,11 @@ export const fabricatebAssetdDecreaseAllowance = ({
   bAsset,
   spender,
   expires,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
-    validateIsNumber(+amount),
-    validateIsGreaterThanZero(+amount),
+    validateIsNumber(amount),
+    validateIsGreaterThanZero(amount),
     validateAddress(spender),
     //TODO: validate the expiration
   ]);

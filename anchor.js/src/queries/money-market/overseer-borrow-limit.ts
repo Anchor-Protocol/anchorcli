@@ -1,6 +1,6 @@
 import { LCDClient } from '@terra-money/terra.js';
-import { AddressProvider } from '../../address-provider/types';
 import { stringifyNumber } from 'yaml/util';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   lcd: LCDClient;
@@ -19,7 +19,7 @@ export const queryOverseerBorrowLimit = ({
   borrower,
   blockTime,
 }: Option) => async (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider,
 ): Promise<BorrowLimitResponse> => {
   const overseerContractAddress = addressProvider.overseer(overseer);
   let response: BorrowLimitResponse = await lcd.wasm.contractQuery(

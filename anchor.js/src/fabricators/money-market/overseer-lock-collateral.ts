@@ -6,7 +6,7 @@ import { validateWhitelistedBAsset } from '../../utils/validation/basset';
 
 import { validateWhitelistedMarket } from '../../utils/validation/market';
 import { validateIsGreaterThanZero } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
@@ -27,14 +27,8 @@ export const fabricateOverseerLockCollateral = ({
   address,
   market,
   amount,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
-  validateInput([
-    validateAddress(address),
-    validateWhitelistedMarket(market),
-    validateIsGreaterThanZero(amount),
-  ]);
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
+  validateInput([validateAddress(address), validateIsGreaterThanZero(amount)]);
 
   const mmOverseerContract = addressProvider.overseer(market.toLowerCase());
 

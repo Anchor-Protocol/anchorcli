@@ -33,7 +33,7 @@ interface Claim {
 const claim = menu
   .command('claim-rewards')
   .description("Claims basset holder's accrued rewards")
-  .requiredOption('--recipient <AccAddress>', 'Address of the receiver')
+  .option('--recipient <AccAddress>', 'Address of the receiver')
   .action(async ({ recipient }: Claim) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
@@ -90,7 +90,7 @@ const getAccruedRewards = query
   .description(
     'Get the amount of rewards accrued to the specified bLuna holder',
   )
-  .option('--address <AccAddress>', 'Address of user')
+  .requiredOption('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: AccruedRewards) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
@@ -107,7 +107,7 @@ const getAccruedRewards = query
 const getHolder = query
   .command('holder')
   .description('Get information about the specified bLuna holder')
-  .option('--address <AccAddress>', 'Address of user')
+  .requiredOption('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: AccruedRewards) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(

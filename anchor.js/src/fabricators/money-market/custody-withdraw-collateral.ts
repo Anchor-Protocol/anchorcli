@@ -5,16 +5,15 @@ import { validateInput } from '../../utils/validate-input';
 import { validateWhitelistedMarket } from '../../utils/validation/market';
 import { validateTrue } from '../../utils/validation/true';
 import { validateIsGreaterThanZero } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
+import { isAmountSet } from '../../utils/validation/amount';
 
 interface Option {
   address: string;
   market: string;
   borrower?: string;
-  redeem_all: boolean;
-  amount?: string | undefined;
+  amount?: string;
 }
-
 /**
  *
  * @param address Client’s Terra address.
@@ -27,14 +26,10 @@ interface Option {
 export const fabricateCustodyWithdrawCollateral = ({
   address,
   market,
-  redeem_all = true,
   amount = null,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
-    validateWhitelistedMarket(market),
     amount ? validateIsGreaterThanZero(amount) : validateTrue,
   ]);
 
@@ -42,10 +37,13 @@ export const fabricateCustodyWithdrawCollateral = ({
 
   return [
     // withdraw from custody
+    // withdraw from custody
     new MsgExecuteContract(address, custodyContract, {
       // @see https://github.com/Anchor-Protocol/money-market-contracts/blob/master/contracts/custody/src/msg.rs#L69
       withdraw_collateral: {
-        amount: redeem_all ? undefined : amount,
+        amount: isAmountSet(amount)
+          ? new Int(new Dec(amount).mul(1000000)).toString()
+          : undefined,
       },
     }),
   ];

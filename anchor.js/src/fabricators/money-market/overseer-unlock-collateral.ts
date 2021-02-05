@@ -5,14 +5,14 @@ import { validateInput } from '../../utils/validate-input';
 import { validateWhitelistedMarket } from '../../utils/validation/market';
 import { validateTrue } from '../../utils/validation/true';
 import { validateIsGreaterThanZero } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
+import { isAmountSet } from '../../utils/validation/amount';
 
 interface Option {
   address: string;
   market: string;
   borrower?: string;
-  redeem_all: boolean;
-  amount: number | null;
+  amount?: string;
 }
 
 /**
@@ -27,31 +27,30 @@ interface Option {
 export const fabricateOverseerUnlockCollateral = ({
   address,
   market,
-  redeem_all = true,
-  amount = null,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+  amount,
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
-    validateWhitelistedMarket(market),
     amount ? validateIsGreaterThanZero(amount) : validateTrue,
   ]);
 
   const mmOverseerContract = addressProvider.overseer(market.toLowerCase());
+  const bAssetTokenContract = addressProvider.bAssetToken('ubluna');
 
   return [
     // unlock collateral
     new MsgExecuteContract(address, mmOverseerContract, {
       // @see https://github.com/Anchor-Protocol/money-market-contracts/blob/master/contracts/overseer/src/msg.rs#L78
-      unlock_collateral: [
-        [
-          address,
-          redeem_all
-            ? undefined
-            : new Int(new Dec(amount as number).mul(1000000)).toString(),
+      unlock_collateral: {
+        collaterals: [
+          [
+            bAssetTokenContract,
+            isAmountSet(amount)
+              ? new Int(new Dec(amount).mul(1000000)).toString()
+              : undefined,
+          ],
         ],
-      ],
+      },
     }),
   ];
 };

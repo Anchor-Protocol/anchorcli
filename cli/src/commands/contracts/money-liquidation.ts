@@ -53,7 +53,7 @@ const liquidationRetractBid = menu
     const msg = fabricateRetractBid({
       address: userAddress,
       collateral_token: collateralToken,
-      amount: int(amount),
+      amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -69,7 +69,10 @@ const liquidationSubmitBid = menu
     '--collateral-token <AccAddress>',
     'Cw20 token contract address of bidding collateral',
   )
-  .option('--premium-rate <Dec>', 'Rate of commission on executing this bid')
+  .requiredOption(
+    '--premium-rate <Dec>',
+    'Rate of commission on executing this bid',
+  )
   .action(async ({ collateralToken, premiumRate }: RetractBid) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;

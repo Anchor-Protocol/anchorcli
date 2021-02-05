@@ -1,3 +1,4 @@
+import { AddressProvider } from '../../address-provider/provider';
 import { Dec, Int, MsgExecuteContract } from '@terra-money/terra.js';
 import { validateInput } from '../../utils/validate-input';
 import { validateAddress } from '../../utils/validation/address';
@@ -5,7 +6,6 @@ import {
   validateIsGreaterThanZero,
   validateIsNumber,
 } from '../../utils/validation/number';
-import { AddressProvider } from '../../address-provider/types';
 
 interface Option {
   address: string;
@@ -19,9 +19,7 @@ export const fabricatebAssetBurnFrom = ({
   amount,
   bAsset,
   owner,
-}: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
     validateIsNumber(+amount),

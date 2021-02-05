@@ -4,14 +4,13 @@ import { validateInput } from '../../utils/validate-input';
 import { validateIsGreaterThanZero } from '../../utils/validation/number';
 import { validateWhitelistedMarket } from '../../utils/validation/market';
 import { validateTrue } from '../../utils/validation/true';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
   market: string;
   borrower?: string;
-  // repay_all: boolean
-  amount: number;
+  amount: string;
 }
 
 /**
@@ -21,16 +20,19 @@ interface Option {
  * @param amount (optional) Amount of stablecoin to repay. Set to null if repay_all is set to true.
  */
 
-export const fabricateRepay = ({ address, market, amount }: Option) => (
-  addressProvider: AddressProvider.Provider,
-): MsgExecuteContract[] => {
+export const fabricateRepay = ({
+  address,
+  market,
+  borrower,
+  amount,
+}: Option) => (addressProvider: AddressProvider): MsgExecuteContract[] => {
   validateInput([
     validateAddress(address),
-    validateWhitelistedMarket(market),
+    borrower ? validateAddress(borrower) : validateTrue,
     validateIsGreaterThanZero(amount),
   ]);
 
-  const nativeTokenDenom = market;
+  //const nativeTokenDenom = market;
   const mmContractAddress = addressProvider.market(market);
 
   return [
@@ -43,7 +45,7 @@ export const fabricateRepay = ({ address, market, amount }: Option) => (
       },
       // sending stablecoin
       {
-        [nativeTokenDenom]: new Int(new Dec(amount).mul(1000000)).toString(),
+        uusd: new Int(new Dec(amount).mul(1000000)).toString(),
       },
     ),
   ];

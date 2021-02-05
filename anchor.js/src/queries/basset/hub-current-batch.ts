@@ -1,5 +1,5 @@
 import { LCDClient } from '@terra-money/terra.js';
-import { AddressProvider } from '../../address-provider/types';
+import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   lcd: LCDClient;
@@ -12,7 +12,7 @@ interface CurrentBatchResponse {
 }
 
 export const queryHubCurrentBatch = ({ lcd, bAsset }: Option) => async (
-  addressProvider: AddressProvider.Provider,
+  addressProvider: AddressProvider,
 ): Promise<CurrentBatchResponse> => {
   const bAssetContractAddress = addressProvider.bAssetHub(bAsset);
   let reponse: CurrentBatchResponse = await lcd.wasm.contractQuery(
