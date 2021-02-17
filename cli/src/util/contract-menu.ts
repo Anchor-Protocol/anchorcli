@@ -84,7 +84,6 @@ export function createQueryMenu(
   return query;
 }
 
-//TODO: Processing LCD & key and Wallet must be implemented
 export async function handleExecCommand(
   exec: commander.Command,
   msgs: MsgExecuteContract[],
@@ -116,8 +115,7 @@ export async function handleExecCommand(
   let key = new CLIKey({ keyName: exec.from, home: exec.home });
   const wallet = lcd.wallet(key);
 
-  //TODO: chain id can be an input value or
-  const chainId: string = exec.chainId;
+  const chainId: string = exec.chainId ? exec.chainId : lcd.config.chainID;
 
   const memo: string = exec.memo ? exec.memo : '';
 
