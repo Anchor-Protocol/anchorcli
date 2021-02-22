@@ -56,4 +56,28 @@ export class AddressProviderFromMantle implements AddressProvider {
   blunaBurn(): string {
     throw new Error('Method not implemented.');
   }
+
+  gov(): string {
+    throw new Error('Method not implemented.');
+  }
+
+  terraswapAnchorToken(): string {
+    throw new Error('Method not implemented.');
+  }
+
+  collector(): string {
+    throw new Error('Method not implemented.');
+  }
+
+  staking(): string {
+    throw new Error('Method not implemented.');
+  }
+
+  community(): string {
+    throw new Error('Method not implemented.');
+  }
+
+  faucet(): string {
+    throw new Error('Method not implemented.');
+  }
 }

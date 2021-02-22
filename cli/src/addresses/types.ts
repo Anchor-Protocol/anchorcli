@@ -19,4 +19,10 @@ export interface Contracts {
   terraswapFactory: string;
   terraswapPair: string;
   blunaBurn: { [nativeDenom: string]: string };
+  gov: string;
+  terraswapAnchorToken: string;
+  collector: string;
+  staking: string;
+  community: string;
+  faucet: string;
 }

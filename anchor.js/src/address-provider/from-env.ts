@@ -59,6 +59,30 @@ export class AddressProviderFromEnvVar implements AddressProvider {
   blunaBurn(nativeDenom: string): string {
     return getFromEnv(`bLunaBurn${nativeDenom}`);
   }
+
+  gov(): string {
+    return getFromEnv(`gov`);
+  }
+
+  terraswapAnchorToken(): string {
+    return getFromEnv(`terraswapAnchorToken`);
+  }
+
+  collector(): string {
+    return getFromEnv(`collector`);
+  }
+
+  staking(): string {
+    return getFromEnv(`staking`);
+  }
+
+  community(): string {
+    return getFromEnv(`community`);
+  }
+
+  faucet(): string {
+    return getFromEnv(`faucet`);
+  }
 }
 
 function getFromEnv(key: string): string {

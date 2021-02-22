@@ -76,4 +76,28 @@ export class AddressProviderFromJSON implements AddressProvider {
     }
     return address;
   }
+
+  gov(): string {
+    return this.addressesMap.gov;
+  }
+
+  terraswapAnchorToken(): string {
+    return this.addressesMap.terraswapAnchorToken;
+  }
+
+  collector(): string {
+    return this.addressesMap.collector;
+  }
+
+  staking(): string {
+    return this.addressesMap.staking;
+  }
+
+  community(): string {
+    return this.addressesMap.community;
+  }
+
+  faucet(): string {
+    return this.addressesMap.faucet;
+  }
 }

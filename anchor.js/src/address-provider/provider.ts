@@ -26,4 +26,16 @@ export interface AddressProvider {
   blunaBurnPair(): string;
 
   blunaBurn(quote: string): string;
+
+  gov(): string;
+
+  terraswapAnchorToken(): string;
+
+  collector(): string;
+
+  staking(): string;
+
+  community(): string;
+
+  faucet(): string;
 }

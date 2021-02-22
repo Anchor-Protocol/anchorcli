@@ -14,6 +14,12 @@ interface JsonData {
   terraswapFactory: string;
   blunaBurnPair: string;
   blunaBurnuluna: string;
+  gov: string;
+  terraswapAnchorToken: string;
+  collector: string;
+  staking: string;
+  community: string;
+  faucet: string;
 }
 
 export class AddressProviderFromJson implements AddressProvider {
@@ -69,5 +75,28 @@ export class AddressProviderFromJson implements AddressProvider {
 
   blunaBurn(): string {
     return this.data.blunaBurnuluna;
+  }
+
+  gov(): string {
+    return this.data.gov;
+  }
+  terraswapAnchorToken(): string {
+    return this.data.terraswapAnchorToken;
+  }
+
+  collector(): string {
+    return this.data.collector;
+  }
+
+  staking(): string {
+    return this.data.staking;
+  }
+
+  community(): string {
+    return this.data.community;
+  }
+
+  faucet(): string {
+    return this.data.faucet;
   }
 }
