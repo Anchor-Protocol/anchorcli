@@ -5,7 +5,7 @@ interface Option {
   lcd: LCDClient;
   market: string;
   borrower: string;
-  block_height: string;
+  block_height: number;
 }
 interface LiabilityResponse {
   borrower: string;

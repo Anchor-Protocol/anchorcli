@@ -22,8 +22,8 @@ import {
 import {
   queryMarketConfig,
   queryMarketEpochState,
-  queryMarketLiabilities,
-  queryMarketLiability,
+  queryMarketBorrowerInfo,
+  queryMarketBorrowerInfos,
   queryMarketLoanAmount,
   queryMarketState,
 } from '@anchor-protocol/anchor.js/dist/queries';
@@ -199,7 +199,7 @@ const getLiabilities = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const queryLiabilities = await queryMarketLiabilities({
+    const queryLiabilities = await queryMarketBorrowerInfos({
       lcd,
       market: 'market',
       startAfter: accAddress(startAfter),
@@ -210,21 +210,24 @@ const getLiabilities = query
 
 interface Liability {
   borrower: string;
+  blockHeight: number;
 }
 
 const getLiability = query
   .command('liability')
   .description('Get liability information for the specified borrower')
   .requiredOption('--borrower <AccAddress>', 'Address of borrower')
-  .action(async ({ borrower }: Liability) => {
+  .requiredOption('--block-height <int>', 'Current block number')
+  .action(async ({ borrower, blockHeight }: Liability) => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const queryLiability = await queryMarketLiability({
+    const queryLiability = await queryMarketBorrowerInfo({
       lcd,
       market: 'market',
       borrower: accAddress(borrower),
+      block_height: +blockHeight,
     })(addressProvider);
     await handleQueryCommand(query, queryLiability);
   });

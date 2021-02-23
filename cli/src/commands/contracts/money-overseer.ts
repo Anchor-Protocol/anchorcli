@@ -151,9 +151,9 @@ const updateConfig = menu
         owner_addr: ownerAddress,
         oracle_contract: oracleContract,
         liquidation_contract: liquidationContract,
-        distribution_threshold: distributionThreshold,
+        threshold_deposit_rate: distributionThreshold,
         target_deposit_rate: targetDepositRate,
-        buffer_distribution_rate: bufferDistributionRate,
+        buffer_distribution_factor: bufferDistributionRate,
         epoch_period: +epochPeriod,
         price_timeframe: +priceTimeframe,
       })(addressProvider);
