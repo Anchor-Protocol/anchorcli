@@ -5,8 +5,8 @@ import { AddressProvider } from '../../address-provider/provider';
 
 interface Option {
   address: string;
-  recipient?: string;
-  amount?: string;
+  recipient: string;
+  amount: string;
 }
 
 export const fabricateCommunitySpend = ({
