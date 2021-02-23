@@ -117,8 +117,11 @@ const repay = menu
 interface Config {
   ownerAddress?: string;
   interestModel?: string;
-  reserveFactor?: Dec;
+  reserveFactor?: string;
+  distributionModel?: string;
+  maxBorrowFactor?: string;
 }
+
 const updateConfig = menu
   .command('update-config')
   .description('Update the configuration of the contract')
@@ -128,21 +131,39 @@ const updateConfig = menu
     'New portion of borrower interest set aside as reserves',
   )
   .option('--interest-model <string>', 'New interest model contract address')
-  .action(async ({ ownerAddress, interestModel, reserveFactor }: Config) => {
-    const key = new CLIKey({ keyName: menu.from });
-    const userAddress = key.accAddress;
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId),
-    );
-    const msg = fabricatebMarketConfig({
-      address: userAddress,
-      owner_addr: ownerAddress,
-      interest_model: interestModel,
-      reserve_factor: reserveFactor,
-      market: 'market',
-    })(addressProvider);
-    await handleExecCommand(menu, msg);
-  });
+  .option(
+    'distribution-model <AccAddress>',
+    'New contract address of Distribution Model',
+  )
+  .option(
+    'max_borrow_factor <Dec>',
+    'New maximum portion of stablecoin liquidity available for borrows',
+  )
+  .action(
+    async ({
+      ownerAddress,
+      interestModel,
+      reserveFactor,
+      distributionModel,
+      maxBorrowFactor,
+    }: Config) => {
+      const key = new CLIKey({ keyName: menu.from });
+      const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId),
+      );
+      const msg = fabricatebMarketConfig({
+        address: userAddress,
+        owner_addr: ownerAddress,
+        interest_model: interestModel,
+        distribution_model: distributionModel,
+        reserve_factor: reserveFactor,
+        max_borrow_factor: maxBorrowFactor,
+        market: 'market',
+      })(addressProvider);
+      await handleExecCommand(menu, msg);
+    },
+  );
 
 const query = createQueryMenu('market', 'Anchor market contract queries');
 
