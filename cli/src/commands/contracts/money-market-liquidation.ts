@@ -6,26 +6,26 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from '../../util/contract-menu';
-import { fabricateRetractBid } from '@anchor-protocol/anchor.js/dist/fabricators/money-market/liquidation-retract-bid';
-import {
-  fabricateLiquidationConfig,
-  fabricateSubmitBid,
-} from '@anchor-protocol/anchor.js/dist/fabricators';
-import { Dec } from '@terra-money/terra.js';
+import { Coin } from '@terra-money/terra.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
+import * as Parse from '../../util/parse-input';
 import {
+  fabricateLiquidationRetractBid,
+  fabricateLiquidationSubmitBid,
+  fabricateLiquidationUpdateConfig,
+  MARKET_DENOMS,
   queryLiquidationBid,
-  queryLiquidationBidsByUser,
   queryLiquidationBidsByCollateral,
+  queryLiquidationBidsByUser,
   queryLiquidationConfig,
   queryLiquidationLiquidationAmount,
-} from '@anchor-protocol/anchor.js/dist/queries';
-import * as Parse from '../../util/parse-input';
+} from '@anchor-protocol/anchor.js';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
+import dec = Parse.dec;
 
 const menu = createExecMenu(
   'liquidation',
@@ -50,7 +50,7 @@ const liquidationRetractBid = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricateRetractBid({
+    const msg = fabricateLiquidationRetractBid({
       address: userAddress,
       collateral_token: collateralToken,
       amount: amount,
@@ -60,7 +60,8 @@ const liquidationRetractBid = menu
 
 interface RetractBid {
   collateralToken: string;
-  premiumRate: Dec;
+  premiumRate: string;
+  coin: string;
 }
 const liquidationSubmitBid = menu
   .command('submit-bid')
@@ -73,16 +74,26 @@ const liquidationSubmitBid = menu
     '--premium-rate <Dec>',
     'Rate of commission on executing this bid',
   )
-  .action(async ({ collateralToken, premiumRate }: RetractBid) => {
+  .requiredOption(
+    '--Coin <coin>',
+    'Stablecoins for submitting bid,  e.g. 1000uusd',
+  )
+  .action(async ({ collateralToken, premiumRate, coin }: RetractBid) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
+    const bidCoin = Coin.fromString(coin);
+    if (bidCoin.denom !== 'uusd') {
+      throw new Error(`invalid coin '${bidCoin.denom}', MUST be uusd`);
+    }
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricateSubmitBid({
+    const msg = fabricateLiquidationSubmitBid({
       address: userAddress,
       collateral_token: collateralToken,
-      premium_rate: premiumRate,
+      premium_rate: dec(premiumRate).toString(),
+      amount: bidCoin.amount.toString(),
+      denom: MARKET_DENOMS.UUSD,
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -91,9 +102,9 @@ interface UpdateConfig {
   owner?: string;
   oracleContract?: string;
   stableDenom?: string;
-  safeRatio?: Dec;
-  bidFee?: Dec;
-  maxPremiumRate?: Dec;
+  safeRatio?: string;
+  bidFee?: string;
+  maxPremiumRate?: string;
   liquidationThreshold?: string;
   priceTimeframe: string;
 }
@@ -136,15 +147,15 @@ const liquidationUpdateConfig = menu
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId),
       );
-      const msg = fabricateLiquidationConfig({
+      const msg = fabricateLiquidationUpdateConfig({
         address: userAddress,
         owner: owner,
         oracle_contract: oracleContract,
         stable_denom: stableDenom,
-        safe_ratio: safeRatio,
-        bid_fee: bidFee,
-        max_premium_rate: maxPremiumRate,
-        liquidation_threshold: int(liquidationThreshold),
+        safe_ratio: dec(safeRatio).toString(),
+        bid_fee: dec(bidFee).toString(),
+        max_premium_rate: dec(maxPremiumRate).toString(),
+        liquidation_threshold: dec(liquidationThreshold).toString(),
         price_timeframe: int(priceTimeframe),
       })(addressProvider);
       await handleExecCommand(menu, msg);
@@ -178,7 +189,7 @@ const getBid = query
     );
     const queryBid = await queryLiquidationBid({
       lcd,
-      collateralToken: accAddress(collateralToken),
+      collateral_token: accAddress(collateralToken),
       bidder: accAddress(bidder),
     })(addressProvider);
     await handleQueryCommand(query, queryBid);
@@ -207,7 +218,7 @@ const getBidsByUser = query
     const queryBidsByUser = await queryLiquidationBidsByUser({
       lcd,
       bidder: accAddress(bidder),
-      startAfter: accAddress(startAfter),
+      start_after: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryBidsByUser);
@@ -240,8 +251,8 @@ const getBidsByCollateral = query
     );
     const queryBidsByCollateral = await queryLiquidationBidsByCollateral({
       lcd,
-      collateralToken: accAddress(collateralToken),
-      startAfter: accAddress(startAfter),
+      collateral_token: accAddress(collateralToken),
+      start_after: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryBidsByCollateral);
@@ -264,8 +275,8 @@ const getConfig = query
 interface LiquidationAmount {
   borrowAmount: string;
   borrowLimit: string;
-  collaterals: object;
-  collateralPrices: object[];
+  collaterals: Array<[string, string]>;
+  collateralPrices: string[];
 }
 //TODO  FIGURE OUT THE INPUT OF TOKENSHUMAN AND VEC<DECIMAL>
 const getLiquidationAmount = query
@@ -296,10 +307,10 @@ const getLiquidationAmount = query
       );
       const queryLiquidationAmount = await queryLiquidationLiquidationAmount({
         lcd,
-        borrowAmount,
-        borrowLimit,
+        borrow_amount: borrowAmount,
+        borrow_limit: borrowLimit,
         collaterals,
-        collateralPrices,
+        collateral_prices: collateralPrices,
       })(addressProvider);
       await handleQueryCommand(query, queryLiquidationAmount);
     },

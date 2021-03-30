@@ -8,19 +8,13 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import {
-  fabricatebOverseerConfig,
-  fabricatebOverseerEpoch,
-  fabricatebOverseerUpWhiteList,
-  fabricatebOverseerWhiteList,
+  fabricateOverseerEpochOperations,
   fabricateOverseerLockCollateral,
   fabricateOverseerUnlockCollateral,
-} from '@anchor-protocol/anchor.js/dist/fabricators';
-import { Dec, DistributionParams } from '@terra-money/terra.js';
-import {
-  AddressProviderFromJSON,
-  resolveChainIDToNetworkName,
-} from '../../addresses/from-json';
-import {
+  fabricateOverseerUpdateConfig,
+  fabricateOverseerUpdateWhitelist,
+  fabricateOverseerWhitelist,
+  MARKET_DENOMS,
   queryOverseerAllCollaterals,
   queryOverseerBorrowLimit,
   queryOverseerCollaterals,
@@ -28,10 +22,17 @@ import {
   queryOverseerDistributionParams,
   queryOverseerEpochState,
   queryOverseerWhitelist,
-} from '@anchor-protocol/anchor.js/dist/queries';
+} from '@anchor-protocol/anchor.js';
+import { DistributionParams } from '@terra-money/terra.js';
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from '../../addresses/from-json';
+
 import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
+import dec = Parse.dec;
 
 const menu = createExecMenu(
   'overseer',
@@ -47,9 +48,9 @@ const executeEpochOperation = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebOverseerEpoch({
+    const msg = fabricateOverseerEpochOperations({
       address: userAddress,
-      overseer: 'overseer',
+      overseer: MARKET_DENOMS.UUSD,
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -66,7 +67,7 @@ const lockCollateral = menu
     );
     const msg = fabricateOverseerLockCollateral({
       address: userAddress,
-      market: 'overseer',
+      market: MARKET_DENOMS.UUSD,
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -84,7 +85,7 @@ const unlockCollateral = menu
     );
     const msg = fabricateOverseerUnlockCollateral({
       address: userAddress,
-      market: 'overseer',
+      market: MARKET_DENOMS.UUSD,
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -94,11 +95,11 @@ interface Config {
   ownerAddress?: string;
   oracleContract?: string;
   liquidationContract?: string;
-  distributionThreshold?: Dec;
-  targetDepositRate?: Dec;
-  bufferDistributionRate?: Dec;
-  epochPeriod?: number;
-  priceTimeframe?: number;
+  distributionThreshold?: string;
+  targetDepositRate?: string;
+  bufferDistributionRate?: string;
+  epochPeriod?: string;
+  priceTimeframe?: string;
 }
 const updateConfig = menu
   .command('update-config')
@@ -145,31 +146,35 @@ const updateConfig = menu
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId),
       );
-      const msg = fabricatebOverseerConfig({
+      const msg = fabricateOverseerUpdateConfig({
         address: userAddress,
-        overseer: 'overseer',
+        overseer: MARKET_DENOMS.UUSD,
         owner_addr: ownerAddress,
         oracle_contract: oracleContract,
         liquidation_contract: liquidationContract,
-        threshold_deposit_rate: distributionThreshold,
-        target_deposit_rate: targetDepositRate,
-        buffer_distribution_factor: bufferDistributionRate,
-        epoch_period: +epochPeriod,
-        price_timeframe: +priceTimeframe,
+        threshold_deposit_rate: dec(distributionThreshold).toString(),
+        target_deposit_rate: dec(targetDepositRate).toString(),
+        buffer_distribution_factor: dec(bufferDistributionRate).toString(),
+        epoch_period: int(epochPeriod),
+        price_timeframe: int(priceTimeframe),
       })(addressProvider);
       await handleExecCommand(menu, msg);
     },
   );
 
 interface WhiteList {
+  collateralName: string;
+  symbol: string;
   collateralToken: string;
   custodyContract: string;
-  ltv?: Dec;
+  ltv?: string;
 }
 
 const whiteList = menu
   .command('whitelist')
   .description('Whitelist a new collateral accepted in the money market')
+  .requiredOption('--collateral-name <string>', 'Name of collateral bAsset')
+  .requiredOption('--symbol <string>', 'Token symbol of collateral bAsset')
   .requiredOption(
     '--collateral-token <AccAddress>',
     'Cw20 token contract address of collateral',
@@ -182,26 +187,36 @@ const whiteList = menu
     '--ltv <Dec>',
     'New maximum loan-to-value ratio allowed for collateral',
   )
-  .action(async ({ collateralToken, custodyContract, ltv }: WhiteList) => {
-    const key = new CLIKey({ keyName: menu.from });
-    const userAddress = key.accAddress;
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId),
-    );
-    const msg = fabricatebOverseerWhiteList({
-      address: userAddress,
-      overseer: 'overseer',
-      collateral_token: collateralToken,
-      custody_contract: custodyContract,
-      ltv: ltv,
-    })(addressProvider);
-    await handleExecCommand(menu, msg);
-  });
+  .action(
+    async ({
+      collateralName,
+      symbol,
+      collateralToken,
+      custodyContract,
+      ltv,
+    }: WhiteList) => {
+      const key = new CLIKey({ keyName: menu.from });
+      const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId),
+      );
+      const msg = fabricateOverseerWhitelist({
+        address: userAddress,
+        name: collateralName,
+        symbol: symbol,
+        overseer: MARKET_DENOMS.UUSD,
+        collateral_token: collateralToken,
+        custody_contract: custodyContract,
+        max_ltv: dec(ltv).toString(),
+      })(addressProvider);
+      await handleExecCommand(menu, msg);
+    },
+  );
 
 interface UpdateWhiteList {
   collateralToken: string;
   custodyContract?: string;
-  ltv?: Dec;
+  ltv?: string;
 }
 
 const updateWhiteList = menu
@@ -226,12 +241,12 @@ const updateWhiteList = menu
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId),
       );
-      const msg = fabricatebOverseerUpWhiteList({
+      const msg = fabricateOverseerUpdateWhitelist({
         address: userAddress,
-        overseer: 'overseer',
-        collateral_token: collateralToken,
-        custody_contract: custodyContract,
-        ltv: ltv,
+        overseer: MARKET_DENOMS.UUSD,
+        collateral_token: accAddress(collateralToken),
+        custody_contract: accAddress(custodyContract),
+        max_ltv: dec(ltv).toString(),
       })(addressProvider);
       await handleExecCommand(menu, msg);
     },
@@ -256,8 +271,8 @@ const getAllCollaterals = query
     );
     const queryAllCollaterals = await queryOverseerAllCollaterals({
       lcd,
-      overseer: 'overseer',
-      startAfter: accAddress(startAfter),
+      overseer: MARKET_DENOMS.UUSD,
+      start_after: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryAllCollaterals);
@@ -282,9 +297,9 @@ const getBorrowLimit = query
     );
     const queryBorrowLimit = await queryOverseerBorrowLimit({
       lcd,
-      overseer: 'overseer',
+      overseer: MARKET_DENOMS.UUSD,
       borrower: accAddress(borrower),
-      blockTime: int(blockTime),
+      block_time: int(blockTime),
     })(addressProvider);
     await handleQueryCommand(query, queryBorrowLimit);
   });
@@ -304,7 +319,7 @@ const getCollaterals = query
     );
     const queryCollaterals = await queryOverseerCollaterals({
       lcd,
-      overseer: 'overseer',
+      overseer: MARKET_DENOMS.UUSD,
       borrower: accAddress(borrower),
     })(addressProvider);
     await handleQueryCommand(query, queryCollaterals);
@@ -313,14 +328,14 @@ const getCollaterals = query
 const getConfig = query
   .command('config')
   .description('Get the configuration of the Overseer contract')
-  .action(async ({}: Config) => {
+  .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
     const queryConfig = await queryOverseerConfig({
       lcd,
-      overseer: 'overseer',
+      overseer: MARKET_DENOMS.UUSD,
     })(addressProvider);
     await handleQueryCommand(query, queryConfig);
   });
@@ -328,14 +343,14 @@ const getConfig = query
 const getDistributionParams = query
   .command('distribution-params')
   .description('Get parameter information related to reward distribution')
-  .action(async ({}: DistributionParams) => {
+  .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
     const queryDistributionParams = await queryOverseerDistributionParams({
       lcd,
-      overseer: 'overseer',
+      overseer: MARKET_DENOMS.UUSD,
     })(addressProvider);
     await handleQueryCommand(query, queryDistributionParams);
   });
@@ -350,7 +365,7 @@ const getEpochState = query
     );
     const queryEpochState = await queryOverseerEpochState({
       lcd,
-      overseer: 'overseer',
+      market: MARKET_DENOMS.UUSD,
     })(addressProvider);
     await handleQueryCommand(query, queryEpochState);
   });
@@ -382,9 +397,9 @@ const getWhitelist = query
     );
     const queryWhitelist = await queryOverseerWhitelist({
       lcd,
-      overseer: 'overseer',
-      collateralToken: accAddress(collateralToken),
-      startAfter: accAddress(startAfter),
+      market: MARKET_DENOMS.UUSD,
+      collateral_token: accAddress(collateralToken),
+      start_after: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryWhitelist);

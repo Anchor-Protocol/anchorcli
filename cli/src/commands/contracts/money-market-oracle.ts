@@ -9,18 +9,19 @@ import {
 } from '../../util/contract-menu';
 import { Dec } from '@terra-money/terra.js';
 import {
-  fabricatebOracleConfig,
-  fabricatebOracleFeedPrice,
-} from '@anchor-protocol/anchor.js/dist/fabricators';
+  fabricateOracleUpdateConfig,
+  fabricateOracleFeedPrice,
+  fabricateOracleRegisterFeeder,
+  queryOracleConfig,
+  queryOraclePrice,
+  queryOraclePrices,
+  Pair,
+} from '@anchor-protocol/anchor.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
-import {
-  queryOracleConfig,
-  queryOraclePrice,
-  queryOraclePrices,
-} from '@anchor-protocol/anchor.js/dist/queries';
+
 import * as Parse from '../../util/parse-input';
 import int = Parse.int;
 
@@ -29,10 +30,8 @@ const menu = createExecMenu(
   'Anchor MoneyMarket Liquidation contract functions',
 );
 
-type Price = [string, Dec];
-
 interface FeedPrice {
-  prices: [Price];
+  prices: [Pair];
 }
 
 const feedPrice = menu
@@ -45,7 +44,7 @@ const feedPrice = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebOracleFeedPrice({
+    const msg = fabricateOracleFeedPrice({
       address: userAddress,
       prices: prices,
     })(addressProvider);
@@ -65,7 +64,7 @@ const updateConfig = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebOracleConfig({
+    const msg = fabricateOracleUpdateConfig({
       address: userAddress,
       owner: owner,
     })(addressProvider);
@@ -77,7 +76,7 @@ const query = createQueryMenu('oracle', 'Anchor oracle contract queries');
 const getConfig = query
   .command('config')
   .description('Get the Oracle contract configuration')
-  .action(async ({}: Config) => {
+  .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
@@ -133,7 +132,7 @@ const getPrices = query
     );
     const queryPrices = await queryOraclePrices({
       lcd,
-      startAfter,
+      start_after: startAfter,
       limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryPrices);

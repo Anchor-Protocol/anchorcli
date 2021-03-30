@@ -7,22 +7,28 @@ export interface AnchorConfig {
 
 export interface Contracts {
   bLunaHub: string;
-  bAssetToken: string;
-  bAssetReward: string;
-  mmInterest: string;
+  bLunaToken: string;
+  bLunaReward: string;
+  bLunaAirdrop: string;
+  mmInterestModel: string;
   mmOracle: string;
   mmMarket: string;
   mmOverseer: string;
   mmCustody: string;
   mmLiquidation: string;
-  anchorToken: string;
-  terraswapFactory: string;
-  terraswapPair: string;
-  blunaBurn: { [nativeDenom: string]: string };
+  mmDistributionModel: string;
+  aTerra: string;
+  terraswapblunaLunaPair: string;
+  terraswapblunaLunaLPToken: string;
+  terraswapAncUstPair: string;
+  terraswapAncUstLPToken: string;
   gov: string;
-  terraswapAnchorToken: string;
+  distributor: string;
   collector: string;
-  staking: string;
   community: string;
-  faucet: string;
+  staking: string;
+  ANC: string;
+  airdrop: string;
+  investor_vesting: string;
+  team_vesting: string;
 }

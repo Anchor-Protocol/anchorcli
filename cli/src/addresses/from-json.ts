@@ -1,11 +1,12 @@
+/* eslint-disable */
 import { Contracts } from './types';
+import { loadConfig } from '../util/config';
+import { AddressProvider } from '@anchor-protocol/anchor.js';
 
 export enum NETWORKS {
   COLUMBUS4,
   TEQUILA0004,
 }
-import { loadConfig } from '../util/config';
-import { AddressProvider } from '@anchor-protocol/anchor.js/dist/address-provider';
 
 const contracts: Contracts = loadConfig().contracts;
 
@@ -32,57 +33,64 @@ export class AddressProviderFromJSON implements AddressProvider {
     this.addressesMap = networksMap[network];
   }
 
-  bAssetReward(): string {
-    return this.addressesMap.bAssetReward;
+  bLunaReward(): string {
+    return this.addressesMap.bLunaReward;
   }
-  bAssetHub(): string {
+
+  bLunaHub(): string {
     return this.addressesMap.bLunaHub;
   }
-  bAssetToken(): string {
-    return this.addressesMap.bAssetToken;
+
+  bLunaToken(): string {
+    return this.addressesMap.bLunaToken;
   }
+
   market(): string {
     return this.addressesMap.mmMarket;
   }
+
   custody(): string {
     return this.addressesMap.mmCustody;
   }
+
   overseer(): string {
     return this.addressesMap.mmOverseer;
   }
-  aToken(): string {
-    return this.addressesMap.anchorToken;
+
+  aTerra(): string {
+    return this.addressesMap.aTerra;
   }
+
   oracle(): string {
     return this.addressesMap.mmOracle;
   }
+
   interest(): string {
-    return this.addressesMap.mmInterest;
+    return this.addressesMap.mmInterestModel;
   }
+
   liquidation(): string {
     return this.addressesMap.mmLiquidation;
   }
-  terraswapFactory(): string {
-    return this.addressesMap.terraswapFactory;
-  }
-  blunaBurnPair(): string {
-    return this.addressesMap.terraswapPair;
+
+  terraswapblunaLunaPair(): string {
+    return this.addressesMap.terraswapblunaLunaPair;
   }
 
-  blunaBurn(quote: string): string {
-    const address = this.addressesMap.blunaBurn[quote];
-    if (typeof address === 'undefined') {
-      throw new Error(`there is not address for ${quote}`);
-    }
-    return address;
+  terraswapblunaLunaLPToken(): string {
+    return this.addressesMap.terraswapblunaLunaLPToken;
   }
 
   gov(): string {
     return this.addressesMap.gov;
   }
 
-  terraswapAnchorToken(): string {
-    return this.addressesMap.terraswapAnchorToken;
+  terraswapAncUstPair(): string {
+    return this.addressesMap.terraswapAncUstPair;
+  }
+
+  terraswapAncUstLPToken(): string {
+    return this.addressesMap.terraswapAncUstLPToken;
   }
 
   collector(): string {
@@ -97,7 +105,23 @@ export class AddressProviderFromJSON implements AddressProvider {
     return this.addressesMap.community;
   }
 
-  faucet(): string {
-    return this.addressesMap.faucet;
+  distributor(): string {
+    return this.addressesMap.distributor;
+  }
+
+  ANC(): string {
+    return this.addressesMap.ANC;
+  }
+
+  airdrop(): string {
+    return this.addressesMap.airdrop;
+  }
+
+  investorLock(): string {
+    return this.addressesMap.investor_vesting;
+  }
+
+  teamLock(): string {
+    return this.addressesMap.team_vesting;
   }
 }

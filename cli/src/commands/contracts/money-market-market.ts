@@ -8,25 +8,22 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import {
-  fabricatebMarketConfig,
-  fabricateBorrow,
-  fabricateDepositStableCoin,
-  fabricateRedeemStable,
-  fabricateRepay,
-} from '@anchor-protocol/anchor.js/dist/fabricators';
-import { Dec } from '@terra-money/terra.js';
+  fabricateMarketBorrow,
+  fabricateMarketDepositStableCoin,
+  fabricateMarketRedeemStable,
+  fabricateMarketRepay,
+  fabricateMarketUpdateConfig,
+  MARKET_DENOMS,
+  queryMarketBorrowerInfo,
+  queryMarketBorrowerInfos,
+  queryMarketConfig,
+  queryMarketEpochState,
+  queryMarketState,
+} from '@anchor-protocol/anchor.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
-import {
-  queryMarketConfig,
-  queryMarketEpochState,
-  queryMarketBorrowerInfo,
-  queryMarketBorrowerInfos,
-  queryMarketLoanAmount,
-  queryMarketState,
-} from '@anchor-protocol/anchor.js/dist/queries';
 import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
@@ -51,11 +48,11 @@ const borrowStable = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricateBorrow({
+    const msg = fabricateMarketBorrow({
       address: userAddress,
-      market: 'market',
+      market: MARKET_DENOMS.UUSD,
       amount: amount,
-      withdrawTo: to,
+      to: to,
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -70,9 +67,9 @@ const depositStable = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricateDepositStableCoin({
+    const msg = fabricateMarketDepositStableCoin({
       address: userAddress,
-      symbol: 'usd',
+      market: MARKET_DENOMS.UUSD,
       amount: depositStable.amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -88,9 +85,9 @@ const redeemStable = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricateRedeemStable({
+    const msg = fabricateMarketRedeemStable({
       address: userAddress,
-      symbol: 'usd',
+      market: MARKET_DENOMS.UUSD,
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -106,9 +103,9 @@ const repay = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricateRepay({
+    const msg = fabricateMarketRepay({
       address: userAddress,
-      market: 'market',
+      market: MARKET_DENOMS.UUSD,
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -152,14 +149,14 @@ const updateConfig = menu
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId),
       );
-      const msg = fabricatebMarketConfig({
+      const msg = fabricateMarketUpdateConfig({
         address: userAddress,
         owner_addr: ownerAddress,
         interest_model: interestModel,
         distribution_model: distributionModel,
         reserve_factor: reserveFactor,
         max_borrow_factor: maxBorrowFactor,
-        market: 'market',
+        market: MARKET_DENOMS.UUSD,
       })(addressProvider);
       await handleExecCommand(menu, msg);
     },
@@ -170,37 +167,33 @@ const query = createQueryMenu('market', 'Anchor market contract queries');
 const getConfig = query
   .command('config')
   .description('Get the Market contract configuration')
-  .action(async ({}: Config) => {
+  .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
     const queryConfig = await queryMarketConfig({
       lcd,
-      market: 'market',
+      market: MARKET_DENOMS.UUSD,
     })(addressProvider);
     await handleQueryCommand(query, queryConfig);
   });
-
-interface EpochState {
-  blockHeight?: string;
-}
 
 const getEpochState = query
   .command('epoch-state')
   .description(
     'Get state information related to epoch operations. Returns the interest-accrued block_height field is filled. Returns the stored (no interest accrued) state if not filled',
   )
-  .option('--block-height <int>', 'Current block number')
-  .action(async ({ blockHeight }: EpochState) => {
+  .action(async () => {
     const lcd = getLCDClient();
+    const { block } = await lcd.tendermint.blockInfo();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
     const queryEpochState = await queryMarketEpochState({
       lcd,
-      market: 'market',
-      blockHeight: int(blockHeight),
+      market: MARKET_DENOMS.UUSD,
+      block_height: int(block.header.height),
     })(addressProvider);
     await handleQueryCommand(query, queryEpochState);
   });
@@ -222,8 +215,8 @@ const getLiabilities = query
     );
     const queryLiabilities = await queryMarketBorrowerInfos({
       lcd,
-      market: 'market',
-      startAfter: accAddress(startAfter),
+      market: MARKET_DENOMS.UUSD,
+      start_after: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryLiabilities);
@@ -231,68 +224,44 @@ const getLiabilities = query
 
 interface Liability {
   borrower: string;
-  blockHeight: number;
 }
 
 const getLiability = query
   .command('liability')
-  .description('Get liability information for the specified borrower')
+  .description(
+    'Get liability information for the specified borrower for the current block height',
+  )
   .requiredOption('--borrower <AccAddress>', 'Address of borrower')
-  .requiredOption('--block-height <int>', 'Current block number')
-  .action(async ({ borrower, blockHeight }: Liability) => {
+  .action(async ({ borrower }: Liability) => {
     const lcd = getLCDClient();
+    const { block } = await lcd.tendermint.blockInfo();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
     const queryLiability = await queryMarketBorrowerInfo({
       lcd,
-      market: 'market',
+      market: MARKET_DENOMS.UUSD,
       borrower: accAddress(borrower),
-      block_height: +blockHeight,
+      block_height: +block.header.height,
     })(addressProvider);
     await handleQueryCommand(query, queryLiability);
   });
 
-interface LoanAmount {
-  borrower: string;
-  blockHeight: string;
-}
-
-const getLoanAmount = query
-  .command('loan-amount')
-  .description(
-    'Get the liability amount for the specified borrower at the specified block number',
-  )
-  .requiredOption('--borrower <AccAddress>', 'Address of borrower')
-  .requiredOption(
-    '--block-height <int>',
-    'Block number to apply in calculation',
-  )
-  .action(async ({ borrower, blockHeight }: LoanAmount) => {
-    const lcd = getLCDClient();
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId),
-    );
-    const queryLoanAmount = await queryMarketLoanAmount({
-      lcd,
-      market: 'market',
-      borrower: accAddress(borrower),
-      blockHeight: int(blockHeight),
-    })(addressProvider);
-    await handleQueryCommand(query, queryLoanAmount);
-  });
-
 const getState = query
   .command('state')
-  .description('Get information related to the overall state of Market')
+  .description(
+    'Get information related to the overall state of Market for the current block height',
+  )
   .action(async () => {
     const lcd = getLCDClient();
+    const { block } = await lcd.tendermint.blockInfo();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
     const queryState = await queryMarketState({
       lcd,
-      market: 'market',
+      market: MARKET_DENOMS.UUSD,
+      block_height: +block.header.height,
     })(addressProvider);
     await handleQueryCommand(query, queryState);
   });

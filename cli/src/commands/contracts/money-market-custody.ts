@@ -7,29 +7,31 @@ import {
 } from '../../util/contract-menu';
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import {
-  fabricatebCustodyConfig,
+  COLLATERAL_DENOMS,
+  fabricateCustodyDepositCollateral,
+  fabricateCustodyUpdateConfig,
   fabricateCustodyWithdrawCollateral,
-} from '@anchor-protocol/anchor.js/dist/fabricators';
+  MARKET_DENOMS,
+  queryCustodyBorrower,
+  queryCustodyBorrowers,
+  queryCustodyConfig,
+} from '@anchor-protocol/anchor.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
-import {
-  queryCustodyBorrower,
-  queryCustodyBorrowers,
-  queryCustodyConfig,
-} from '@anchor-protocol/anchor.js/dist/queries';
 import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 
 const menu = createExecMenu(
-  'custody',
+  'custody-bluna',
   'Anchor MoneyMarket Custody contract functions',
 );
 
 interface Config {
   liquidationContract?: string;
+  owner?: string;
 }
 
 const updateConfig = menu
@@ -39,16 +41,19 @@ const updateConfig = menu
     '--liquidation-contract <AccAddress>',
     'New contract address of Liquidation Contract',
   )
-  .action(async ({ liquidationContract }: Config) => {
+  .option('--owner <AccAddress>', 'New Owner of the contract')
+  .action(async ({ liquidationContract, owner }: Config) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebCustodyConfig({
+    const msg = fabricateCustodyUpdateConfig({
       address: userAddress,
-      custody: 'custody',
-      liquidation_contract: liquidationContract,
+      market: MARKET_DENOMS.UUSD,
+      collateral: COLLATERAL_DENOMS.UBLUNA,
+      liquidation_contract: accAddress(liquidationContract),
+      owner: accAddress(owner),
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -60,27 +65,50 @@ interface Withdraw {
 const withdraw_collateral = menu
   .command('withdraw-collateral')
   .description('Withdraw specified amount of spendable collateral')
-  .requiredOption('--amount <string>', '')
+  .requiredOption('--amount <string>', 'Amount of collateral to withdraw')
   .action(async ({ amount }: Withdraw) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    let redeem_all = false;
-    if (amount === undefined) {
-      redeem_all = true;
-    }
 
     const msg = fabricateCustodyWithdrawCollateral({
       address: userAddress,
-      market: 'custody',
+      market: MARKET_DENOMS.UUSD,
+      collateral: COLLATERAL_DENOMS.UBLUNA,
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
 
-const query = createQueryMenu('custody', 'Anchor custody contract queries');
+interface Deposit {
+  amount: string;
+}
+
+const deposit_collateral = menu
+  .command('deposit_collateral')
+  .requiredOption('--amount <string>', 'Amount of collateral to deposit')
+  .action(async ({ amount }: Deposit) => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+    const msg = fabricateCustodyDepositCollateral({
+      address: userAddress,
+      market: MARKET_DENOMS.UUSD,
+      collateral: COLLATERAL_DENOMS.UBLUNA,
+      amount: amount,
+    })(addressProvider);
+
+    await handleExecCommand(menu, msg);
+  });
+
+const query = createQueryMenu(
+  'custody-bluna',
+  'Anchor custody contract queries',
+);
 
 interface Borrower {
   address: string;
@@ -100,7 +128,8 @@ const getBorrower = query
     );
     const queryBorrower = await queryCustodyBorrower({
       lcd,
-      custody: 'custody',
+      market: MARKET_DENOMS.UUSD,
+      custody: COLLATERAL_DENOMS.UBLUNA,
       address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, queryBorrower);
@@ -123,8 +152,9 @@ const getBorrowers = query
     );
     const queryBorrowers = await queryCustodyBorrowers({
       lcd,
-      custody: 'custody',
-      startAfter: accAddress(startAfter),
+      market: MARKET_DENOMS.UUSD,
+      collateral: COLLATERAL_DENOMS.UBLUNA,
+      start_after: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, queryBorrowers);
@@ -133,14 +163,15 @@ const getBorrowers = query
 const getConfig = query
   .command('config')
   .description('Get the contract configuration of the Custody contract')
-  .action(async ({}: Config) => {
+  .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
     const queryConfig = await queryCustodyConfig({
       lcd,
-      custody: 'custody',
+      market: MARKET_DENOMS.UUSD,
+      collateral: COLLATERAL_DENOMS.UBLUNA,
     })(addressProvider);
     await handleQueryCommand(query, queryConfig);
   });

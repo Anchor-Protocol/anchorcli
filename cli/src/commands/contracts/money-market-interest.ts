@@ -8,7 +8,6 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import { Dec } from '@terra-money/terra.js';
-import { fabricatebInterestConfig } from '@anchor-protocol/anchor.js/dist/fabricators/money-market/interest-update-config';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -18,7 +17,9 @@ import {
   queryInterestModelConfig,
 } from '@anchor-protocol/anchor.js/dist/queries';
 import * as Parse from '../../util/parse-input';
-import accAddress = Parse.accAddress;
+import { fabricateInterestUpdateConfig } from '@anchor-protocol/anchor.js';
+import int = Parse.int;
+import dec = Parse.dec;
 
 const menu = createExecMenu(
   'interest',
@@ -27,8 +28,8 @@ const menu = createExecMenu(
 
 interface Config {
   owner?: string;
-  baseRate?: Dec;
-  interestMultiplier?: Dec;
+  baseRate?: string;
+  interestMultiplier?: string;
 }
 
 const updateConfig = menu
@@ -39,11 +40,11 @@ const updateConfig = menu
     'Address of contract owner that can update model parameters',
   )
   .option(
-    '--base-rate <Dec>',
+    '--base-rate <String>',
     'Minimum per-block interest rate applied to borrows',
   )
   .option(
-    '--interest-multiplier <Dec>',
+    '--interest-multiplier <String>',
     'Multiplier between utilization ratio and per-block borrow rate',
   )
   .action(async ({ owner, baseRate, interestMultiplier }: Config) => {
@@ -52,11 +53,11 @@ const updateConfig = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebInterestConfig({
+    const msg = fabricateInterestUpdateConfig({
       address: userAddress,
       owner: owner,
-      base_rate: baseRate,
-      interest_multiplier: interestMultiplier,
+      base_rate: dec(baseRate).toString(),
+      interest_multiplier: dec(interestMultiplier).toString(),
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -91,9 +92,9 @@ const getBorrowRate = query
       );
       const queryBorrowRate = await queryInterestModelBorrowRate({
         lcd,
-        marketBalance,
-        totalLiabilities,
-        totalReserves,
+        market_balance: marketBalance,
+        total_liabilities: totalLiabilities,
+        total_reserves: totalReserves,
       })(addressProvider);
       await handleQueryCommand(query, queryBorrowRate);
     },
@@ -102,7 +103,7 @@ const getBorrowRate = query
 const getConfig = query
   .command('config')
   .description('Get the interest model contract configuration')
-  .action(async ({}: Config) => {
+  .action(async () => {
     const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),

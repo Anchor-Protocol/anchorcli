@@ -8,7 +8,7 @@
     "cli"
   ],
   "scripts": {
-    "lint": "eslint \"**/src/*.{js,ts,tsx}\"",
+    "lint": "eslint \"cli/src/**/*.{js,ts,tsx}\"",
     "format": "prettier \"**/src/**/*.{js,ts,json}\" --write",
     "start": "multiplerun start",
     "build": "yarn workspace @anchor-protocol/anchor.js run build && yarn workspace @anchor-protocol/cli run build",

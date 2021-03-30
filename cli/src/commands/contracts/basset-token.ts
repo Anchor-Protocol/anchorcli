@@ -7,27 +7,25 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import {
+  fabricatebAssetSend,
   fabricatebAssetBurnFrom,
-  fabricatebAssetdDecreaseAllowance,
+  fabricatebAssetDecreaseAllowance,
   fabricatebAssetIncreaseAllowance,
   fabricatebAssetSendFrom,
   fabricatebAssetTransfer,
   fabricatebAssetTransferFrom,
-} from '@anchor-protocol/anchor.js/dist/fabricators';
+  queryTokenAllAccounts,
+  queryTokenBalance,
+  queryTokenMinter,
+  queryTokenAllowances,
+  queryTokenInfo,
+} from '@anchor-protocol/anchor.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
-import {
-  queryTokenAllAccounts,
-  queryTokenAllAllowance,
-  queryTokenBalance,
-  queryTokenMinter,
-} from '@anchor-protocol/anchor.js/dist/queries';
-import { queryTokenInfo } from '@anchor-protocol/anchor.js/dist/queries';
-import { queryTokenAllowance } from '@anchor-protocol/anchor.js/dist/queries/basset/token-allowance';
 import * as Parse from '../../util/parse-input';
-import { fabricatebAssetSend } from '@anchor-protocol/anchor.js/dist/fabricators/basset/basset-send';
+import { queryTokenAllowance } from '@anchor-protocol/anchor.js/dist/queries/cw20/token-allowance';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 
@@ -56,7 +54,6 @@ const transfer = menu
       address: userAddress,
       amount: amount,
       recipient: recipient,
-      bAsset: 'bluna',
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -82,7 +79,6 @@ const transferFrom = menu
       address: userAddress,
       amount: amount,
       recipient: recipient,
-      bAsset: 'bluna',
       owner: owner,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -108,7 +104,6 @@ const send = menu
     const message = fabricatebAssetSend({
       address: userAddress,
       amount: amount,
-      bAsset: 'bluna',
       contract: contract,
       msg: msg,
     })(addressProvider);
@@ -137,10 +132,9 @@ const sendFrom = menu
     const message = fabricatebAssetSendFrom({
       address: userAddress,
       amount: amount,
-      bAsset: 'bluna',
       contract: contract,
       owner: owner,
-      msg: msg,
+      msg: JSON.parse(msg),
     })(addressProvider);
     await handleExecCommand(menu, message);
   });
@@ -164,7 +158,6 @@ const burnFrom = menu
     const msg = fabricatebAssetBurnFrom({
       address: userAddress,
       amount: amount,
-      bAsset: 'bluna',
       owner: owner,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -234,7 +227,6 @@ const increaseAllowance = menu
       const msg = fabricatebAssetIncreaseAllowance({
         address: userAddress,
         amount: amount,
-        bAsset: 'bluna',
         spender: spender,
         expires: expiry,
       })(addressProvider);
@@ -294,10 +286,9 @@ const decreaseAllowance = menu
         };
       }
 
-      const msg = fabricatebAssetdDecreaseAllowance({
+      const msg = fabricatebAssetDecreaseAllowance({
         address: userAddress,
         amount: amount,
-        bAsset: 'bluna',
         spender: spender,
         expires: expiry,
       })(addressProvider);
@@ -318,9 +309,10 @@ const getTokenInfo = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const query_token = await queryTokenInfo({ lcd: lcd, bAsset: 'bluna' })(
-      addressProvider,
-    );
+    const query_token = await queryTokenInfo({
+      lcd: lcd,
+      token_address: addressProvider.addressesMap.bLunaToken,
+    })(addressProvider);
     await handleQueryCommand(query, query_token);
   });
 
@@ -339,7 +331,7 @@ const getBalance = query
     );
     const balance_query = await queryTokenBalance({
       lcd: lcd,
-      bAsset: 'bluna',
+      token_address: addressProvider.addressesMap.bLunaToken,
       address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, balance_query);
@@ -353,9 +345,10 @@ const getMinter = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const query_minter = await queryTokenMinter({ lcd: lcd, bAsset: 'bluna' })(
-      addressProvider,
-    );
+    const query_minter = await queryTokenMinter({
+      lcd: lcd,
+      token_address: addressProvider.addressesMap.bLunaToken,
+    })(addressProvider);
     await handleQueryCommand(query, query_minter);
   });
 
@@ -375,7 +368,7 @@ const getAllowance = query
     );
     const allowance_query = await queryTokenAllowance({
       lcd: lcd,
-      bAsset: 'bluna',
+      token_address: addressProvider.addressesMap.bLunaToken,
       owner: accAddress(owner),
       spender: accAddress(spender),
     })(addressProvider);
@@ -399,11 +392,11 @@ const getAllowances = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const batch_query = await queryTokenAllAllowance({
+    const batch_query = await queryTokenAllowances({
       lcd: lcd,
-      bAsset: 'bluna',
+      token_address: addressProvider.addressesMap.bLunaToken,
       owner: accAddress(owner),
-      startAfter: startAfter,
+      start_after: startAfter,
       lim: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
@@ -429,9 +422,9 @@ const getAccounts = query
     );
     const batch_query = await queryTokenAllAccounts({
       lcd: lcd,
-      bAsset: 'bluna',
-      startAfter: accAddress(startAfter),
-      lim: int(limit),
+      token_address: addressProvider.addressesMap.bLunaToken,
+      start_after: accAddress(startAfter),
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });

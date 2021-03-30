@@ -43,7 +43,7 @@ The entrypoint `anchorcli` should then be available in your `path`:
           -h, --help      display help for command
 
         Commands:
-          exec|x          Execute a function on a smart contract
+          menu|x          Execute a function on a smart contract
           query|q         Run a smart contract query function
           help [command]  display help for command
         </div>

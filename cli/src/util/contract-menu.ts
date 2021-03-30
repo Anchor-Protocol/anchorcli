@@ -125,7 +125,7 @@ export async function handleExecCommand(
   if (!!exec.accountNumber || !!exec.sequence) {
     // don't look up account-number and sequence values from blockchain
     // ensure that both account number and sequence number are set
-    if (exec.accountNumber === undefined || exec.sequence == undefined) {
+    if (exec.accountNumber === undefined || exec.sequence === undefined) {
       throw new Error(
         `both account-number and sequence must be provided if one is provided.`,
       );

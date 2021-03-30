@@ -1,16 +1,23 @@
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import {
   fabricatebAssetBond,
-  fabricatebCheckSlashing,
-} from '@anchor-protocol/anchor.js/dist/fabricators';
-import { fabricatebAssetUpdateGlobalIndex } from '@anchor-protocol/anchor.js/dist/fabricators/basset/basset-update-global-index';
-import {
+  fabricatebAssetUpdateGlobalIndex,
+  fabricatebAssetCheckSlashing,
   fabricatebAssetBurn,
-  fabricatebAssetConfig,
-  fabricatebAssetParams,
+  fabricatebAssetUpdateConfig,
+  fabricatebAssetUpdateParams,
   fabricatebAssetWithdrawUnbonded,
-  fabricateRegisterValidator,
-} from '@anchor-protocol/anchor.js/dist/fabricators';
+  fabricatebAssetRegisterValidator,
+  queryHubConfig,
+  queryHubCurrentBatch,
+  queryHubHistory,
+  queryHubParams,
+  queryHubState,
+  queryHubUnbond,
+  queryHubWhiteVals,
+  queryHubWithdrawable,
+  fabricatebAssetDeregisterValidator,
+} from '@anchor-protocol/anchor.js';
 import {
   createExecMenu,
   createQueryMenu,
@@ -22,18 +29,7 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
-import {
-  queryHubConfig,
-  queryHubCurrentBatch,
-  queryHubHistory,
-  queryHubParams,
-  queryHubState,
-  queryHubUnbond,
-  queryHubWhiteVals,
-  queryHubWithdrawable,
-} from '@anchor-protocol/anchor.js/dist/queries';
 import * as Parse from '../../util/parse-input';
-import { fabricateDeRegisterValidator } from '@anchor-protocol/anchor.js/dist/fabricators/basset/basset-deregister-validator';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 
@@ -41,6 +37,8 @@ const menu = createExecMenu(
   'basset-hub',
   'Anchor bAsset Hub contract functions',
 );
+
+const lcd = getLCDClient();
 
 interface BondArgs {
   amount: string;
@@ -65,7 +63,6 @@ const bond = menu
       address: userAddress,
       amount: amount,
       validator: validator,
-      bAsset: 'bluna',
     })(addressProvider);
 
     await handleExecCommand(menu, msgs);
@@ -82,7 +79,6 @@ const global_index = menu
     );
     const msgs = fabricatebAssetUpdateGlobalIndex({
       address: userAddress,
-      bAsset: 'bluna',
     })(addressProvider);
     await handleExecCommand(menu, msgs);
   });
@@ -96,9 +92,8 @@ const checkSlashing = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msgs = fabricatebCheckSlashing({
+    const msgs = fabricatebAssetCheckSlashing({
       address: userAddress,
-      bAsset: 'bluna',
     })(addressProvider);
     await handleExecCommand(menu, msgs);
   });
@@ -117,9 +112,9 @@ const registerValidator = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msgs = fabricateRegisterValidator({
+    const msgs = fabricatebAssetRegisterValidator({
       address: userAddress,
-      validatorAddress: validator,
+      validator: validator,
     })(addressProvider);
     await handleExecCommand(menu, msgs);
   });
@@ -134,9 +129,9 @@ const deregisterValidator = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msgs = fabricateDeRegisterValidator({
+    const msgs = fabricatebAssetDeregisterValidator({
       address: userAddress,
-      validatorAddress: validator,
+      validator: validator,
     })(addressProvider);
     await handleExecCommand(menu, msgs);
   });
@@ -145,6 +140,7 @@ interface UpdateConfig {
   owner?: string;
   rewardAddress?: string;
   tokenAddress?: string;
+  airdropRegistryAddress?: string;
 }
 const updateConfig = menu
   .command('update-config')
@@ -152,66 +148,68 @@ const updateConfig = menu
   .option('--owner <AccAddress>', 'Address of the new owner')
   .option('--reward-address <AccAddress>', 'The new address of reward contract')
   .option('--token-address <AccAddress>', 'The new address of token contract')
-  .action(async ({ owner, rewardAddress, tokenAddress }: UpdateConfig) => {
-    const key = new CLIKey({ keyName: menu.from });
-    const userAddress = key.accAddress;
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(menu.chainId),
-    );
-    const msg = fabricatebAssetConfig({
-      address: userAddress,
-      owner: owner,
-      reward_contract: rewardAddress,
-      token_contract: tokenAddress,
-      bAsset: 'bluna',
-    })(addressProvider);
-    await handleExecCommand(menu, msg);
-  });
+  .option(
+    '--airdrop-registry-address <AccAddress>',
+    'The new address of airdrop registry',
+  )
+  .action(
+    async ({
+      owner,
+      rewardAddress,
+      tokenAddress,
+      airdropRegistryAddress,
+    }: UpdateConfig) => {
+      const key = new CLIKey({ keyName: menu.from });
+      const userAddress = key.accAddress;
+      const addressProvider = new AddressProviderFromJSON(
+        resolveChainIDToNetworkName(menu.chainId),
+      );
+      const msg = fabricatebAssetUpdateConfig({
+        address: userAddress,
+        owner: owner,
+        reward_contract: rewardAddress,
+        token_contract: tokenAddress,
+        airdrop_registry_contract: airdropRegistryAddress,
+      })(addressProvider);
+      await handleExecCommand(menu, msg);
+    },
+  );
 
 interface Params {
   epochPeriod?: string;
-  underlyingCoinDenom?: string;
   unbondingPeriod?: string;
   pegRecoveryFee?: string;
   erThreshold?: string;
-  rewardDenom?: string;
 }
 
 const updateParams = menu
   .command('update-params')
   .description('Update parameters for the hub contract')
   .option('epoch-period <int>', 'The period of time for each epoch in second')
-  .option('underlying-coin-denom <string>', 'Supported denominator for basset')
   .option(
     'unbonding-period <int>',
     'Unbonding time, slightly more than unbonding period of sdk',
   )
   .option('peg-recovery-fee <Dec>', 'Recovery fee')
   .option('er-threshold<Dec>', 'Exchange rate threshold')
-  .option('reward-denom <string>', 'Denominator for reward calculation')
   .action(
     async ({
       epochPeriod,
-      underlyingCoinDenom,
       unbondingPeriod,
       pegRecoveryFee,
       erThreshold,
-      rewardDenom,
     }: Params) => {
       const key = new CLIKey({ keyName: menu.from });
       const userAddress = key.accAddress;
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId),
       );
-      const msg = fabricatebAssetParams({
+      const msg = fabricatebAssetUpdateParams({
         address: userAddress,
         epoch_period: int(epochPeriod),
-        underlying_coin_denom: underlyingCoinDenom,
         unbonding_period: int(unbondingPeriod),
-        peg_recovery_fee: int(pegRecoveryFee),
-        er_threshold: int(erThreshold),
-        reward_denom: rewardDenom,
-        bAsset: 'bluna',
+        peg_recovery_fee: pegRecoveryFee,
+        er_threshold: erThreshold,
       })(addressProvider);
       await handleExecCommand(menu, msg);
     },
@@ -228,7 +226,6 @@ const withdrawUnbond = menu
     );
     const msg = fabricatebAssetWithdrawUnbonded({
       address: userAddress,
-      bAsset: 'bluna',
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -249,7 +246,6 @@ const unbond = menu
     const msg = fabricatebAssetBurn({
       address: userAddress,
       amount: amount,
-      bAsset: `bluna`,
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -266,9 +262,7 @@ const getConfig = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const config_query = await queryHubConfig({ lcd: lcd, bAsset: 'bluna' })(
-      addressProvider,
-    );
+    const config_query = await queryHubConfig({ lcd: lcd })(addressProvider);
     await handleQueryCommand(query, config_query);
   });
 
@@ -282,7 +276,6 @@ const getCurrentBatch = query
     );
     const batch_query = await queryHubCurrentBatch({
       lcd: lcd,
-      bAsset: 'bluna',
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
@@ -304,9 +297,8 @@ const getAllHistory = query
     );
     const batch_query = await queryHubHistory({
       lcd: lcd,
-      bAsset: 'bluna',
-      startFrom: int(startFrom),
-      lim: int(limit),
+      start_from: int(startFrom),
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
@@ -319,9 +311,7 @@ const getParams = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const batch_query = await queryHubParams({ lcd: lcd, bAsset: 'bluna' })(
-      addressProvider,
-    );
+    const batch_query = await queryHubParams({ lcd: lcd })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
 
@@ -333,9 +323,7 @@ const getWhitelistedValidators = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const batch_query = await queryHubWhiteVals({ lcd: lcd, bAsset: 'bluna' })(
-      addressProvider,
-    );
+    const batch_query = await queryHubWhiteVals({ lcd: lcd })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
 
@@ -356,7 +344,6 @@ const getUnbondRequest = query
     );
     const batch_query = await queryHubUnbond({
       lcd: lcd,
-      bAsset: 'bluna',
       address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
@@ -381,7 +368,6 @@ const getWhitdrawable = query
     );
     const batch_query = await queryHubWithdrawable({
       lcd: lcd,
-      bAsset: 'bluna',
       address: accAddress(address),
       block_time: int(blockTime),
     })(addressProvider);
@@ -402,6 +388,7 @@ const getState = query
     await handleQueryCommand(query, config_query);
   });
 
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
   query,
   menu,

@@ -6,18 +6,19 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from '../../util/contract-menu';
-import { fabricatebAssetClaim } from '@anchor-protocol/anchor.js/dist/fabricators';
 import {
-  AddressProviderFromJSON,
-  resolveChainIDToNetworkName,
-} from '../../addresses/from-json';
-import {
+  fabricatebAssetClaimRewards,
   queryRewardConfig,
   queryRewardHolder,
   queryRewardHolders,
   queryRewardState,
-} from '@anchor-protocol/anchor.js/dist/queries';
-import { queryRewardAccrued } from '@anchor-protocol/anchor.js/dist/queries';
+  queryRewardAccrued,
+} from '@anchor-protocol/anchor.js';
+import {
+  AddressProviderFromJSON,
+  resolveChainIDToNetworkName,
+} from '../../addresses/from-json';
+
 import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
@@ -40,10 +41,9 @@ const claim = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebAssetClaim({
+    const msg = fabricatebAssetClaimRewards({
       address: userAddress,
       recipient: recipient,
-      bAsset: 'bluna',
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -61,9 +61,7 @@ const getConfig = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const config_query = await queryRewardConfig({ lcd: lcd, bAsset: 'bluna' })(
-      addressProvider,
-    );
+    const config_query = await queryRewardConfig({ lcd: lcd })(addressProvider);
     await handleQueryCommand(query, config_query);
   });
 
@@ -75,9 +73,7 @@ const getState = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const config_query = await queryRewardState({ lcd: lcd, bAsset: 'bluna' })(
-      addressProvider,
-    );
+    const config_query = await queryRewardState({ lcd: lcd })(addressProvider);
     await handleQueryCommand(query, config_query);
   });
 
@@ -98,7 +94,6 @@ const getAccruedRewards = query
     );
     const batch_query = await queryRewardAccrued({
       lcd: lcd,
-      bAsset: 'bluna',
       address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
@@ -115,7 +110,6 @@ const getHolder = query
     );
     const batch_query = await queryRewardHolder({
       lcd: lcd,
-      bAsset: 'bluna',
       address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
@@ -138,14 +132,13 @@ const getHolders = query
     );
     const batch_query = await queryRewardHolders({
       lcd: lcd,
-      bAsset: 'bluna',
-      startAfter: startAfter,
-      lim: int(limit),
+      start_after: startAfter,
+      limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);
   });
 
-//TODO: Add queries
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
   query,
   menu,

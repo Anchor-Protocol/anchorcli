@@ -9,7 +9,9 @@ command.alias('q');
 command.description('Run a smart contract query function');
 
 _.each(contracts.anchor, (contract) => {
-  command.addCommand(contract.query);
+  if (contract.query !== undefined) {
+    command.addCommand(contract.query);
+  }
 });
 
 export default command;
