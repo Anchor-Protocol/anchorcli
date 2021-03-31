@@ -1,33 +1,50 @@
 {
+  "name": "@anchor-protocol/anchorcli",
   "private": true,
   "version": "1.0.0",
   "author": "Anchor Protocol",
   "license": "Apache-2.0",
-  "workspaces": [
-    "anchor.js",
-    "cli"
-  ],
+  "main": "./dist/index.js",
   "scripts": {
-    "lint": "eslint \"cli/src/**/*.{js,ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
     "format": "prettier \"**/src/**/*.{js,ts,json}\" --write",
     "start": "multiplerun start",
-    "build": "yarn workspace @anchor-protocol/anchor.js run build && yarn workspace @anchor-protocol/cli run build",
-    "publish": "yarn workspace @anchor-protocol/anchor.js run publish && yarn workspace @anchor-protocol/cli run publish",
+    "build": "tsc --module commonjs",
+    "publish": "yarn run publish",
     "e2e": "yarn run build && bash test/e2e.sh",
     "test": "jest --colors",
     "coverage": "jest --coverage"
   },
   "multiplerun": {
     "start": [
-      "cd anchor.js; yarn run watch",
-      "cd cli; node bin/anchorcli --help"
+      "node bin/anchorcli --help"
     ]
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "bin": {
+    "anchorcli": "bin/anchorcli"
+  },
+  "dependencies": {
+    "@anchor-protocol/anchor.js": "^1.0.0",
+    "@terra-money/terra.js": "^1.3.6",
+    "@types/jest": "^26.0.22",
+    "chalk": "^4.1.0",
+    "commander": "^6.2.0",
+    "dot-prop": "^6.0.1",
+    "jsome": "^2.5.0",
+    "lodash": "^4.17.20",
+    "yaml": "^1.10.0",
+    "yesno": "^0.3.1"
   },
   "devDependencies": {
     "@ssen/eslint-config": "^1.3.1",
     "@ssen/prettier-config": "^1.2.0",
     "@types/eslint": "^7.2.6",
     "@types/eslint-plugin-prettier": "^3.1.0",
+    "@types/lodash": "^4.14.168",
     "@types/prettier": "2.1.6",
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
@@ -42,5 +59,6 @@
     "ts-jest": "^26.5.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
-  }
+  },
+  "types": "./dist/index.d.ts"
 }
