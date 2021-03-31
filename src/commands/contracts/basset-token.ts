@@ -7,18 +7,18 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import {
-  fabricatebAssetSend,
-  fabricatebAssetBurnFrom,
-  fabricatebAssetDecreaseAllowance,
-  fabricatebAssetIncreaseAllowance,
-  fabricatebAssetSendFrom,
-  fabricatebAssetTransfer,
-  fabricatebAssetTransferFrom,
-  queryTokenAllAccounts,
-  queryTokenBalance,
-  queryTokenMinter,
-  queryTokenAllowances,
-  queryTokenInfo,
+    fabricatebAssetSend,
+    fabricatebAssetBurnFrom,
+    fabricatebAssetDecreaseAllowance,
+    fabricatebAssetIncreaseAllowance,
+    fabricatebAssetSendFrom,
+    fabricatebAssetTransfer,
+    fabricatebAssetTransferFrom,
+    queryTokenAllAccounts,
+    queryTokenBalance,
+    queryTokenMinter,
+    queryTokenAllowances,
+    queryTokenInfo, fabricatebAssetUnbond, fabricatebAssetBurn,
 } from '@anchor-protocol/anchor.js';
 import {
   AddressProviderFromJSON,
@@ -87,8 +87,9 @@ const transferFrom = menu
 interface Send {
   amount: string;
   contract: string;
-  msg?: object;
+  msg?: string;
 }
+
 const send = menu
   .command('send')
   .description('Send bAsset to a contract')
@@ -105,7 +106,7 @@ const send = menu
       address: userAddress,
       amount: amount,
       contract: contract,
-      msg: msg,
+      msg: JSON.parse(msg)
     })(addressProvider);
     await handleExecCommand(menu, message);
   });
@@ -138,6 +139,26 @@ const sendFrom = menu
     })(addressProvider);
     await handleExecCommand(menu, message);
   });
+
+interface Unbond {
+    amount: string;
+}
+const burn = menu
+    .command('burn')
+    .description('Burn corresponding amount of asset')
+    .requiredOption('--amount <string>', 'The amount for burn')
+    .action(async ({ amount }: Unbond) => {
+        const key = new CLIKey({ keyName: menu.from });
+        const userAddress = key.accAddress;
+        const addressProvider = new AddressProviderFromJSON(
+            resolveChainIDToNetworkName(menu.chainId),
+        );
+        const msg = fabricatebAssetBurn({
+            address: userAddress,
+            amount: amount,
+        })(addressProvider);
+        await handleExecCommand(menu, msg);
+    });
 
 interface BurnFrom {
   amount: string;

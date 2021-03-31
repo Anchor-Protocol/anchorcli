@@ -1,22 +1,22 @@
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import {
-  fabricatebAssetBond,
-  fabricatebAssetUpdateGlobalIndex,
-  fabricatebAssetCheckSlashing,
-  fabricatebAssetBurn,
-  fabricatebAssetUpdateConfig,
-  fabricatebAssetUpdateParams,
-  fabricatebAssetWithdrawUnbonded,
-  fabricatebAssetRegisterValidator,
-  queryHubConfig,
-  queryHubCurrentBatch,
-  queryHubHistory,
-  queryHubParams,
-  queryHubState,
-  queryHubUnbond,
-  queryHubWhiteVals,
-  queryHubWithdrawable,
-  fabricatebAssetDeregisterValidator,
+    fabricatebAssetBond,
+    fabricatebAssetUpdateGlobalIndex,
+    fabricatebAssetCheckSlashing,
+    fabricatebAssetBurn,
+    fabricatebAssetUpdateConfig,
+    fabricatebAssetUpdateParams,
+    fabricatebAssetWithdrawUnbonded,
+    fabricatebAssetRegisterValidator,
+    queryHubConfig,
+    queryHubCurrentBatch,
+    queryHubHistory,
+    queryHubParams,
+    queryHubState,
+    queryHubUnbond,
+    queryHubWhiteVals,
+    queryHubWithdrawable,
+    fabricatebAssetDeregisterValidator, fabricatebAssetUnbond,
 } from '@anchor-protocol/anchor.js';
 import {
   createExecMenu,
@@ -243,7 +243,7 @@ const unbond = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebAssetBurn({
+    const msg = fabricatebAssetUnbond({
       address: userAddress,
       amount: amount,
     })(addressProvider);

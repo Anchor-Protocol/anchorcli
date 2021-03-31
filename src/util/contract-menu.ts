@@ -140,7 +140,7 @@ export async function handleExecCommand(
   }
 
   let gas: number;
-  let feeAmount: Coins;
+  let feeAmount: Coins = new Coins({});;
 
   if (exec.gas === 'auto') {
     // estimate gas
