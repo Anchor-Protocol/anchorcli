@@ -8,10 +8,12 @@ export enum NETWORKS {
   TEQUILA0004,
 }
 
-const contracts: Contracts = loadConfig().contracts;
+const testnetContracts: Contracts = loadConfig('tequila-0004').contracts;
+const mainnetContracts: Contracts = loadConfig('columbus-4').contracts;
 
 const chainIDToNetworkName: any = {
   'tequila-0004': NETWORKS.TEQUILA0004,
+  'columbus-4': NETWORKS.COLUMBUS4,
 };
 export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
   const network: NETWORKS =
@@ -22,8 +24,8 @@ export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
 };
 
 const networksMap: { [networkName: string]: Contracts } = {
-  [NETWORKS.COLUMBUS4]: contracts,
-  [NETWORKS.TEQUILA0004]: contracts,
+  [NETWORKS.COLUMBUS4]: mainnetContracts,
+  [NETWORKS.TEQUILA0004]: testnetContracts,
 };
 
 export class AddressProviderFromJSON implements AddressProvider {

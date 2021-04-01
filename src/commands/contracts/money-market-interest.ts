@@ -7,7 +7,6 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from '../../util/contract-menu';
-import { Dec } from '@terra-money/terra.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -18,7 +17,6 @@ import {
 } from '@anchor-protocol/anchor.js/dist/queries';
 import * as Parse from '../../util/parse-input';
 import { fabricateInterestUpdateConfig } from '@anchor-protocol/anchor.js';
-import int = Parse.int;
 import dec = Parse.dec;
 
 const menu = createExecMenu(
@@ -86,7 +84,7 @@ const getBorrowRate = query
   )
   .action(
     async ({ marketBalance, totalLiabilities, totalReserves }: BorrowRate) => {
-      const lcd = getLCDClient();
+      const lcd = getLCDClient(query.chainId);
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(query.chainId),
       );
@@ -104,7 +102,7 @@ const getConfig = query
   .command('config')
   .description('Get the interest model contract configuration')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );

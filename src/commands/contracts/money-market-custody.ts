@@ -122,10 +122,10 @@ const getBorrower = query
     'Address of borrower that deposited collateral',
   )
   .action(async ({ address }: Borrower) => {
-    const lcd = getLCDClient();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
+    const lcd = getLCDClient(query.chainId);
     const queryBorrower = await queryCustodyBorrower({
       lcd,
       market: MARKET_DENOMS.UUSD,
@@ -146,7 +146,7 @@ const getBorrowers = query
   .option('--start-after <AccAddress>', 'Borrower address to start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: Borrowers) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -164,7 +164,7 @@ const getConfig = query
   .command('config')
   .description('Get the contract configuration of the Custody contract')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );

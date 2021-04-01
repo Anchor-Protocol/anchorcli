@@ -18,11 +18,6 @@ import {
 
 const menu = createExecMenu('collector', 'Anchor Collector contract functions');
 
-const addressProvider = new AddressProviderFromJSON(
-  resolveChainIDToNetworkName(menu.chainId),
-);
-const lcd = getLCDClient();
-
 interface Sweep {
   denom: string;
 }
@@ -38,6 +33,9 @@ const sweep = menu
   .action(async ({ denom }: Sweep) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
     await handleExecCommand(
       menu,
       await fabricateCollectorSweep({
@@ -52,6 +50,11 @@ const getConfig = query
   .command('config')
   .description('Query Anchor Collector contract config')
   .action(async () => {
+    const lcd = getLCDClient(query.chainId);
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId),
+    );
+
     await handleQueryCommand(
       query,
       await queryCollectorConfig({

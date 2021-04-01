@@ -265,7 +265,7 @@ const getAllCollaterals = query
   .option('--start-after <AccAddress>', 'Borrower address of start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: AllCollaterals) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -291,7 +291,7 @@ const getBorrowLimit = query
   .requiredOption('--borrower <AccAddress>', 'Address of borrower')
   .option('--block-time <int>', 'Current block timestamp')
   .action(async ({ borrower, blockTime }: BorrowLimit) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -313,7 +313,7 @@ const getCollaterals = query
   .description('Get locked collateral information for the specified borrower')
   .requiredOption('--borrower <AccAddress>', 'Address of borrower')
   .action(async ({ borrower }: Collaterals) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -329,7 +329,7 @@ const getConfig = query
   .command('config')
   .description('Get the configuration of the Overseer contract')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -344,7 +344,7 @@ const getDistributionParams = query
   .command('distribution-params')
   .description('Get parameter information related to reward distribution')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -359,7 +359,7 @@ const getEpochState = query
   .command('epoch-state')
   .description('Get information related to the current epoch')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );

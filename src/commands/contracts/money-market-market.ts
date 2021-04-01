@@ -168,7 +168,7 @@ const getConfig = query
   .command('config')
   .description('Get the Market contract configuration')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -185,7 +185,7 @@ const getEpochState = query
     'Get state information related to epoch operations. Returns the interest-accrued block_height field is filled. Returns the stored (no interest accrued) state if not filled',
   )
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const { block } = await lcd.tendermint.blockInfo();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
@@ -209,7 +209,7 @@ const getLiabilities = query
   .option('--start-after <AccAddress>', 'Borrower address to start query')
   .option('--limit <int>', 'Maximum number of entries to query')
   .action(async ({ startAfter, limit }: Liabilities) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -233,7 +233,7 @@ const getLiability = query
   )
   .requiredOption('--borrower <AccAddress>', 'Address of borrower')
   .action(async ({ borrower }: Liability) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const { block } = await lcd.tendermint.blockInfo();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
@@ -253,7 +253,7 @@ const getState = query
     'Get information related to the overall state of Market for the current block height',
   )
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const { block } = await lcd.tendermint.blockInfo();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),

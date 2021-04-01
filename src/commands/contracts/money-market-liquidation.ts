@@ -183,7 +183,7 @@ const getBid = query
   )
   .requiredOption('--bidder <AccAddress>', 'Address of bidder')
   .action(async ({ collateralToken, bidder }: Bid) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -211,7 +211,7 @@ const getBidsByUser = query
   )
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ bidder, startAfter, limit }: BidsByUser) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -245,7 +245,7 @@ const getBidsByCollateral = query
   )
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ collateralToken, startAfter, limit }: BidsByCollateral) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
@@ -262,7 +262,7 @@ const getConfig = query
   .command('config')
   .description("Get the Liquidation Contract's configuration")
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -301,7 +301,7 @@ const getLiquidationAmount = query
       collaterals,
       collateralPrices,
     }: LiquidationAmount) => {
-      const lcd = getLCDClient();
+      const lcd = getLCDClient(query.chainId);
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(query.chainId),
       );

@@ -57,7 +57,7 @@ const getConfig = query
   .command('config')
   .description('Get the contract configuration of bLuna Reward')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -69,7 +69,7 @@ const getState = query
   .command('state')
   .description('Get information about the current state')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -88,7 +88,7 @@ const getAccruedRewards = query
   )
   .requiredOption('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: AccruedRewards) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -104,7 +104,7 @@ const getHolder = query
   .description('Get information about the specified bLuna holder')
   .requiredOption('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: AccruedRewards) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -126,7 +126,7 @@ const getHolders = query
   .option('--start-after <int>', 'Address of bLuna holder to start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: AllHistory) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );

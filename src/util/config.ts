@@ -19,12 +19,19 @@ export const config = (() => {
   }
 })();
 
-export function loadConfig(): AnchorConfig {
+export function loadConfig(chainId?: string): AnchorConfig {
   if (!fs.existsSync(configFilePath)) {
-    let config: AnchorConfig = JSON.parse(
-      fs.readFileSync('src/addresses/anchor-config.json').toString(),
-    );
-    return config;
+    if (chainId === 'columbus-4') {
+      let config: AnchorConfig = JSON.parse(
+        fs.readFileSync('src/addresses/anchor-config-mainnet').toString(),
+      );
+      return config;
+    } else {
+      let config: AnchorConfig = JSON.parse(
+        fs.readFileSync('src/addresses/anchor-config-testnet.json').toString(),
+      );
+      return config;
+    }
   } else {
     try {
       const loadedConfig: AnchorConfig = JSON.parse(

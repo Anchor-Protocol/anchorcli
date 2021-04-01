@@ -1,22 +1,22 @@
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import {
-    fabricatebAssetBond,
-    fabricatebAssetUpdateGlobalIndex,
-    fabricatebAssetCheckSlashing,
-    fabricatebAssetBurn,
-    fabricatebAssetUpdateConfig,
-    fabricatebAssetUpdateParams,
-    fabricatebAssetWithdrawUnbonded,
-    fabricatebAssetRegisterValidator,
-    queryHubConfig,
-    queryHubCurrentBatch,
-    queryHubHistory,
-    queryHubParams,
-    queryHubState,
-    queryHubUnbond,
-    queryHubWhiteVals,
-    queryHubWithdrawable,
-    fabricatebAssetDeregisterValidator, fabricatebAssetUnbond,
+  fabricatebAssetBond,
+  fabricatebAssetUpdateGlobalIndex,
+  fabricatebAssetCheckSlashing,
+  fabricatebAssetUpdateConfig,
+  fabricatebAssetUpdateParams,
+  fabricatebAssetWithdrawUnbonded,
+  fabricatebAssetRegisterValidator,
+  queryHubConfig,
+  queryHubCurrentBatch,
+  queryHubHistory,
+  queryHubParams,
+  queryHubState,
+  queryHubUnbond,
+  queryHubWhiteVals,
+  queryHubWithdrawable,
+  fabricatebAssetDeregisterValidator,
+  fabricatebAssetUnbond,
 } from '@anchor-protocol/anchor.js';
 import {
   createExecMenu,
@@ -37,8 +37,6 @@ const menu = createExecMenu(
   'basset-hub',
   'Anchor bAsset Hub contract functions',
 );
-
-const lcd = getLCDClient();
 
 interface BondArgs {
   amount: string;
@@ -258,7 +256,7 @@ const getConfig = query
   .command('config')
   .description("Get the Hub contract's configuration")
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -270,7 +268,7 @@ const getCurrentBatch = query
   .command('current-batch')
   .description('Get information about the current undelegation batch')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -291,7 +289,7 @@ const getAllHistory = query
   .option('--start-from <int>', 'Batch ID to start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startFrom, limit }: AllHistory) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -307,7 +305,7 @@ const getParams = query
   .command('params')
   .description('Get parameter information')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -319,7 +317,7 @@ const getWhitelistedValidators = query
   .command('whitelisted-validators')
   .description('Get the list of whitelisted validators')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -338,7 +336,7 @@ const getUnbondRequest = query
   )
   .requiredOption('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: UnbondRequest) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -362,7 +360,7 @@ const getWhitdrawable = query
   .requiredOption('--address <AccAddress>', 'Address of user')
   .requiredOption('--block-time <int>', 'Current block timestamp')
   .action(async ({ address, blockTime }: Whitdrawable) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -378,7 +376,7 @@ const getState = query
   .command('state')
   .description('Get information about the current state')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );

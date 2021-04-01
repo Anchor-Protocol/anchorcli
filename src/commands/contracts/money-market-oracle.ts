@@ -7,11 +7,9 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from '../../util/contract-menu';
-import { Dec } from '@terra-money/terra.js';
 import {
   fabricateOracleUpdateConfig,
   fabricateOracleFeedPrice,
-  fabricateOracleRegisterFeeder,
   queryOracleConfig,
   queryOraclePrice,
   queryOraclePrices,
@@ -77,7 +75,7 @@ const getConfig = query
   .command('config')
   .description('Get the Oracle contract configuration')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -103,7 +101,7 @@ const getPrice = query
     'Asset in which calculated price will be denominated',
   )
   .action(async ({ base, quote }: QueryPrice) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -126,7 +124,7 @@ const getPrices = query
   .option('--start-after <String>', 'Asset to start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: Prices) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );

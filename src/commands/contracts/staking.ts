@@ -90,7 +90,7 @@ const getConfig = query
   .command('config')
   .description('Get the contract configuration of the Staking contract')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -104,7 +104,7 @@ const getState = query
   .command('state')
   .description('Gets state information for the current block number')
   .action(async () => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -120,7 +120,7 @@ const getStakerInfo = query
     staker: '(AccAddress) staker for whom to query rewards',
   })
   .action(async (staker: string) => {
-    const lcd = getLCDClient();
+    const lcd = getLCDClient(query.chainId);
     const { block } = await lcd.tendermint.blockInfo();
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),

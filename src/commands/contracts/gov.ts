@@ -31,8 +31,6 @@ import {
 
 const menu = createExecMenu('gov', 'ANC Gov contract functions');
 
-const lcd = getLCDClient();
-
 interface UpdateConfig {
   owner: string;
   effectiveDelay: number;
@@ -290,6 +288,8 @@ const getConfig = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
+    const lcd = getLCDClient(query.chainId);
+
     await handleQueryCommand(
       query,
       await queryGovConfig({
@@ -305,6 +305,7 @@ const getPoll = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
+    const lcd = getLCDClient(query.chainId);
     await handleQueryCommand(
       query,
       await queryGovPoll({
@@ -337,6 +338,7 @@ const getPolls = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
+    const lcd = getLCDClient(query.chainId);
     await handleQueryCommand(
       query,
       await queryGovPolls({
@@ -357,6 +359,7 @@ const getStaker = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
+    const lcd = getLCDClient(query.chainId);
     await handleQueryCommand(
       query,
       await queryGovStaker({
@@ -373,6 +376,7 @@ const getState = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
+    const lcd = getLCDClient(query.chainId);
     await handleQueryCommand(
       query,
       await queryGovState({
@@ -390,6 +394,7 @@ const getVoters = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
+    const lcd = getLCDClient(query.chainId);
     await handleQueryCommand(
       query,
       await queryGovVoters({

@@ -1,7 +1,4 @@
 import * as commander from 'commander';
-import jsome from 'jsome';
-//@ts-ignore
-import yesno from 'yesno';
 import * as Parse from './parse-input';
 import * as yaml from 'yaml';
 
@@ -14,9 +11,12 @@ import {
 } from '@terra-money/terra.js';
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import { loadConfig } from './config';
+const jsome = require('jsome');
+//@ts-ignore
+const yesno = require('yesno');
 
-export function getLCDClient(): LCDClient {
-  return new LCDClient(loadConfig().lcd);
+export function getLCDClient(chainId?: string): LCDClient {
+  return new LCDClient(loadConfig(chainId).lcd);
 }
 
 export function createExecMenu(
@@ -80,7 +80,8 @@ export function createQueryMenu(
   const query = new commander.Command(name);
   query
     .description(description)
-    .option('--yaml', 'Encode result as YAML instead of JSON');
+    .option('--yaml', 'Encode result as YAML instead of JSON')
+    .option('--chain-id <string>', 'Chain ID of Terra node');
   return query;
 }
 
@@ -140,7 +141,7 @@ export async function handleExecCommand(
   }
 
   let gas: number;
-  let feeAmount: Coins = new Coins({});;
+  let feeAmount: Coins = new Coins({});
 
   if (exec.gas === 'auto') {
     // estimate gas
@@ -243,6 +244,6 @@ export async function handleQueryCommand(query: commander.Command, T: any) {
   if (query.yaml) {
     console.log(yaml.stringify(T));
   } else {
-    jsome(T);
+    console.log(T);
   }
 }

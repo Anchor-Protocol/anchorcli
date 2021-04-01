@@ -16,6 +16,8 @@ import Distributor from './distributor';
 import InvestorVesting from './investor-vesting';
 import TeamVesting from './team-vesting';
 import Staking from './staking';
+import ANC from './ANC';
+import aTerra from './aterra';
 
 export const anchor = [
   Hub,
@@ -36,4 +38,6 @@ export const anchor = [
   InvestorVesting,
   TeamVesting,
   Staking,
+  ANC,
+  aTerra,
 ];

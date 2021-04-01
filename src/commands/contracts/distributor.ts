@@ -19,15 +19,14 @@ const query = createQueryMenu(
   'Anchor Distributor contract queries',
 );
 
-const addressProvider = new AddressProviderFromJSON(
-  resolveChainIDToNetworkName(query.chainId),
-);
-const lcd = getLCDClient();
-
 const getConfig = query
   .command('config')
   .description('Query Anchor Community contract config')
   .action(async () => {
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId),
+    );
+    const lcd = getLCDClient(query.chainId);
     await handleQueryCommand(
       query,
       await queryDistributortConfig({
