@@ -1,15 +1,37 @@
-import { Coins, LCDClient, LCDClientConfig } from '@terra-money/terra.js';
-import { Numeric } from '@terra-money/terra.js/dist/core/numeric';
 import * as path from 'path';
 import { homedir } from 'os';
 import * as fs from 'fs';
-import { AnchorConfig, Contracts } from '../addresses/types';
+import { AnchorConfig } from '../addresses/types';
+import mainnetDefaultConfig from '../data/anchorcli-default-columbus';
+import tequilaDefaultConfig from '../data/anchorcli-default-tequila';
+import { Validator } from 'jsonschema';
+import * as logger from './logger';
+import configSchema from '../data/configSchema';
 
-export const configFilePath = path.join(homedir(), '.anchorcli_contracts.json');
+export const configFilePathTestnet = path.join(
+  homedir(),
+  'anchorcliTestnet.json',
+);
+export const configFilePathMainnet = path.join(
+  homedir(),
+  'anchorcliMainnet.json',
+);
+
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
+
+export namespace AnchorCLIConfig {
+  export const SCHEMA = configSchema;
+}
+
+export const activeNetwork = process.env.ANCHORCLI_NETWORK || 'columbus-4';
 
 export const config = (() => {
   try {
-    const c = loadConfig();
+    const c = loadConfig(activeNetwork);
     if (c === undefined) {
       throw new Error(`Could not find configuration`);
     }
@@ -19,38 +41,98 @@ export const config = (() => {
   }
 })();
 
+export function saveConfigTestnet(newConfig: DeepPartial<AnchorConfig>) {
+  fs.writeFileSync(
+    configFilePathTestnet,
+    JSON.stringify(validateConfig(newConfig), null, 2),
+  );
+}
+
+export function saveConfigMainnet(newConfig: DeepPartial<AnchorConfig>) {
+  fs.writeFileSync(
+    configFilePathMainnet,
+    JSON.stringify(validateConfig(newConfig), null, 2),
+  );
+}
+
+export function validateConfig(
+  config: DeepPartial<AnchorConfig>,
+): DeepPartial<AnchorConfig> {
+  const v = new Validator();
+  const r = v.validate(config, AnchorCLIConfig.SCHEMA);
+  if (r.valid) {
+    return config;
+  } else {
+    for (const err of r.errors) {
+      logger.error(err.toString());
+    }
+    throw new Error(`improper format.`);
+  }
+}
+
 export function loadConfig(chainId?: string): AnchorConfig {
-  if (!fs.existsSync(configFilePath)) {
+  if (chainId === undefined) {
+    chainId = activeNetwork;
+  }
+  if (
+    !fs.existsSync(configFilePathTestnet) ||
+    !fs.existsSync(configFilePathMainnet)
+  ) {
     if (chainId === 'columbus-4') {
-      let config: AnchorConfig = JSON.parse(
-        fs.readFileSync('src/addresses/anchor-config-mainnet').toString(),
-      );
+      console.log(' I am here');
+      saveConfigMainnet(mainnetDefaultConfig);
+      let config: AnchorConfig = mainnetDefaultConfig;
       return config;
     } else {
-      let config: AnchorConfig = JSON.parse(
-        fs.readFileSync('src/addresses/anchor-config-testnet.json').toString(),
-      );
+      saveConfigTestnet(tequilaDefaultConfig);
+      let config: AnchorConfig = tequilaDefaultConfig;
       return config;
     }
   } else {
-    try {
-      const loadedConfig: AnchorConfig = JSON.parse(
-        fs.readFileSync(configFilePath).toString(),
-      );
-      return loadedConfig;
-    } catch (e) {
-      throw new Error(
-        `Could not parse config file ${configFilePath}: ${e.message}`,
-      );
+    if (chainId === 'columbus-4') {
+      try {
+        const loadedConfig: AnchorConfig = JSON.parse(
+          fs.readFileSync(configFilePathMainnet).toString(),
+        );
+        return loadedConfig;
+      } catch (e) {
+        throw new Error(
+          `Could not parse config file ${configFilePathTestnet}: ${e.message}`,
+        );
+      }
+    } else {
+      try {
+        const loadedConfig: AnchorConfig = JSON.parse(
+          fs.readFileSync(configFilePathTestnet).toString(),
+        );
+        return loadedConfig;
+      } catch (e) {
+        throw new Error(
+          `Could not parse config file ${configFilePathTestnet}: ${e.message}`,
+        );
+      }
     }
   }
 }
 
-export function saveContractAddresses(newContractAddresses: AnchorConfig) {
-  fs.writeFileSync(
-    configFilePath,
-    JSON.stringify(newContractAddresses, null, 2),
-  );
+export function saveContractAddresses(
+  newContractAddresses: AnchorConfig,
+  chainId?: string,
+) {
+  if (chainId === undefined) {
+    chainId = activeNetwork;
+  }
+  if (chainId === 'columbus-4') {
+    fs.writeFileSync(
+      configFilePathMainnet,
+      JSON.stringify(newContractAddresses, null, 2),
+    );
+  } else {
+    fs.writeFileSync(
+      configFilePathTestnet,
+      JSON.stringify(newContractAddresses, null, 2),
+    );
+  }
 }
 
 export default {

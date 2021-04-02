@@ -2,8 +2,10 @@
 # yarn lockfile v1
 
 
-"@anchor-protocol/anchor.js@../anchor.js/":
-  version "1.0.0-rc.3"
+"@anchor-protocol/anchor.js@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@anchor-protocol/anchor.js/-/anchor.js-1.0.0.tgz#57f2d400f8f22282e58794743304a30674bc17ee"
+  integrity sha512-krYTNJFFts+lvcjz1NoY+Cte7KjETwVkoQB+SxZDyM5UJCJy/0R7VtOvPmo9QeIjqIHMcRhXv5bnAQO/9oBsKg==
   dependencies:
     "@terra-money/terra.js" "^1.3.6"
 
@@ -3568,6 +3570,11 @@ json5@^1.0.1:
   integrity sha512-aKS4WQjPenRxiQsC93MNfjx+nbF4PAdYzmd/1JIj8HYzqfbu86beTuNgXDzPknWk0n0uARlyewZo4s++ES36Ow==
   dependencies:
     minimist "^1.2.0"
+
+jsonschema@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/jsonschema/-/jsonschema-1.4.0.tgz#1afa34c4bc22190d8e42271ec17ac8b3404f87b2"
+  integrity sha512-/YgW6pRMr6M7C+4o8kS+B/2myEpHCrxO4PEWnqJNBFMjn7EWXqlQ4tGwL6xTHeRplwuZmcAncdvfOad1nT2yMw==
 
 jsprim@^1.2.2:
   version "1.4.1"

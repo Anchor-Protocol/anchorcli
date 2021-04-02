@@ -1,25 +1,28 @@
 /* eslint-disable */
 import { Contracts } from './types';
-import { loadConfig } from '../util/config';
+import { activeNetwork, loadConfig } from '../util/config';
 import { AddressProvider } from '@anchor-protocol/anchor.js';
+import tequilaDefaultConfig from '../data/anchorcli-default-tequila';
+import mainnetDefaultConfig from '../data/anchorcli-default-columbus';
 
 export enum NETWORKS {
   COLUMBUS4,
   TEQUILA0004,
 }
 
-const testnetContracts: Contracts = loadConfig('tequila-0004').contracts;
-const mainnetContracts: Contracts = loadConfig('columbus-4').contracts;
+//TODO: should not read from loadconfig();
+const testnetContracts: Contracts = tequilaDefaultConfig.contracts;
+const mainnetContracts: Contracts = mainnetDefaultConfig.contracts;
 
 const chainIDToNetworkName: any = {
   'tequila-0004': NETWORKS.TEQUILA0004,
   'columbus-4': NETWORKS.COLUMBUS4,
 };
 export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
-  const network: NETWORKS =
-    chainId === undefined
-      ? chainIDToNetworkName['tequila-0004']
-      : chainIDToNetworkName[chainId];
+  if (chainId === undefined) {
+    chainId = activeNetwork;
+  }
+  const network: NETWORKS = chainIDToNetworkName[chainId];
   return network;
 };
 
