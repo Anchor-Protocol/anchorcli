@@ -4,10 +4,6 @@ import * as _ from 'lodash';
 import commands from './commands';
 import * as logger from './util/logger';
 
-interface CommanderError extends Error {
-  message: string;
-}
-
 process.on('unhandledRejection', (error) => {
   if (program.verbose) {
     console.error(error);
@@ -31,6 +27,6 @@ export function run(argv: string[]): void {
     });
     program.parse(argv);
   } catch (e) {
-    logger.error((e as CommanderError).message);
+    logger.error(e.message);
   }
 }

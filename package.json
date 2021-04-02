@@ -28,7 +28,7 @@
     "anchorcli": "bin/anchorcli"
   },
   "dependencies": {
-    "@anchor-protocol/anchor.js": "^1.0.0",
+    "@anchor-protocol/anchor.js": "../anchor.js/",
     "@terra-money/terra.js": "^1.3.6",
     "@types/jest": "^26.0.22",
     "chalk": "^4.1.0",

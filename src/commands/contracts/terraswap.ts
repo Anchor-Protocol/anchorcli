@@ -10,6 +10,10 @@ import {
   fabricateTerraswapSwapLuna,
   fabricateTerraswapProvideLiquidityANC,
   fabricateTerraswapProvideLiquiditybLuna,
+  fabricateTerraswapSwapANC,
+  fabricateTerraswapSwapUSTANC,
+  fabricateTerraswapWithdrawLiquidityANC,
+  fabricateTerraswapWithdrawLiquiditybLuna,
 } from '@anchor-protocol/anchor.js';
 import {
   AddressProviderFromJSON,
@@ -17,8 +21,8 @@ import {
 } from '../../addresses/from-json';
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import * as Parse from '../../util/parse-input';
-import { queryTerraswapNativeSimulation } from '@anchor-protocol/anchor.js/dist/queries/terraswap/native-simulation';
-import { queryTerraswapReverseNativeSimulation } from '@anchor-protocol/anchor.js/dist/queries/terraswap/reverse-native-simulation';
+import { queryTerraswapPool } from '@anchor-protocol/anchor.js/dist/queries/terraswap/pool';
+import { queryTerrasawpPair } from '@anchor-protocol/anchor.js/dist/queries/terraswap/pairs';
 
 const menu = createExecMenu(
   'terraswap',
@@ -42,11 +46,11 @@ const provideLiquiditybLuna = menu
   .description('Provide liquidity to a Terraswap pool')
   .requiredOption(
     '--token-amount <string>',
-    'first side of liquidity pool e.g. 1000bluna',
+    'first side of liquidity pool (bLuna) e.g. 1000',
   )
   .requiredOption(
     '--native-amount <string>',
-    'second side of liquidity pool e.g. 1000uusd',
+    'second side of liquidity pool (LUNA) e.g. 1000',
   )
   .option(
     '--slippage-tolerance <Dec>',
@@ -60,7 +64,6 @@ const provideLiquiditybLuna = menu
       slippageTolerance,
       tokenAmount,
       nativeAmount,
-      quote,
       expiryHeight,
       expiryTime,
       expiryNever,
@@ -94,6 +97,7 @@ const provideLiquiditybLuna = menu
           never: {},
         };
       }
+
       const addressProvider = new AddressProviderFromJSON(
         resolveChainIDToNetworkName(menu.chainId),
       );
@@ -102,7 +106,7 @@ const provideLiquiditybLuna = menu
       const message = fabricateTerraswapProvideLiquiditybLuna({
         address: userAddress,
         slippage_tolerance: slippageTolerance,
-        quote: quote,
+        quote: 'uluna',
         token_amount: tokenAmount,
         native_amount: nativeAmount,
         expires: expiry,
@@ -122,15 +126,15 @@ interface provideLiquidityArgs {
 }
 
 const provideLiquidityANC = menu
-  .command('provide-liquidity-bluna')
+  .command('provide-liquidity-anc')
   .description('Provide liquidity to a Terraswap pool')
   .requiredOption(
     '--token-amount <string>',
-    'first side of liquidity pool e.g. 1000bluna',
+    'first side of liquidity pool (ANC) e.g. 1000',
   )
   .requiredOption(
     '--native-amount <string>',
-    'second side of liquidity pool e.g. 1000uusd',
+    'second side of liquidity pool (USD) e.g. 1000',
   )
   .option(
     '--slippage-tolerance <Dec>',
@@ -144,7 +148,6 @@ const provideLiquidityANC = menu
       slippageTolerance,
       tokenAmount,
       nativeAmount,
-      quote,
       expiryHeight,
       expiryTime,
       expiryNever,
@@ -186,7 +189,7 @@ const provideLiquidityANC = menu
       const message = fabricateTerraswapProvideLiquidityANC({
         address: userAddress,
         slippage_tolerance: slippageTolerance,
-        quote: quote,
+        quote: 'uusd',
         token_amount: tokenAmount,
         native_amount: nativeAmount,
         expires: expiry,
@@ -201,27 +204,52 @@ interface swapArgs {
   beliefPrice?: string;
   maxSpread?: string;
   amount: string;
-  denom: string;
 }
 const swapLuna = menu
   .command('swap-luna')
-  .description('Swap native asset to  asset another using Terraswap')
-  .requiredOption('--denom <string>', 'Native denom')
-  .requiredOption('--amount <string>', 'Native amount to swap')
+  .description('Swap Luna asset to bLuna using Terraswap')
+  .requiredOption('--amount <string>', 'Luna amount to swap')
   .option('--to <AccAddress>', 'Account to send swapped funds to')
   .option(
     '--max-spread <Dec>',
     'Maximum difference between market and estimated price to execute transaction',
   )
   .option('--belief-price <Dec>', 'Price submitted at the time of the swap')
-  .action(async ({ to, beliefPrice, maxSpread, amount, denom }: swapArgs) => {
+  .action(async ({ to, beliefPrice, maxSpread, amount }: swapArgs) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const pair_message = fabricateTerraswapSwapLuna({
-      denom,
+      denom: 'uluna',
+      address: userAddress,
+      amount: amount,
+      to: to,
+      belief_price: beliefPrice,
+      max_spread: maxSpread,
+    })(addressProvider);
+    await handleExecCommand(menu, pair_message);
+  });
+
+const swapUst = menu
+  .command('swap-ust-anc')
+  .description('Swap UST asset to ANC using Terraswap')
+  .requiredOption('--amount <string>', 'Ust amount to swap')
+  .option('--to <AccAddress>', 'Account to send swapped funds to')
+  .option(
+    '--max-spread <Dec>',
+    'Maximum difference between market and estimated price to execute transaction',
+  )
+  .option('--belief-price <Dec>', 'Price submitted at the time of the swap')
+  .action(async ({ to, beliefPrice, maxSpread, amount }: swapArgs) => {
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const pair_message = fabricateTerraswapSwapUSTANC({
+      denom: 'uusd',
       address: userAddress,
       amount: amount,
       to: to,
@@ -251,7 +279,7 @@ const swapbLuna = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    console.log(amount);
+
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const pair_message = fabricateTerraswapSwapbLuna({
@@ -264,80 +292,126 @@ const swapbLuna = menu
     await handleExecCommand(menu, pair_message);
   });
 
+const swapANC = menu
+  .command('swap-anc')
+  .description('Swap ANC asset to uusd asset using Terraswap')
+  .requiredOption('--amount <string>', 'ANC amount to swap')
+  .option('--to <AccAddress>', 'Account to send swapped funds to')
+  .option(
+    '--max-spread <Dec>',
+    'Maximum difference between market and estimated price to execute transaction',
+  )
+  .option('--belief-price <Dec>', 'Price submitted at the time of the swap')
+  .action(async ({ to, beliefPrice, maxSpread, amount }: swapArgs) => {
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const pair_message = fabricateTerraswapSwapANC({
+      address: userAddress,
+      amount: amount,
+      to: to,
+      belief_price: beliefPrice,
+      max_spread: maxSpread,
+    })(addressProvider);
+    await handleExecCommand(menu, pair_message);
+  });
+
+interface swapArgs {
+  amount: string;
+}
+
+const withdrawAnc = menu
+  .command('withdraw-anc')
+  .description('Withdraw ANC asset from Terraswap')
+  .requiredOption('--amount <string>', 'ANC amount to withdraw')
+  .action(async ({ amount }: swapArgs) => {
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const pair_message = fabricateTerraswapWithdrawLiquidityANC({
+      address: userAddress,
+      amount: amount,
+    })(addressProvider);
+    await handleExecCommand(menu, pair_message);
+  });
+
+const withdrawbLuna = menu
+  .command('withdraw-bluna')
+  .description('Withdraw bLuna asset from Terraswap')
+  .requiredOption('--amount <string>', 'bluna amount to withdraw')
+  .action(async ({ amount }: swapArgs) => {
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const pair_message = fabricateTerraswapWithdrawLiquiditybLuna({
+      address: userAddress,
+      amount: amount,
+    })(addressProvider);
+    await handleExecCommand(menu, pair_message);
+  });
+
 const query = createQueryMenu('terraswap', 'Terraswap contract queries');
 
-// interface TokenSimulation {
-//   contractAddr: string;
-//   amount: string;
-//   denom: string
-// }
-// const getRevTokenSimulation = query
-//   .command('token-reverse-simulation')
-//   .description('Simulate and determine swap price')
-//   .requiredOption(
-//     '--contract-addr <AccAddress>',
-//     'Contract address of the asset to swap into',
-//   )
-//   .requiredOption('--amount <string>', 'Amount of the asset to swap from')
-//   .action(async ({ contractAddr, amount, denom }: TokenSimulation) => {
-//     const lcd = getLCDClient();
-//     const addressProvider = new AddressProviderFromJSON(
-//       resolveChainIDToNetworkName(query.chainId),
-//     );
-//     const reverse_sim_query = await queryTerraswapNativeSimulation({
-//       lcd,
-//       pair_contract_address: contractAddr,
-//       denom,
-//       amount,
-//     })(addressProvider);
-//     await handleQueryCommand(query, reverse_sim_query);
-//   });
-//
-// interface NativeSimulation {
-//   denom: string;
-//   amount: string;
-// }
-// const getRevNativeTokenSimulation = query
-//   .command('native-reverse-simulation')
-//   .description('Simulate and determine swap price')
-//   .requiredOption('--denom <string>', 'Native asset denom to swap into')
-//   .requiredOption('--amount <string>', 'Amount of the asset to swap into')
-//   .action(async ({ denom, amount }: NativeSimulation) => {
-//     const lcd = getLCDClient();
-//     const addressProvider = new AddressProviderFromJSON(
-//       resolveChainIDToNetworkName(query.chainId),
-//     );
-//     const reverse_sim_query = await queryTerraswapReverseNativeSimulation({
-//       lcd,
-//       denom,
-//       amount,
-//     })(addressProvider);
-//     await handleQueryCommand(query, reverse_sim_query);
-//   });
-//
-// const getPool = query
-//   .command('pool')
-//   .description('Get pool information on pair')
-//   .action(async () => {
-//     const lcd = getLCDClient();
-//     const addressProvider = new AddressProviderFromJSON(
-//       resolveChainIDToNetworkName(query.chainId),
-//     );
-//     const pool_query = await queryPool({ lcd })(addressProvider);
-//     await handleQueryCommand(query, pool_query);
-//   });
-//
-// const getPair = query
-//   .command('pair')
-//   .description('Get terraswap pair')
-//   .action(async () => {
-//     const lcd = getLCDClient();
-//     const addressProvider = new AddressProviderFromJSON(
-//       resolveChainIDToNetworkName(query.chainId),
-//     );
-//     const pair_query = await queryPair({ lcd })(addressProvider);
-//     await handleQueryCommand(query, pair_query);
-//   });
+interface Pool {
+  ancUst?: string;
+  blunaLuna?: string;
+}
+
+const getPool = query
+  .command('pool')
+  .description('Get pool information on pair')
+  .option('--anc-ust', 'get information related to anc<>ust pool')
+  .option('--bluna-luna', 'get information related to bluna<>luna pool')
+  .action(async ({ ancUst, blunaLuna }: Pool) => {
+    const lcd = getLCDClient(query.chainId);
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId),
+    );
+    let address;
+    if (ancUst) {
+      address = addressProvider.addressesMap.terraswapAncUstPair;
+    }
+    if (blunaLuna) {
+      address = addressProvider.addressesMap.terraswapblunaLunaPair;
+    }
+    const pool_query = await queryTerraswapPool({
+      lcd,
+      pair_contract_address: address,
+    })(addressProvider);
+    await handleQueryCommand(query, pool_query);
+  });
+
+const getPair = query
+  .command('pair')
+  .description('Get terraswap pair')
+  .option('--anc-ust', 'get information related to anc<>ust pool')
+  .option('--bluna-luna', 'get information related to bluna<>luna pool')
+  .action(async ({ ancUst, blunaLuna }: Pool) => {
+    const lcd = getLCDClient(query.chainId);
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId),
+    );
+    let address;
+    if (ancUst) {
+      address = addressProvider.addressesMap.terraswapAncUstPair;
+    }
+    if (blunaLuna) {
+      address = addressProvider.addressesMap.terraswapblunaLunaPair;
+    }
+    const pair_query = await queryTerrasawpPair({
+      lcd,
+      pair_contract_address: address,
+    })(addressProvider);
+    await handleQueryCommand(query, pair_query);
+  });
 
 export default {
   menu,
