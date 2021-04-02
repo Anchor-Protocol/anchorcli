@@ -7,6 +7,8 @@ Command-line interface for Anchor Protocol on Terra.
 - [Configuration](#configuration)
   - [Specifying LCD settings](#specifying-lcd-settings)
   - [Specifying Contracts](#specifying-contracts)
+  - [Specify the Network [IMPORTANT]](#specify-the-network-important)
+    - [Example](#example)  
 - [Usage](#usage)
   - [Execute](#execute)
   - [Query](#query)
@@ -52,6 +54,7 @@ The entrypoint `anchorcli` should then be available in your `path`:
 ## Configuration
 By default, `anchorcli` works with the default configuration which is set to be for contracts on `tequila-0004`. 
 This setting provides the address of contracts and specifies the setting for LCD provider, gas prices for fee estimation.
+`anchorcli` will create two configuration files in your home directory: `$HOME/anchorcliTestnet.json` and `$HOME/anchorcliMainnet.json`.
 
 ### Specifying LCD settings
 Each network config should define how to connect to the Terra blockchain via LCD parameters.
@@ -152,6 +155,23 @@ Each address configuration should point to the correct Anchor core contract addr
    }
 }
 ```
+### Specify the Network [IMPORTANT]
+
+By default, `anchorcli` will use the network setting for `columbus-4` configured in `~/.anchorcliMainnet.json`. You can direct `anchorcli` to use a different network configuration by changing the value of the `ANCHORCLI_NETWORK` environment variable.
+
+#### Example
+
+```sh
+ANCHORCLI_NETWORK=tequila-0004 anchorcli x bond ...
+```
+
+OR
+
+```sh
+export ANCHORCLI_NETWORK=tequila-0004 
+anchorcli x bond ...
+```
+
 ## Usage
 
 `anchorcli` allows you to:
