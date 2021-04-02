@@ -87,7 +87,7 @@ interface Deposit {
 }
 
 const deposit_collateral = menu
-  .command('deposit_collateral')
+  .command('deposit-collateral')
   .requiredOption('--amount <string>', 'Amount of collateral to deposit')
   .action(async ({ amount }: Deposit) => {
     const key = new CLIKey({ keyName: menu.from });

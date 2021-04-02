@@ -112,7 +112,7 @@ export async function handleExecCommand(
     return console.log(JSON.stringify(msgs[0].execute_msg));
   }
 
-  const lcd = getLCDClient();
+  const lcd = getLCDClient(exec.chainId);
   let key = new CLIKey({ keyName: exec.from, home: exec.home });
   const wallet = lcd.wallet(key);
 

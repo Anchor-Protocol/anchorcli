@@ -75,7 +75,7 @@ const liquidationSubmitBid = menu
     'Rate of commission on executing this bid',
   )
   .requiredOption(
-    '--Coin <coin>',
+    '--coin <coin>',
     'Stablecoins for submitting bid,  e.g. 1000uusd',
   )
   .action(async ({ collateralToken, premiumRate, coin }: RetractBid) => {
@@ -275,10 +275,10 @@ const getConfig = query
 interface LiquidationAmount {
   borrowAmount: string;
   borrowLimit: string;
-  collaterals: Array<[string, string]>;
-  collateralPrices: string[];
+  collaterals: string;
+  collateralPrices: string;
 }
-//TODO  FIGURE OUT THE INPUT OF TOKENSHUMAN AND VEC<DECIMAL>
+//TODO  FIGURE OUT THE INPUT OF TOKENSHUMAN
 const getLiquidationAmount = query
   .command('liquidation-amount')
   .description(
@@ -286,14 +286,8 @@ const getLiquidationAmount = query
   )
   .requiredOption('--borrow-amount <int>', 'Liability of borrower')
   .requiredOption('--borrow-limit <int>', 'Borrow limit of borrower')
-  .requiredOption(
-    '--collaterals <Vec<<AccAddress>,<Dec>>>',
-    'Held collaterals and locked amounts',
-  )
-  .requiredOption(
-    '--collateral-prices <Vec<Dec>>',
-    'Vector of collateral prices',
-  )
+  .requiredOption('--collaterals <json>', 'Held collaterals and locked amounts')
+  .requiredOption('--collateral-prices <json>', 'Vector of collateral prices')
   .action(
     async ({
       borrowAmount,
@@ -309,8 +303,8 @@ const getLiquidationAmount = query
         lcd,
         borrow_amount: borrowAmount,
         borrow_limit: borrowLimit,
-        collaterals,
-        collateral_prices: collateralPrices,
+        collaterals: JSON.parse(collaterals) as Array<[string, string]>,
+        collateral_prices: JSON.parse(collateralPrices) as [string],
       })(addressProvider);
       await handleQueryCommand(query, queryLiquidationAmount);
     },

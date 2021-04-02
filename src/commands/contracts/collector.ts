@@ -18,10 +18,6 @@ import {
 
 const menu = createExecMenu('collector', 'Anchor Collector contract functions');
 
-interface Sweep {
-  denom: string;
-}
-
 const sweep = menu
   .command('sweep <denom>')
   .description(
@@ -30,7 +26,7 @@ const sweep = menu
       denom: 'Denomination of stablecoin to swap',
     },
   )
-  .action(async ({ denom }: Sweep) => {
+  .action(async (denom: string) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(

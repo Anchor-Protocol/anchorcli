@@ -152,16 +152,12 @@ const createPoll = menu
     );
   });
 
-interface PollOperations {
-  pollId: string;
-}
-
 const executePoll = menu
   .command('execute-poll <poll-id>')
   .description(`Executes the poll`, {
     pollId: '(int) poll id',
   })
-  .action(async ({ pollId }: PollOperations) => {
+  .action(async (pollId: string) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
@@ -181,7 +177,7 @@ const endPoll = menu
   .description(`Ends a poll`, {
     pollId: '(int) poll id',
   })
-  .action(async ({ pollId }: PollOperations) => {
+  .action(async (pollId: string) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
@@ -201,7 +197,7 @@ const expirePoll = menu
   .description(`Expires a poll`, {
     pollId: '(int) poll id',
   })
-  .action(async ({ pollId }: PollOperations) => {
+  .action(async (pollId: string) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
@@ -221,7 +217,7 @@ const snapshotPoll = menu
   .description(`Snapshot a poll`, {
     pollId: '(int) poll id',
   })
-  .action(async ({ pollId }: PollOperations) => {
+  .action(async (pollId: string) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
@@ -241,10 +237,12 @@ interface Stake {
 }
 
 const stake = menu
-  .command('stake <amount>')
-  .description(`Stake ANC tokens in governance`, {
-    amount: '(Uint128) amount of ANC tokens to stake',
-  })
+  .command('stake')
+  .description(`Stake ANC tokens in governance`)
+  .requiredOption(
+    '--amount <string>',
+    '(Uint128) amount of ANC tokens to stake',
+  )
   .action(async ({ amount }: Stake) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;

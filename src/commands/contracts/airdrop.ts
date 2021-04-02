@@ -6,46 +6,59 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import { MsgExecuteContract } from '@terra-money/terra.js';
-import { fabricateAirdropClaim } from '@anchor-protocol/anchor.js';
+import {
+  AddressProvider,
+  fabricateAirdropClaim,
+} from '@anchor-protocol/anchor.js';
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
 import * as Parse from '../../util/parse-input';
+import fetch from 'cross-fetch';
 
 const menu = createExecMenu(
   'airdrop',
   'Anchor Airdrop contract functions [mainnet only]',
 );
 
-const addressProvider = new AddressProviderFromJSON(
-  resolveChainIDToNetworkName(menu.chainId),
-);
-
-const lcd = getLCDClient();
-
 interface Claim {
   stage?: string;
   amount?: string;
 }
 const claim = menu
-  .command('claim <stage> [amount]')
-  .description(`Claim ANC airdrop reward`, {
-    stage:
-      '(int) stage of airdrop to claim, if undefined send message for all unclaimed airdrops',
-    amount:
-      '(Uint128) amount of ANC tokens to claim. If omitted, total amount will be fetched via Anchor API to claim all.',
-  })
+  .command('claim')
+  .description(`Claim ANC airdrop reward`)
+  .option(
+    '--stage <int>',
+    '(int) stage of airdrop to claim, if undefined send message for all unclaimed airdrops',
+  )
+  .option(
+    '--amount <int>',
+    "'(Uint128) amount of ANC tokens to claim. If omitted, total amount will be fetched via Anchor API to claim all.'",
+  )
   .action(async ({ stage, amount }: Claim) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
     if (stage === undefined) {
-      await handleExecCommand(menu, await send_claim(userAddress));
+      await handleExecCommand(
+        menu,
+        await send_claim(userAddress, addressProvider, menu.chainId),
+      );
     } else {
       await handleExecCommand(
         menu,
-        await send_claim_with_stage(userAddress, stage, amount),
+        await send_claim_with_stage(
+          userAddress,
+          addressProvider,
+          menu.chainId,
+          stage,
+          amount,
+        ),
       );
     }
   });
@@ -62,7 +75,18 @@ const getIsClaimed = query
     stage: '(int) stage of airdrop',
   })
   .action(async (address: string, stage: string) => {
-    await handleQueryCommand(query, await isClaimed(Parse.int(stage), address));
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(query.chainId),
+    );
+    await handleQueryCommand(
+      query,
+      await isClaimed(
+        Parse.int(stage),
+        address,
+        addressProvider,
+        query.chainId,
+      ),
+    );
   });
 
 // const getLatestStage = query
@@ -108,12 +132,21 @@ async function get_airdrops(address: string): Promise<Airdrop[]> {
   });
 }
 
-async function send_claim(address: string): Promise<MsgExecuteContract[]> {
+async function send_claim(
+  address: string,
+  addressProvider: AddressProviderFromJSON,
+  chainId: string,
+): Promise<MsgExecuteContract[]> {
   const airdrops = await get_airdrops(address);
   let msgs: MsgExecuteContract[] = [];
 
   for (const stageData of airdrops) {
-    const claimable = await isClaimed(stageData.stage, address);
+    const claimable = await isClaimed(
+      stageData.stage,
+      address,
+      addressProvider,
+      chainId,
+    );
     if (!claimable.is_claimed) {
       const airdrop_claim = await fabricateAirdropClaim({
         address: address,
@@ -130,6 +163,8 @@ async function send_claim(address: string): Promise<MsgExecuteContract[]> {
 
 async function send_claim_with_stage(
   address: string,
+  addressProvider: AddressProviderFromJSON,
+  chainId: string,
   stage: string,
   amount?: string,
 ): Promise<MsgExecuteContract[]> {
@@ -137,7 +172,12 @@ async function send_claim_with_stage(
   let msgs: MsgExecuteContract[] = [];
   let proof: string[];
   for (const stageData of airdrops) {
-    const claimable = await isClaimed(stageData.stage, address);
+    const claimable = await isClaimed(
+      stageData.stage,
+      address,
+      addressProvider,
+      chainId,
+    );
     if (!claimable.is_claimed && stageData.stage === Parse.int(stage)) {
       if (amount === undefined) {
         amount = stageData.amount;
@@ -165,7 +205,10 @@ interface IsClaimedResponse {
 async function isClaimed(
   stage: number,
   address: string,
+  addressProvider: AddressProviderFromJSON,
+  chainId: string,
 ): Promise<IsClaimedResponse> {
+  const lcd = getLCDClient(chainId);
   const query: IsClaimedResponse = await lcd.wasm.contractQuery(
     addressProvider.addressesMap.airdrop,
     {
