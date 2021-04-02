@@ -324,7 +324,7 @@ const decreaseAllowance = menu
     },
   );
 
-const query = createQueryMenu('aust', 'Anchor aUST token  contract queries');
+const query = createQueryMenu('aust', 'Anchor aUST token contract queries');
 
 const getTokenInfo = query
   .command('token-info')

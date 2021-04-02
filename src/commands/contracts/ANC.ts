@@ -324,7 +324,7 @@ const decreaseAllowance = menu
     },
   );
 
-const query = createQueryMenu('anc', 'Anchor ANC token  contract queries');
+const query = createQueryMenu('anc', 'Anchor ANC token contract queries');
 
 const getTokenInfo = query
   .command('token-info')

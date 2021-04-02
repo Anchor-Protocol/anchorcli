@@ -22,10 +22,7 @@ import * as Parse from '../../util/parse-input';
 import accAddress = Parse.accAddress;
 import int = Parse.int;
 
-const menu = createExecMenu(
-  'investor-vesting',
-  'Anchor Investor Vesting contract functions',
-);
+const menu = createExecMenu('staking', 'Anchor Staking contract functions');
 
 const addressProvider = new AddressProviderFromJSON(
   resolveChainIDToNetworkName(menu.chainId),
@@ -84,7 +81,7 @@ const bond = menu
     );
   });
 
-const query = createQueryMenu('staking', 'AnchorStaking queries');
+const query = createQueryMenu('staking', 'Anchor Staking contract queries');
 
 const getConfig = query
   .command('config')
