@@ -29,7 +29,7 @@ import {
   queryGovVoters,
 } from '@anchor-protocol/anchor.js';
 
-const menu = createExecMenu('gov', 'ANC Gov contract functions');
+const menu = createExecMenu('gov', 'Anchor Gov contract functions');
 
 interface UpdateConfig {
   owner: string;

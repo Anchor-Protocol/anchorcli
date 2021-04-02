@@ -21,7 +21,7 @@ import dec = Parse.dec;
 
 const menu = createExecMenu(
   'interest',
-  'Anchor MoneyMarket Interest contract functions',
+  'Anchor Money Market Interest contract functions',
 );
 
 interface Config {
@@ -60,7 +60,7 @@ const updateConfig = menu
     await handleExecCommand(menu, msg);
   });
 
-const query = createQueryMenu('interest', 'Anchor interest contract queries');
+const query = createQueryMenu('interest', 'Anchor Interest contract queries');
 
 interface BorrowRate {
   marketBalance: string;

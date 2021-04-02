@@ -29,6 +29,7 @@ Command-line interface for Anchor Protocol on Terra.
 ```bash
 $ npm install -g @anchor-protocol/anchorcli
 ```
+
 The entrypoint `anchorcli` should then be available in your `path`:
 
 <pre>
@@ -52,12 +53,12 @@ The entrypoint `anchorcli` should then be available in your `path`:
 </pre>
 
 ## Configuration
-By default, `anchorcli` works with the default configuration which is set to be for contracts on `tequila-0004`. 
-This setting provides the address of contracts and specifies the setting for LCD provider, gas prices for fee estimation.
+By default, `anchorcli` works with the default configuration which is set for the contracts on the `tequila-0004` environment. 
+This setting provides the address of contracts and specifies the settings for LCD provider and fee estimation gas prices.
 `anchorcli` will create two configuration files in your home directory: `$HOME/anchorcliTestnet.json` and `$HOME/anchorcliMainnet.json`.
 
 ### Specifying LCD settings
-Each network config should define how to connect to the Terra blockchain via LCD parameters.
+Each network configuration should define how to connect to the Terra blockchain via LCD parameters.
 - `columbus-4`:
 ```json
 "lcd": {
@@ -155,20 +156,20 @@ Each address configuration should point to the correct Anchor core contract addr
    }
 }
 ```
-### Specify the Network [IMPORTANT]
 
-By default, `anchorcli` will use the network setting for `columbus-4` configured in `~/.anchorcliMainnet.json`. You can direct `anchorcli` to use a different network configuration by changing the value of the `ANCHORCLI_NETWORK` environment variable.
+### Specify the Network [IMPORTANT]
+By default, `anchorcli` will use the network setting for `tequila-0004` configured in `$HOME/anchorcliTestnet.json`. You can direct `anchorcli` to use a different network configuration by changing the value of the `ANCHORCLI_NETWORK` environment variable.
 
 #### Example
 
 ```sh
-ANCHORCLI_NETWORK=tequila-0004 anchorcli x bond ...
+ANCHORCLI_NETWORK=columbus-4 anchorcli x bond ...
 ```
 
 OR
 
 ```sh
-export ANCHORCLI_NETWORK=tequila-0004 
+export ANCHORCLI_NETWORK=columbus-4
 anchorcli x bond ...
 ```
 
@@ -209,12 +210,12 @@ Commands:
   basset-hub [options]        Anchor bAsset Hub contract functions
   basset-reward [options]     Anchor bAsset reward contract functions
   basset-token [options]      Anchor bAsset token contract functions
-  liquidation [options]       Anchor MoneyMarket Liquidation contract functions
-  oracle [options]            Anchor MoneyMarket Liquidation contract functions
-  market [options]            Anchor MoneyMarket Market contract functions
-  custody-bluna [options]     Anchor MoneyMarket Custody contract functions
-  overseer [options]          Anchor MoneyMarket Overseer contract functions
-  interest [options]          Anchor MoneyMarket Interest contract functions
+  liquidation [options]       Anchor Money Market Liquidation contract functions
+  oracle [options]            Anchor Money Market Liquidation contract functions
+  market [options]            Anchor Money Market Market contract functions
+  custody-bluna [options]     Anchor Money Market Custody contract functions
+  overseer [options]          Anchor Money Market Overseer contract functions
+  interest [options]          Anchor Money Market Interest contract functions
   terraswap [options]         terraswap, anchor related contract functions
   gov [options]               ANC Gov contract functions
   airdrop [options]           Anchor Airdrop contract functions [mainnet only]
@@ -241,12 +242,12 @@ Commands:
   basset-hub [options]     Anchor bAsset hub contract queries
   basset-reward [options]  Anchor bAsset reward contract queries
   basset-token [options]   Anchor bAsset token  contract queries
-  liquidation [options]    Anchor liquidation contract queries
-  oracle [options]         Anchor oracle contract queries
-  market [options]         Anchor market contract queries
-  custody-bluna [options]  Anchor custody contract queries
-  overseer [options]       Anchor overseer contract queries
-  interest [options]       Anchor interest contract queries
+  liquidation [options]    Anchor Money Market Liquidation contract queries
+  oracle [options]         Anchor Money Market Oracle contract queries
+  market [options]         Anchor Money Market Market contract queries
+  custody-bluna [options]  Anchor Money Market Custody contract queries
+  overseer [options]       Anchor Money Market Overseer contract queries
+  interest [options]       Anchor Money Market Interest contract queries
   terraswap [options]      Terraswap contract queries
   gov [options]            Anchor Gov contract queries
   airdrop [options]        Anchor Airdrop contract queries [mainnet only]
@@ -265,12 +266,12 @@ This section illustrates the usage of `anchorcli` through some use cases.
 All examples assume you have a key in `terracli` keychain called `test1`.
 
 ### Bond bLuna 
-The anchor protocol requires you to provide collateral to be able to borrow. In order to provide collateral, a user needs to bond luna first, the contract will issue bLuna for the user. The following example is the way a user can bond luna to gain bluna: 
+The Anchor protocol requires providing collaterals to be able to borrow. bLuna (bonded Luna) is an accepted type of collateral. The following example illustrates how the user can attempt to bond Luna (in response to which the contract will issue bLuna for the user):
 ```bash
 anchorcli x basset-hub bond --amount $BOND_AMOUNT --validator $VALIDATOR_ADDRESS --from test1 --gas auto --fees 100000uluna --b block
 ```
 ### Query bLuna Balance
-After bonding your luna, you can get your bLuna balance with the following query: 
+After bonding Luna, the user can get their bLuna balance using the following query: 
 ```bash
 anchorcli q basset-token balance --address $USER_ADDRESS
 ```

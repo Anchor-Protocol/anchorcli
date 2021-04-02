@@ -30,7 +30,7 @@ import int = Parse.int;
 
 const menu = createExecMenu(
   'market',
-  'Anchor MoneyMarket Market contract functions',
+  'Anchor Money Market Market contract functions',
 );
 
 interface BorrowStable {
@@ -162,7 +162,7 @@ const updateConfig = menu
     },
   );
 
-const query = createQueryMenu('market', 'Anchor market contract queries');
+const query = createQueryMenu('market', 'Anchor Market contract queries');
 
 const getConfig = query
   .command('config')

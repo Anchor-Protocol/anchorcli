@@ -10,6 +10,7 @@
     "start": "multiplerun start",
     "build": "tsc --module commonjs",
     "publish": "yarn run publish",
+    "prepublishOnly": "npm run build",
     "e2e": "yarn run build && bash test/e2e.sh",
     "test": "jest --colors",
     "coverage": "jest --coverage"
@@ -25,6 +26,9 @@
   ],
   "bin": {
     "anchorcli": "bin/anchorcli"
+  },
+  "publishConfig": {
+    "access": "private"
   },
   "dependencies": {
     "@anchor-protocol/anchor.js": "1.0.0",

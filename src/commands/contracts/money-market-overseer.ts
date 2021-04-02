@@ -23,7 +23,6 @@ import {
   queryOverseerEpochState,
   queryOverseerWhitelist,
 } from '@anchor-protocol/anchor.js';
-import { DistributionParams } from '@terra-money/terra.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -36,7 +35,7 @@ import dec = Parse.dec;
 
 const menu = createExecMenu(
   'overseer',
-  'Anchor MoneyMarket Overseer contract functions',
+  'Anchor Money Market Overseer contract functions',
 );
 
 const executeEpochOperation = menu
@@ -252,7 +251,7 @@ const updateWhiteList = menu
     },
   );
 
-const query = createQueryMenu('overseer', 'Anchor overseer contract queries');
+const query = createQueryMenu('overseer', 'Anchor Overseer contract queries');
 
 interface AllCollaterals {
   startAfter?: string;

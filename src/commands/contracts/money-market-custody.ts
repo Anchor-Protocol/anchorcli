@@ -26,7 +26,7 @@ import int = Parse.int;
 
 const menu = createExecMenu(
   'custody-bluna',
-  'Anchor MoneyMarket Custody contract functions',
+  'Anchor Money Market Custody contract functions',
 );
 
 interface Config {
@@ -107,7 +107,7 @@ const deposit_collateral = menu
 
 const query = createQueryMenu(
   'custody-bluna',
-  'Anchor custody contract queries',
+  'Anchor Custody contract queries',
 );
 
 interface Borrower {

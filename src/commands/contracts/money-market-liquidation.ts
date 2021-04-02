@@ -29,7 +29,7 @@ import dec = Parse.dec;
 
 const menu = createExecMenu(
   'liquidation',
-  'Anchor MoneyMarket Liquidation contract functions',
+  'Anchor Money Market Liquidation contract functions',
 );
 
 interface RetractBid {
@@ -164,7 +164,7 @@ const liquidationUpdateConfig = menu
 
 const query = createQueryMenu(
   'liquidation',
-  'Anchor liquidation contract queries',
+  'Anchor Liquidation contract queries',
 );
 
 interface Bid {

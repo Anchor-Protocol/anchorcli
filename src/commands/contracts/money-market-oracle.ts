@@ -25,7 +25,7 @@ import int = Parse.int;
 
 const menu = createExecMenu(
   'oracle',
-  'Anchor MoneyMarket Liquidation contract functions',
+  'Anchor Money Market Liquidation contract functions',
 );
 
 interface FeedPrice {
@@ -69,7 +69,7 @@ const updateConfig = menu
     await handleExecCommand(menu, msg);
   });
 
-const query = createQueryMenu('oracle', 'Anchor oracle contract queries');
+const query = createQueryMenu('oracle', 'Anchor Oracle contract queries');
 
 const getConfig = query
   .command('config')
