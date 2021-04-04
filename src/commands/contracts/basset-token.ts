@@ -54,7 +54,7 @@ const transfer = menu
     const msg = fabricatebAssetTransfer({
       address: userAddress,
       amount: amount,
-      recipient: recipient,
+      recipient: accAddress(recipient),
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -79,8 +79,8 @@ const transferFrom = menu
     const msg = fabricatebAssetTransferFrom({
       address: userAddress,
       amount: amount,
-      recipient: recipient,
-      owner: owner,
+      recipient: accAddress(recipient),
+      owner: accAddress(owner),
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -106,7 +106,7 @@ const send = menu
     const message = fabricatebAssetSend({
       address: userAddress,
       amount: amount,
-      contract: contract,
+      contract: accAddress(contract),
       msg: JSON.parse(msg),
     })(addressProvider);
     await handleExecCommand(menu, message);
@@ -134,8 +134,8 @@ const sendFrom = menu
     const message = fabricatebAssetSendFrom({
       address: userAddress,
       amount: amount,
-      contract: contract,
-      owner: owner,
+      contract: accAddress(contract),
+      owner: accAddress(owner),
       msg: JSON.parse(msg),
     })(addressProvider);
     await handleExecCommand(menu, message);
@@ -180,7 +180,7 @@ const burnFrom = menu
     const msg = fabricatebAssetBurnFrom({
       address: userAddress,
       amount: amount,
-      owner: owner,
+      owner: accAddress(owner),
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -249,7 +249,7 @@ const increaseAllowance = menu
       const msg = fabricatebAssetIncreaseAllowance({
         address: userAddress,
         amount: amount,
-        spender: spender,
+        spender: accAddress(spender),
         expires: expiry,
       })(addressProvider);
       await handleExecCommand(menu, msg);

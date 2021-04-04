@@ -52,7 +52,7 @@ const transfer = menu
       address: userAddress,
       contract_address: addressProvider.addressesMap.ANC,
       amount: amount,
-      recipient: recipient,
+      recipient: accAddress(recipient),
     });
 
     await handleExecCommand(menu, msg);
@@ -79,8 +79,8 @@ const transferFrom = menu
       address: userAddress,
       contract_address: addressProvider.addressesMap.ANC,
       amount: amount,
-      recipient: recipient,
-      owner: owner,
+      recipient: accAddress(recipient),
+      owner: accAddress(owner),
     });
     await handleExecCommand(menu, msg);
   });
@@ -107,7 +107,7 @@ const send = menu
       address: userAddress,
       contract_address: addressProvider.addressesMap.ANC,
       amount: amount,
-      contract: contract,
+      contract: accAddress(contract),
       msg: JSON.parse(msg),
     });
     await handleExecCommand(menu, message);
@@ -136,8 +136,8 @@ const sendFrom = menu
       address: userAddress,
       contract_address: addressProvider.addressesMap.ANC,
       amount: amount,
-      contract: contract,
-      owner: owner,
+      contract: accAddress(contract),
+      owner: accAddress(owner),
       msg: JSON.parse(msg),
     });
     await handleExecCommand(menu, message);
@@ -171,7 +171,7 @@ interface BurnFrom {
 
 const burnFrom = menu
   .command('burn-from')
-  .description("burn ANC from the user's allowance")
+  .description("Burn ANC from the user's allowance")
   .requiredOption('--owner <AccAddress>', 'Account to burn from')
   .requiredOption('--amount <string>', 'Amount of asset to burn')
   .action(async ({ amount, owner }: BurnFrom) => {
@@ -184,7 +184,7 @@ const burnFrom = menu
       address: userAddress,
       contract_address: addressProvider.addressesMap.ANC,
       amount: amount,
-      owner: owner,
+      owner: accAddress(owner),
     });
     await handleExecCommand(menu, msg);
   });
@@ -201,7 +201,7 @@ interface Allowance {
 
 const increaseAllowance = menu
   .command('increase-allowance')
-  .description("burn ANC from the user's allowance")
+  .description("Burn ANC from the user's allowance")
   .requiredOption('--spender <AccAddress>', 'Spender address')
   .requiredOption('--amount <string>', 'Amount to increase')
   .option('--expiry-height <int>', 'block height expiration of allowance')
@@ -254,7 +254,7 @@ const increaseAllowance = menu
         address: userAddress,
         contract_address: addressProvider.addressesMap.ANC,
         amount: amount,
-        spender: spender,
+        spender: accAddress(spender),
         expires: expiry,
       });
       await handleExecCommand(menu, msg);
@@ -317,7 +317,7 @@ const decreaseAllowance = menu
         address: userAddress,
         contract_address: addressProvider.addressesMap.ANC,
         amount: amount,
-        spender: spender,
+        spender: accAddress(spender),
         expires: expiry,
       });
       await handleExecCommand(menu, msg);

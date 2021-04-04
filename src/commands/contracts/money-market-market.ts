@@ -151,9 +151,9 @@ const updateConfig = menu
       );
       const msg = fabricateMarketUpdateConfig({
         address: userAddress,
-        owner_addr: ownerAddress,
-        interest_model: interestModel,
-        distribution_model: distributionModel,
+        owner_addr: accAddress(ownerAddress),
+        interest_model: accAddress(interestModel),
+        distribution_model: accAddress(distributionModel),
         reserve_factor: reserveFactor,
         max_borrow_factor: maxBorrowFactor,
         market: MARKET_DENOMS.UUSD,

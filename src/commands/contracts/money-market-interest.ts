@@ -32,17 +32,17 @@ interface Config {
 
 const updateConfig = menu
   .command('update-config')
-  .description('Updates the configuration of the interest model contract')
+  .description('Update the configuration of the interest model contract')
   .option(
     '--owner <AccAddress>',
     'Address of contract owner that can update model parameters',
   )
   .option(
-    '--base-rate <String>',
+    '--base-rate <string>',
     'Minimum per-block interest rate applied to borrows',
   )
   .option(
-    '--interest-multiplier <String>',
+    '--interest-multiplier <string>',
     'Multiplier between utilization ratio and per-block borrow rate',
   )
   .action(async ({ owner, baseRate, interestMultiplier }: Config) => {

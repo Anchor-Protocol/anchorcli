@@ -28,6 +28,8 @@ import {
   queryGovState,
   queryGovVoters,
 } from '@anchor-protocol/anchor.js';
+import * as Parse from '../../util/parse-input';
+import int = Parse.int;
 
 const menu = createExecMenu('gov', 'Anchor Gov contract functions');
 
@@ -91,7 +93,7 @@ const castVote = menu
     'vote-option': `(string) 'yes' or 'no'`,
     amount: '(Uint128) amount of staked ANC voting power to allocate',
   })
-  .action(async (pollId: number, voteOption: string, amount: string) => {
+  .action(async (pollId: string, voteOption: string, amount: string) => {
     if (voteOption !== 'yes' && voteOption !== 'no') {
       throw new Error(
         `invalid vote option '${voteOption}', MUST be 'yes' or 'no'`,
@@ -106,7 +108,7 @@ const castVote = menu
       menu,
       fabricateGovCastVote({
         address: userAddress,
-        poll_id: +pollId,
+        poll_id: int(pollId),
         vote: voteOption,
         amount: amount,
       })(addressProvider),
@@ -154,7 +156,7 @@ const createPoll = menu
 
 const executePoll = menu
   .command('execute-poll <poll-id>')
-  .description(`Executes the poll`, {
+  .description(`Execute the poll`, {
     pollId: '(int) poll id',
   })
   .action(async (pollId: string) => {
@@ -167,14 +169,14 @@ const executePoll = menu
       menu,
       fabricateGovExecutePoll({
         address: userAddress,
-        poll_id: +pollId,
+        poll_id: int(pollId),
       })(addressProvider),
     );
   });
 
 const endPoll = menu
   .command('end-poll <poll-id>')
-  .description(`Ends a poll`, {
+  .description(`End a poll`, {
     pollId: '(int) poll id',
   })
   .action(async (pollId: string) => {
@@ -187,14 +189,14 @@ const endPoll = menu
       menu,
       fabricateGovEndPoll({
         address: userAddress,
-        poll_id: +pollId,
+        poll_id: int(pollId),
       })(addressProvider),
     );
   });
 
 const expirePoll = menu
   .command('expire-poll <poll-id>')
-  .description(`Expires a poll`, {
+  .description(`Expire a poll`, {
     pollId: '(int) poll id',
   })
   .action(async (pollId: string) => {
@@ -207,7 +209,7 @@ const expirePoll = menu
       menu,
       fabricateGovExpirePoll({
         address: userAddress,
-        poll_id: +pollId,
+        poll_id: int(pollId),
       })(addressProvider),
     );
   });
@@ -227,7 +229,7 @@ const snapshotPoll = menu
       menu,
       fabricateGovSnapshotPoll({
         address: userAddress,
-        poll_id: +pollId,
+        poll_id: int(pollId),
       })(addressProvider),
     );
   });
@@ -263,7 +265,7 @@ const withdraw = menu
   .description(`Stake ANC tokens in governance`, {
     amount: '(Uint128) amount of ANC tokens to stake',
   })
-  .action(async ({ amount }: Stake) => {
+  .action(async (amount: string) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
     const addressProvider = new AddressProviderFromJSON(
@@ -299,7 +301,7 @@ const getConfig = query
 const getPoll = query
   .command('poll <poll-id>')
   .description('Query poll')
-  .action(async (pollId: number) => {
+  .action(async (pollId: string) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -308,7 +310,7 @@ const getPoll = query
       query,
       await queryGovPoll({
         lcd,
-        poll_id: pollId,
+        poll_id: int(pollId),
       })(addressProvider),
     );
   });
@@ -388,7 +390,7 @@ const getVoters = query
   .description('Query voter for a poll')
   .option('--start-after <string>', 'voter prefix to start query from')
   .option('--limit <int>', 'max results to return')
-  .action(async (pollId: number) => {
+  .action(async (pollId: string) => {
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
@@ -397,7 +399,7 @@ const getVoters = query
       query,
       await queryGovVoters({
         lcd,
-        poll_id: pollId,
+        poll_id: int(pollId),
         start_after: getVoters.startAfter,
         limit: getVoters.limit,
       })(addressProvider),

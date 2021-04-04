@@ -21,7 +21,7 @@ const addressProvider = new AddressProviderFromJSON(
 
 const claim = menu
   .command('claim <denom>')
-  .description(`Claims vested ANC tokens`)
+  .description(`Claim vested ANC tokens`)
   .action(async () => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
@@ -39,7 +39,7 @@ interface RefisterAccounts {
 
 const registerAccounts = menu
   .command('register-accounts')
-  .description(`Registers a new vesting account to the Vesting contract`)
+  .description(`Register a new vesting account to the Vesting contract`)
   .option(
     '--accounts <json>',
     'List of accounts with ANC vesting and their vesting schedules',
@@ -63,7 +63,7 @@ interface UpdateConfig {
 }
 const updateConfig = menu
   .command('update-config')
-  .description(`Updates the Vesting contract configuration`)
+  .description(`Update the Vesting contract configuration`)
   .option('--owner <string>', 'Address of new contract owner')
   .option(
     '--anchor-token <string>',

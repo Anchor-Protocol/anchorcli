@@ -43,7 +43,7 @@ const claim = menu
     );
     const msg = fabricatebAssetClaimRewards({
       address: userAddress,
-      recipient: recipient,
+      recipient: accAddress(recipient),
     })(addressProvider);
     await handleExecCommand(menu, msg);
   });
@@ -132,7 +132,7 @@ const getHolders = query
     );
     const batch_query = await queryRewardHolders({
       lcd: lcd,
-      start_after: startAfter,
+      start_after: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);
     await handleQueryCommand(query, batch_query);

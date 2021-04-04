@@ -9,6 +9,7 @@ import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
 } from '../../addresses/from-json';
+import { accAddress } from '../../util/parse-input';
 
 const menu = createExecMenu(
   'investor-vesting',
@@ -80,7 +81,7 @@ const updateConfig = menu
       menu,
       await fabricateInvestorVestingUpdateConfig({
         address: userAddress,
-        owner: owner,
+        owner: accAddress(owner),
         genesis_time: genesisTime,
         anchor_token: anchorToken,
       })(addressProvider),

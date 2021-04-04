@@ -148,9 +148,9 @@ const updateConfig = menu
       const msg = fabricateOverseerUpdateConfig({
         address: userAddress,
         overseer: MARKET_DENOMS.UUSD,
-        owner_addr: ownerAddress,
-        oracle_contract: oracleContract,
-        liquidation_contract: liquidationContract,
+        owner_addr: accAddress(ownerAddress),
+        oracle_contract: accAddress(oracleContract),
+        liquidation_contract: accAddress(liquidationContract),
         threshold_deposit_rate: dec(distributionThreshold).toString(),
         target_deposit_rate: dec(targetDepositRate).toString(),
         buffer_distribution_factor: dec(bufferDistributionRate).toString(),
@@ -204,8 +204,8 @@ const whiteList = menu
         name: collateralName,
         symbol: symbol,
         overseer: MARKET_DENOMS.UUSD,
-        collateral_token: collateralToken,
-        custody_contract: custodyContract,
+        collateral_token: accAddress(collateralToken),
+        custody_contract: accAddress(custodyContract),
         max_ltv: dec(ltv).toString(),
       })(addressProvider);
       await handleExecCommand(menu, msg);

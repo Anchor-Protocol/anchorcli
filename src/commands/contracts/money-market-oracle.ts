@@ -34,7 +34,7 @@ interface FeedPrice {
 
 const feedPrice = menu
   .command('feed-price')
-  .description('Feeds new price data')
+  .description('Feed new price data')
   .requiredOption('--prices <json>', 'Vector of assets and their prices')
   .action(async ({ prices }: FeedPrice) => {
     const key = new CLIKey({ keyName: menu.from });
@@ -54,7 +54,7 @@ interface Config {
 }
 const updateConfig = menu
   .command('update-config')
-  .description('Updates the configuration of the contract')
+  .description('Update the configuration of the contract')
   .option('--owner <AccAddress>', 'Address of new owner')
   .action(async ({ owner }: Config) => {
     const key = new CLIKey({ keyName: menu.from });
@@ -95,9 +95,9 @@ const getPrice = query
   .description(
     'Get price information for the specified base asset denominated in the quote asset',
   )
-  .requiredOption('--base <String>', 'Asset for which to get price')
+  .requiredOption('--base <string>', 'Asset for which to get price')
   .requiredOption(
-    '--quote <String>',
+    '--quote <string>',
     'Asset in which calculated price will be denominated',
   )
   .action(async ({ base, quote }: QueryPrice) => {
@@ -121,7 +121,7 @@ interface Prices {
 const getPrices = query
   .command('prices')
   .description('Get price information for all assets')
-  .option('--start-after <String>', 'Asset to start query')
+  .option('--start-after <string>', 'Asset to start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: Prices) => {
     const lcd = getLCDClient(query.chainId);

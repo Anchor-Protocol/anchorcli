@@ -23,6 +23,7 @@ import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import * as Parse from '../../util/parse-input';
 import { queryTerraswapPool } from '@anchor-protocol/anchor.js/dist/queries/terraswap/pool';
 import { queryTerrasawpPair } from '@anchor-protocol/anchor.js/dist/queries/terraswap/pairs';
+import { accAddress } from '../../util/parse-input';
 
 const menu = createExecMenu(
   'terraswap',

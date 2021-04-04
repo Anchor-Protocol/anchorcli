@@ -52,7 +52,7 @@ const liquidationRetractBid = menu
     );
     const msg = fabricateLiquidationRetractBid({
       address: userAddress,
-      collateral_token: collateralToken,
+      collateral_token: accAddress(collateralToken),
       amount: amount,
     })(addressProvider);
     await handleExecCommand(menu, msg);
@@ -90,7 +90,7 @@ const liquidationSubmitBid = menu
     );
     const msg = fabricateLiquidationSubmitBid({
       address: userAddress,
-      collateral_token: collateralToken,
+      collateral_token: accAddress(collateralToken),
       premium_rate: dec(premiumRate).toString(),
       amount: bidCoin.amount.toString(),
       denom: MARKET_DENOMS.UUSD,
@@ -149,8 +149,8 @@ const liquidationUpdateConfig = menu
       );
       const msg = fabricateLiquidationUpdateConfig({
         address: userAddress,
-        owner: owner,
-        oracle_contract: oracleContract,
+        owner: accAddress(owner),
+        oracle_contract: accAddress(oracleContract),
         stable_denom: stableDenom,
         safe_ratio: dec(safeRatio).toString(),
         bid_fee: dec(bidFee).toString(),
@@ -278,7 +278,8 @@ interface LiquidationAmount {
   collaterals: string;
   collateralPrices: string;
 }
-//TODO  FIGURE OUT THE INPUT OF TOKENSHUMAN
+
+//TODO FIX TOKENSHUMAN
 const getLiquidationAmount = query
   .command('liquidation-amount')
   .description(

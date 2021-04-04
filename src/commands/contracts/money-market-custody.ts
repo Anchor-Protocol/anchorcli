@@ -36,7 +36,7 @@ interface Config {
 
 const updateConfig = menu
   .command('update-config')
-  .description('Updates the configuration of the Custody contract')
+  .description('Update the configuration of the Custody contract')
   .option(
     '--liquidation-contract <AccAddress>',
     'New contract address of Liquidation Contract',

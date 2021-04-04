@@ -165,9 +165,9 @@ const updateConfig = menu
       const msg = fabricatebAssetUpdateConfig({
         address: userAddress,
         owner: owner,
-        reward_contract: rewardAddress,
-        token_contract: tokenAddress,
-        airdrop_registry_contract: airdropRegistryAddress,
+        reward_contract: accAddress(rewardAddress),
+        token_contract: accAddress(tokenAddress),
+        airdrop_registry_contract: accAddress(airdropRegistryAddress),
       })(addressProvider);
       await handleExecCommand(menu, msg);
     },

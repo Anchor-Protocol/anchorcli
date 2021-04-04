@@ -34,7 +34,7 @@ interface Unbond {
 
 const unbond = menu
   .command('unbond')
-  .description(`Unbonds specified amount of ANC-UST Terraswap LP tokens`)
+  .description(`Unbond specified amount of ANC-UST Terraswap LP tokens`)
   .requiredOption('--amount <string>', 'Amount of LP tokens to unbond')
   .action(async ({ amount }: Unbond) => {
     const key = new CLIKey({ keyName: menu.from });
@@ -50,7 +50,7 @@ const unbond = menu
 
 const withdraw = menu
   .command('withdraw')
-  .description(`Withdraws user's accrued LP token staking rewards`)
+  .description(`Withdraw user's accrued LP token staking rewards`)
   .action(async () => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
@@ -68,7 +68,8 @@ interface Bond {
 
 const bond = menu
   .command('bond')
-  .description(`Bonds LP tokens of the ANC-UST Terraswap pair`)
+  .description(`Bond LP tokens of the ANC-UST Terraswap pair`)
+  .requiredOption('--amount <string>', 'Amount of LP tokens to unbond')
   .action(async ({ amount }: Bond) => {
     const key = new CLIKey({ keyName: menu.from });
     const userAddress = key.accAddress;
@@ -99,7 +100,7 @@ const getConfig = query
 
 const getState = query
   .command('state')
-  .description('Gets state information for the current block number')
+  .description('Get state information for the current block number')
   .action(async () => {
     const lcd = getLCDClient(query.chainId);
     const addressProvider = new AddressProviderFromJSON(
@@ -113,7 +114,7 @@ const getState = query
 
 const getStakerInfo = query
   .command('reward-info <staker>')
-  .description('Gets reward information for the specified LP token staker', {
+  .description('Get reward information for the specified LP token staker', {
     staker: '(AccAddress) staker for whom to query rewards',
   })
   .action(async (staker: string) => {

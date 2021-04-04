@@ -1,6 +1,6 @@
 {
   "name": "@anchor-protocol/anchorcli",
-  "version": "1.0.0-rc.0",
+  "version": "1.0.0-rc.2",
   "author": "Anchor Protocol",
   "license": "Apache-2.0",
   "main": "./dist/index.js",
@@ -9,7 +9,6 @@
     "format": "prettier \"**/src/**/*.{js,ts,json}\" --write",
     "start": "multiplerun start",
     "build": "tsc --module commonjs",
-    "publish": "yarn run publish",
     "prepublishOnly": "npm run build",
     "e2e": "yarn run build && bash test/e2e.sh",
     "test": "jest --colors",
@@ -43,7 +42,8 @@
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.20",
     "yaml": "^1.10.0",
-    "yesno": "^0.3.1"
+    "yesno": "^0.3.1",
+    "cross-fetch": "^3.1.2"
   },
   "devDependencies": {
     "@ssen/eslint-config": "^1.3.1",
@@ -55,7 +55,6 @@
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
-    "cross-fetch": "^3.1.2",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
