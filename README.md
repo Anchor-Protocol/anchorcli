@@ -158,19 +158,19 @@ Each address configuration should point to the correct Anchor core contract addr
 ```
 
 ### Specify the Network [IMPORTANT]
-By default, `anchorcli` will use the network setting for `tequila-0004` configured in `$HOME/anchorcliTestnet.json`. You can direct `anchorcli` to use a different network configuration by changing the value of the `ANCHORCLI_NETWORK` environment variable.
+By default, `anchorcli` will use the network setting for `columbus-4` configured in `$HOME/anchorcliMainnet.json`. You can direct `anchorcli` to use a different network configuration by changing the value of the `ANCHORCLI_NETWORK` environment variable.
 
 #### Example
 
 ```sh
-ANCHORCLI_NETWORK=columbus-4 anchorcli x bond ...
+ANCHORCLI_NETWORK=tequila-0004 anchorcli x basset-hub bond ...
 ```
 
 OR
 
 ```sh
-export ANCHORCLI_NETWORK=columbus-4
-anchorcli x bond ...
+export ANCHORCLI_NETWORK=tequila-0004
+anchorcli x basset-hub bond ...
 ```
 
 ## Usage

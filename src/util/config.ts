@@ -27,7 +27,7 @@ export namespace AnchorCLIConfig {
   export const SCHEMA = configSchema;
 }
 
-export const activeNetwork = process.env.ANCHORCLI_NETWORK || 'tequila-0004';
+export const activeNetwork = process.env.ANCHORCLI_NETWORK || 'columbus-4';
 
 export const config = (() => {
   try {
