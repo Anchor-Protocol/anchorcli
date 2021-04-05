@@ -267,7 +267,7 @@ interface swapArgs {
   amount: string;
 }
 const swapbLuna = menu
-  .command('swap-bLuna')
+  .command('swap-bluna')
   .description('Swap bluna asset to luna asset using Terraswap')
   .requiredOption('--amount <string>', 'bAsset amount to swap')
   .option('--to <AccAddress>', 'Account to send swapped funds to')

@@ -2,17 +2,14 @@
 import { Contracts } from './types';
 import { activeNetwork, loadConfig } from '../util/config';
 import { AddressProvider } from '@anchor-protocol/anchor.js';
-import tequilaDefaultConfig from '../data/anchorcli-default-tequila';
-import mainnetDefaultConfig from '../data/anchorcli-default-columbus';
 
 export enum NETWORKS {
   COLUMBUS4,
   TEQUILA0004,
 }
 
-//TODO: should not read from loadconfig();
-const testnetContracts: Contracts = tequilaDefaultConfig.contracts;
-const mainnetContracts: Contracts = mainnetDefaultConfig.contracts;
+const testnetContracts: Contracts = loadConfig('tequila-0004').contracts;
+const mainnetContracts: Contracts = loadConfig('columbus-4').contracts;
 
 const chainIDToNetworkName: any = {
   'tequila-0004': NETWORKS.TEQUILA0004,
