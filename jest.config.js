@@ -1,5 +1,5 @@
 module.exports = {
-  roots: ['<rootDir>/anchor.js/src/', '<rootDir>/cli/src/'],
+  roots: ['<rootDir>/src/'],
   transform: {
     '.(ts|tsx)': 'ts-jest',
   },
