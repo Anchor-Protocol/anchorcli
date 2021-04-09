@@ -79,7 +79,6 @@ export function loadConfig(chainId?: string): AnchorConfig {
     !fs.existsSync(configFilePathMainnet)
   ) {
     if (chainId === 'columbus-4') {
-      console.log(' I am here');
       saveConfigMainnet(mainnetDefaultConfig);
       let config: AnchorConfig = mainnetDefaultConfig;
       return config;
