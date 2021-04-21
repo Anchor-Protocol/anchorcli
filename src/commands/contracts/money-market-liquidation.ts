@@ -175,7 +175,7 @@ interface Bid {
 const getBid = query
   .command('bid')
   .description(
-    "Get information about the specifed bidder's bid for the specified collateral",
+    "Get information about the specified bidder's bid for the specified collateral",
   )
   .requiredOption(
     '--collateral-token <AccAddress>',
