@@ -171,22 +171,26 @@ async function send_claim_with_stage(
   const airdrops = await get_airdrops(address);
   let msgs: MsgExecuteContract[] = [];
   let proof: string[];
-  for (const stageData of airdrops) {
-    const claimable = await isClaimed(
-      stageData.stage,
-      address,
-      addressProvider,
-      chainId,
-    );
-    if (!claimable.is_claimed && stageData.stage === Parse.int(stage)) {
-      if (amount === undefined) {
-        amount = stageData.amount;
+
+  airdrops
+    .filter((airdrop) => airdrop.stage === Parse.int(stage))
+    .map(async (airdrop) => {
+      const claimable = await isClaimed(
+        airdrop.stage,
+        address,
+        addressProvider,
+        chainId,
+      );
+      if (!claimable.is_claimed) {
+        if (amount === undefined) {
+          amount = airdrop.amount;
+        }
+        proof = JSON.parse(airdrop.proof);
+        return;
+      } else {
+        throw new Error(`Stage ${stage} is already claimed`);
       }
-      proof = JSON.parse(stageData.proof);
-      break;
-    }
-    throw new Error(`Could not find stage ${stage} - ${airdrops}`);
-  }
+    });
   msgs.push(
     await fabricateAirdropClaim({
       address: address,
