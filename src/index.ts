@@ -17,7 +17,7 @@ export function run(argv: string[]): void {
   try {
     program
       .name('anchorcli')
-      .version('0.0.1')
+      .version('1.0.5')
       .option('-v,--verbose', 'Show verbose error logs')
       .description(
         'Command-line interface for interacting with Anchor Protocol on Terra',
