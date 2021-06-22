@@ -6,7 +6,7 @@ import {
   handleExecCommand,
   handleQueryCommand,
 } from '../../util/contract-menu';
-import { Coin } from '@terra-money/terra.js';
+import { Coin, Dec, Int } from '@terra-money/terra.js';
 import {
   AddressProviderFromJSON,
   resolveChainIDToNetworkName,
@@ -92,7 +92,7 @@ const liquidationSubmitBid = menu
       address: userAddress,
       collateral_token: accAddress(collateralToken),
       premium_rate: dec(premiumRate).toString(),
-      amount: bidCoin.amount.toString(),
+      amount: new Int(new Dec(bidCoin.amount).div(1000000)).toString(),
       denom: MARKET_DENOMS.UUSD,
     })(addressProvider);
     await handleExecCommand(menu, msg);
