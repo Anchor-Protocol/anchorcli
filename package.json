@@ -1,6 +1,6 @@
 {
   "name": "@anchor-protocol/anchorcli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "Anchor Protocol",
   "license": "Apache-2.0",
   "main": "./dist/index.js",
@@ -27,7 +27,7 @@
     "anchorcli": "bin/anchorcli"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "public"
   },
   "dependencies": {
     "@anchor-protocol/anchor.js": "1.0.2",
