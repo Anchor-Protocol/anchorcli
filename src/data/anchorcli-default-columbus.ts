@@ -7,7 +7,7 @@ const mainnetDefaultConfig: AnchorConfig = {
     gasPrices: {
       uluna: 0.013199,
       usdr: 0.267408,
-      uusd: 0.38,
+      uusd: 0.456,
       ukrw: 443.515327,
       umnt: 1061.675585,
     },
