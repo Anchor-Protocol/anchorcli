@@ -47,6 +47,14 @@ export class AddressProviderFromJSON implements AddressProvider {
     return this.addressesMap.bLunaToken;
   }
 
+  bEthToken(): string {
+    return this.addressesMap.bEthToken;
+  }
+
+  bEthReward(): string {
+    return this.addressesMap.bEthReward;
+  }
+
   market(): string {
     return this.addressesMap.mmMarket;
   }

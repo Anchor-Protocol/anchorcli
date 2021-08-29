@@ -18,6 +18,8 @@ const tequilaDefaultConfig: AnchorConfig = {
     bLunaToken: 'terra1u0t35drzyy0mujj8rkdyzhe264uls4ug3wdp3x',
     bLunaReward: 'terra1ac24j6pdxh53czqyrkr6ygphdeftg7u3958tl2',
     bLunaAirdrop: 'terra1334h20c9ewxguw9p9vdxzmr8994qj4qu77ux6q',
+    bEthReward:'terra1ja3snkedk4t0zp7z3ljd064hcln8dsv5x004na',
+    bEthToken:'terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l',
     mmInterestModel: 'terra1m25aqupscdw2kw4tnq5ql6hexgr34mr76azh5x',
     mmOracle: 'terra1p4gg3p2ue6qy2qfuxtrmgv2ec3f4jmgqtazum8',
     mmMarket: 'terra15dwd5mj8v59wpj0wvt233mf5efdff808c5tkal',

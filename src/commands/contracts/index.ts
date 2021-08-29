@@ -1,6 +1,8 @@
 import Hub from './basset-hub';
 import Reward from './basset-reward';
 import Token from './basset-token';
+import bEthReward from './beth-reward';
+import bEthToken from './beth-token';
 import Liquidity from './money-market-liquidation';
 import Oracle from './money-market-oracle';
 import Market from './money-market-market';
@@ -23,6 +25,8 @@ export const anchor = [
   Hub,
   Reward,
   Token,
+  bEthReward,
+  bEthToken,
   Liquidity,
   Oracle,
   Market,
