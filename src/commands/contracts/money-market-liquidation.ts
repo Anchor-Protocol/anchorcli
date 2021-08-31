@@ -241,7 +241,7 @@ const getBidsByCollateral = query
   )
   .option(
     '--start-after <AccAddress>',
-    'Token contract address of collateral to start query',
+    'Token contract address of bidder to start query',
   )
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ collateralToken, startAfter, limit }: BidsByCollateral) => {

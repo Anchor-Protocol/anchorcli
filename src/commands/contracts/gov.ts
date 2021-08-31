@@ -344,8 +344,8 @@ const getPolls = query
       await queryGovPolls({
         lcd,
         filter: getPolls.filter,
-        start_after: getPolls.startAfter,
-        limit: getPolls.limit,
+        start_after: Number(getPolls.startAfter),
+        limit: Number(getPolls.limit),
       })(addressProvider),
     );
   });

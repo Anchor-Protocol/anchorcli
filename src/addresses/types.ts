@@ -17,6 +17,7 @@ export interface Contracts {
   mmMarket: string;
   mmOverseer: string;
   mmCustody: string;
+  mmCustodyBEth: string;
   mmLiquidation: string;
   mmDistributionModel: string;
   aTerra: string;

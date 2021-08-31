@@ -339,20 +339,6 @@ const getConfig = query
     await handleQueryCommand(query, queryConfig);
   });
 
-const getDistributionParams = query
-  .command('distribution-params')
-  .description('Get parameter information related to reward distribution')
-  .action(async () => {
-    const lcd = getLCDClient(query.chainId);
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId),
-    );
-    const queryDistributionParams = await queryOverseerDistributionParams({
-      lcd,
-      overseer: MARKET_DENOMS.UUSD,
-    })(addressProvider);
-    await handleQueryCommand(query, queryDistributionParams);
-  });
 
 const getEpochState = query
   .command('epoch-state')
