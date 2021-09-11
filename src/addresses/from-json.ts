@@ -4,16 +4,16 @@ import { activeNetwork, loadConfig } from '../util/config';
 import { AddressProvider, COLLATERAL_DENOMS, MARKET_DENOMS } from '@anchor-protocol/anchor.js';
 
 export enum NETWORKS {
-  COLUMBUS4,
-  TEQUILA0004,
+  COLUMBUS5,
+  BOMBAY10,
 }
 
-const testnetContracts: Contracts = loadConfig('tequila-0004').contracts;
-const mainnetContracts: Contracts = loadConfig('columbus-4').contracts;
+const testnetContracts: Contracts = loadConfig('bombay-10').contracts;
+const mainnetContracts: Contracts = loadConfig('columbus-5').contracts;
 
 const chainIDToNetworkName: any = {
-  'tequila-0004': NETWORKS.TEQUILA0004,
-  'columbus-4': NETWORKS.COLUMBUS4,
+  'bombay-10': NETWORKS.BOMBAY10,
+  'columbus-5': NETWORKS.COLUMBUS5,
 };
 export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
   if (chainId === undefined) {
@@ -24,8 +24,8 @@ export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
 };
 
 const networksMap: { [networkName: string]: Contracts } = {
-  [NETWORKS.COLUMBUS4]: mainnetContracts,
-  [NETWORKS.TEQUILA0004]: testnetContracts,
+  [NETWORKS.COLUMBUS5]: mainnetContracts,
+  [NETWORKS.BOMBAY10]: testnetContracts,
 };
 
 export class AddressProviderFromJSON implements AddressProvider {

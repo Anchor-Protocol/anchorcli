@@ -1,6 +1,6 @@
 {
   "lcd": {
-    "chainID": "columbus-4",
+    "chainID": "columbus-5",
     "URL": "https://lcd.terra.dev",
     "gasPrices": {
       "uluna": 0.15,

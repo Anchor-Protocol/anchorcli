@@ -262,7 +262,7 @@ const stake = menu
 
 const withdraw = menu
   .command('withdraw-voting <amount>')
-  .description(`Stake ANC tokens in governance`, {
+  .description(`Withdraw ANC tokens in governance`, {
     amount: '(Uint128) amount of ANC tokens to stake',
   })
   .action(async (amount: string) => {

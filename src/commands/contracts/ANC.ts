@@ -108,7 +108,7 @@ const send = menu
       contract_address: addressProvider.addressesMap.ANC,
       amount: amount,
       contract: accAddress(contract),
-      msg: JSON.parse(msg),
+      msg: msg ? JSON.parse(msg) : msg,
     });
     await handleExecCommand(menu, message);
   });
@@ -138,7 +138,7 @@ const sendFrom = menu
       amount: amount,
       contract: accAddress(contract),
       owner: accAddress(owner),
-      msg: JSON.parse(msg),
+      msg: msg ? JSON.parse(msg) : msg,
     });
     await handleExecCommand(menu, message);
   });

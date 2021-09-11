@@ -28,8 +28,8 @@ export function createExecMenu(
     .description(description)
     .option('--yaml', 'Encode result as YAML instead of JSON')
     .option('-y,--yes', 'Sign transaction without confirming (yes)')
-    .option('--home <string>', 'Directory for config of terracli')
-    .option('--from <key-name>', '*Name of key in terracli keyring')
+    .option('--home <string>', 'Directory for config of terrad')
+    .option('--from <key-name>', '*Name of key in terrad keyring')
     .option(
       '--generate-only',
       'Build an unsigned transaction and write it to stdout',

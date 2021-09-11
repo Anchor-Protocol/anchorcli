@@ -2,8 +2,8 @@ import * as path from 'path';
 import { homedir } from 'os';
 import * as fs from 'fs';
 import { AnchorConfig } from '../addresses/types';
-import mainnetDefaultConfig from '../data/anchorcli-default-columbus';
-import tequilaDefaultConfig from '../data/anchorcli-default-tequila';
+import mainnetDefaultConfig from '../data/anchorcli-default-mainnet';
+import testnetDefaultConfig from '../data/anchorcli-default-testnet';
 import { Validator } from 'jsonschema';
 import * as logger from './logger';
 import configSchema from '../data/configSchema';
@@ -27,7 +27,7 @@ export namespace AnchorCLIConfig {
   export const SCHEMA = configSchema;
 }
 
-export const activeNetwork = process.env.ANCHORCLI_NETWORK || 'columbus-4';
+export const activeNetwork = process.env.ANCHORCLI_NETWORK || 'columbus-5';
 
 export const config = (() => {
   try {
@@ -78,17 +78,17 @@ export function loadConfig(chainId?: string): AnchorConfig {
     !fs.existsSync(configFilePathTestnet) ||
     !fs.existsSync(configFilePathMainnet)
   ) {
-    if (chainId === 'columbus-4') {
+    if (chainId === 'columbus-5') {
       saveConfigMainnet(mainnetDefaultConfig);
       let config: AnchorConfig = mainnetDefaultConfig;
       return config;
     } else {
-      saveConfigTestnet(tequilaDefaultConfig);
-      let config: AnchorConfig = tequilaDefaultConfig;
+      saveConfigTestnet(testnetDefaultConfig);
+      let config: AnchorConfig = testnetDefaultConfig;
       return config;
     }
   } else {
-    if (chainId === 'columbus-4') {
+    if (chainId === 'columbus-5') {
       try {
         const loadedConfig: AnchorConfig = JSON.parse(
           fs.readFileSync(configFilePathMainnet).toString(),
@@ -121,7 +121,7 @@ export function saveContractAddresses(
   if (chainId === undefined) {
     chainId = activeNetwork;
   }
-  if (chainId === 'columbus-4') {
+  if (chainId === 'columbus-5') {
     fs.writeFileSync(
       configFilePathMainnet,
       JSON.stringify(newContractAddresses, null, 2),

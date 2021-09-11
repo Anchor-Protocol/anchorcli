@@ -107,7 +107,7 @@ const send = menu
       address: userAddress,
       amount: amount,
       contract: accAddress(contract),
-      msg: JSON.parse(msg),
+      msg: msg ? JSON.parse(msg) : msg,
     })(addressProvider);
     await handleExecCommand(menu, message);
   });
@@ -136,7 +136,7 @@ const sendFrom = menu
       amount: amount,
       contract: accAddress(contract),
       owner: accAddress(owner),
-      msg: JSON.parse(msg),
+      msg: msg ? JSON.parse(msg) : msg,
     })(addressProvider);
     await handleExecCommand(menu, message);
   });
