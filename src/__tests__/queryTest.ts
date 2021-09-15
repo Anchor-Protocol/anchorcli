@@ -14,16 +14,6 @@ const bLunaPair = 'terra1jxazgm67et0ce260kvrpfv50acuushpjsz2y0p'
 const bLuna = 'terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp'
 const bEth = 'terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun'
 
-//terra13cgw8587lgwtckjs28nw8d3n7hqvwd9elj829q
-const mnemonic = `
-wheat force find trim 
-marble dentist yellow rocket
-move globe kidney math
-diet power opinion dutch
-tool inflict eternal noble
-grant blade cave still
-`
-
 //query test is for mainnet, before test do $export ANCHORCLI_NETWORK=columbus-5 (mainnet)
 
 //airdrop

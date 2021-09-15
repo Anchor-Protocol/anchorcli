@@ -1,13 +1,17 @@
 import * as commander from 'commander';
 import * as Parse from './parse-input';
 import * as yaml from 'yaml';
-
+import { execSync } from 'child_process';
+import { SignMode } from '@terra-money/terra.proto/cosmos/tx/signing/v1beta1/signing';
 import {
-  StdFee,
-  StdSignMsg,
   Coins,
   MsgExecuteContract,
   LCDClient,
+  AuthInfo,
+  Tx,
+  TxBody,
+  SignOptions,
+  Fee
 } from '@terra-money/terra.js';
 import { CLIKey } from '@terra-money/terra.js/dist/key/CLIKey';
 import { loadConfig } from './config';
@@ -114,6 +118,13 @@ export async function handleExecCommand(
 
   const lcd = getLCDClient(exec.chainId);
   let key = new CLIKey({ keyName: exec.from, home: exec.home });
+  
+  const keyType = JSON.parse(
+    execSync(
+      (`terrad keys show ${exec.from} --output json`)
+    ).toString()
+  ).type
+  
   const wallet = lcd.wallet(key);
 
   const chainId: string = exec.chainId ? exec.chainId : lcd.config.chainID;
@@ -148,15 +159,15 @@ export async function handleExecCommand(
     const estimatedFee = (
       await lcd.tx.create(key.accAddress, {
         msgs,
-        account_number: accountNumber,
+        accountNumber: accountNumber,
         sequence,
         gasPrices: exec.gasPrices,
         gasAdjustment: exec.gasAdjustment,
         memo,
       })
-    ).fee;
+    ).auth_info.fee;
 
-    gas = estimatedFee.gas;
+    gas = Number(estimatedFee.toAmino().gas);
 
     if (exec.fees === undefined) {
       feeAmount = estimatedFee.amount;
@@ -173,32 +184,36 @@ export async function handleExecCommand(
     gas = Parse.int(exec.gas);
   }
 
-  const unsignedTx = new StdSignMsg(
-    chainId,
+  const unsignedTx = new Tx(
+    new TxBody(msgs, memo),
+    new AuthInfo([], new Fee(gas, feeAmount)),
+    []
+  );
+
+  const signOptions: SignOptions = {
     accountNumber,
     sequence,
-    new StdFee(gas, feeAmount),
-    msgs,
-    memo,
-  );
+    signMode: keyType === 'ledger' ? SignMode.SIGN_MODE_LEGACY_AMINO_JSON : SignMode.SIGN_MODE_DIRECT,
+    chainID: chainId
+  }
 
   if (exec.generateOnly) {
     if (exec.yaml) {
-      console.log(yaml.stringify(unsignedTx.toStdTx().toData()));
+      console.log(yaml.stringify(unsignedTx.toData()));
     } else {
-      jsome(unsignedTx.toStdTx().toData());
+      jsome(unsignedTx.toData());
     }
   } else {
     if (!exec.yes) {
-      let msg = unsignedTx.msgs[0].toData() as any;
-      msg.value.execute_msg = (unsignedTx
-        .msgs[0] as MsgExecuteContract).execute_msg;
+      let msg = unsignedTx.body.messages[0].toData() as any;
+      msg.execute_msg = (unsignedTx
+        .body.messages[0] as MsgExecuteContract).execute_msg;
 
       console.log(
         yaml.stringify({
           chainId,
           msg,
-          fee: unsignedTx.fee.toData(),
+          fee: unsignedTx.auth_info.fee.toData(),
           memo,
         }),
       );
@@ -215,8 +230,9 @@ export async function handleExecCommand(
       }
     }
 
-    const signedTx = await key.signTx(unsignedTx);
+    const signedTx = await key.signTx(unsignedTx, signOptions);
     let result;
+  
     switch (exec.broadcastMode) {
       case 'sync':
         result = await lcd.tx.broadcastSync(signedTx);
