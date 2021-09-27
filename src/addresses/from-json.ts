@@ -5,14 +5,14 @@ import { AddressProvider, COLLATERAL_DENOMS, MARKET_DENOMS } from '@anchor-proto
 
 export enum NETWORKS {
   COLUMBUS5,
-  BOMBAY10,
+  BOMBAY11,
 }
 
-const testnetContracts: Contracts = loadConfig('bombay-10').contracts;
+const testnetContracts: Contracts = loadConfig('bombay-11').contracts;
 const mainnetContracts: Contracts = loadConfig('columbus-5').contracts;
 
 const chainIDToNetworkName: any = {
-  'bombay-10': NETWORKS.BOMBAY10,
+  'bombay-11': NETWORKS.BOMBAY11,
   'columbus-5': NETWORKS.COLUMBUS5,
 };
 export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
@@ -25,7 +25,7 @@ export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
 
 const networksMap: { [networkName: string]: Contracts } = {
   [NETWORKS.COLUMBUS5]: mainnetContracts,
-  [NETWORKS.BOMBAY10]: testnetContracts,
+  [NETWORKS.BOMBAY11]: testnetContracts,
 };
 
 export class AddressProviderFromJSON implements AddressProvider {

@@ -53,7 +53,7 @@ The entrypoint `anchorcli` should then be available in your `path`:
 </pre>
 
 ## Configuration
-By default, `anchorcli` works with the default configuration which is set for the contracts on the `bombay-10` environment. 
+By default, `anchorcli` works with the default configuration which is set for the contracts on the `bombay-11` environment. 
 This setting provides the address of contracts and specifies the settings for LCD provider and fee estimation gas prices.
 `anchorcli` will create two configuration files in your home directory: `$HOME/anchorcliTestnet.json` and `$HOME/anchorcliMainnet.json`.
 
@@ -74,11 +74,11 @@ Each network configuration should define how to connect to the Terra blockchain 
     "gasAdjustment": 1.2
   },
 ```
-- `bombay-10`:
+- `bombay-11`:
 ```json
 {
 "lcd": {
-    "chainID": "bomabay-10",
+    "chainID": "bomabay-11",
     "URL": "https://bombay-lcd.terra.dev",
     "gasPrices": {
       "uluna": 0.15,
@@ -127,7 +127,7 @@ Each address configuration should point to the correct Anchor core contract addr
     "team_vesting": "terra10evq9zxk2m86n3n3xnpw28jpqwp628c6dzuq42"
   }
 ```
-- `bombay-10`:
+- `bombay-11`:
 ```json
 
 "contracts": {
@@ -168,13 +168,13 @@ By default, `anchorcli` will use the network setting for `columbus-5` configured
 #### Example
 
 ```sh
-ANCHORCLI_NETWORK=bombay-10 anchorcli x basset-hub bond ...
+ANCHORCLI_NETWORK=bombay-11 anchorcli x basset-hub bond ...
 ```
 
 OR
 
 ```sh
-export ANCHORCLI_NETWORK=bombay-10
+export ANCHORCLI_NETWORK=bombay-11
 anchorcli x basset-hub bond ...
 ```
 

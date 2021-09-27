@@ -1,6 +1,6 @@
 {
   "lcd": {
-    "chainID": "bombay-10",
+    "chainID": "bombay-11",
     "URL": "https://bombay-lcd.terra.dev",
     "gasPrices": {
       "uluna": 0.15,

@@ -3,7 +3,7 @@ import { AnchorConfig } from '../addresses/types';
 const testnetDefaultConfig: AnchorConfig = {
   lcd: {
     URL: 'https://bombay-lcd.terra.dev',
-    chainID: 'bombay-10',
+    chainID: 'bombay-11',
     gasPrices: {
       uluna: 0.15,
       usdr: 0.1018,
