@@ -108,7 +108,7 @@ const send = menu
       contract_address: addressProvider.addressesMap.ANC,
       amount: amount,
       contract: accAddress(contract),
-      msg: JSON.parse(msg),
+      msg: msg ? JSON.parse(msg) : msg,
     });
     await handleExecCommand(menu, message);
   });
@@ -138,7 +138,7 @@ const sendFrom = menu
       amount: amount,
       contract: accAddress(contract),
       owner: accAddress(owner),
-      msg: JSON.parse(msg),
+      msg: msg ? JSON.parse(msg) : msg,
     });
     await handleExecCommand(menu, message);
   });
@@ -285,9 +285,9 @@ const decreaseAllowance = menu
 
       let expiry: Expire;
       if (
-        +!!increaseAllowance.expiryHeight +
-          +!!increaseAllowance.expiryTime +
-          +!!increaseAllowance.expiryNever >=
+        +!!decreaseAllowance.expiryHeight +
+          +!!decreaseAllowance.expiryTime +
+          +!!decreaseAllowance.expiryNever >=
         2
       ) {
         throw new Error(
@@ -295,13 +295,13 @@ const decreaseAllowance = menu
         );
       }
 
-      if (increaseAllowance.expiryHeight) {
+      if (decreaseAllowance.expiryHeight) {
         expiry = {
           at_height: Parse.int(expiryHeight),
         };
       }
 
-      if (increaseAllowance.expiryTime) {
+      if (decreaseAllowance.expiryTime) {
         expiry = {
           at_time: Parse.int(expiryTime),
         };

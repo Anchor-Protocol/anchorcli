@@ -7,19 +7,19 @@ import {
   handleQueryCommand,
 } from '../../util/contract-menu';
 import {
-  fabricatebAssetSend,
-  fabricatebAssetBurnFrom,
-  fabricatebAssetDecreaseAllowance,
-  fabricatebAssetIncreaseAllowance,
-  fabricatebAssetSendFrom,
-  fabricatebAssetTransfer,
-  fabricatebAssetTransferFrom,
+  fabricatebEthSend,
+  fabricatebEthBurnFrom,
+  fabricatebEthDecreaseAllowance,
+  fabricatebEthIncreaseAllowance,
+  fabricatebEthSendFrom,
+  fabricatebEthTransferFrom,
   queryTokenAllAccounts,
   queryTokenBalance,
   queryTokenMinter,
   queryTokenAllowances,
   queryTokenInfo,
-  fabricatebAssetBurn,
+  fabricatebEthBurn,
+  fabricatebEthTransfer,
 } from '@anchor-protocol/anchor.js';
 import {
   AddressProviderFromJSON,
@@ -31,8 +31,8 @@ import accAddress = Parse.accAddress;
 import int = Parse.int;
 
 const menu = createExecMenu(
-  'basset-token',
-  'Anchor bAsset token contract functions',
+  'beth-token',
+  'Anchor bEth token contract functions',
 );
 
 interface Transfer {
@@ -42,7 +42,7 @@ interface Transfer {
 
 const transfer = menu
   .command('transfer')
-  .description('Transfer bAsset to other users')
+  .description('Transfer bEth to other users')
   .requiredOption('--amount <string>', 'Amount to send to recipient')
   .requiredOption('--recipient <AccAddress>', 'Recipient address')
   .action(async ({ amount, recipient }: Transfer) => {
@@ -51,7 +51,7 @@ const transfer = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebAssetTransfer({
+    const msg = fabricatebEthTransfer({
       address: userAddress,
       amount: amount,
       recipient: accAddress(recipient),
@@ -66,7 +66,7 @@ interface TransferFrom {
 }
 const transferFrom = menu
   .command('transfer-from')
-  .description("Transfer bAsset to other users from the user's allowance")
+  .description("Transfer bEth to other users from the user's allowance")
   .requiredOption('--owner <AccAddress>', 'Address of the owner of allowance')
   .requiredOption('--amount <string>', 'Amount to transfer')
   .requiredOption('--recipient <AccAddress>', 'Recipient address')
@@ -76,7 +76,7 @@ const transferFrom = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebAssetTransferFrom({
+    const msg = fabricatebEthTransferFrom({
       address: userAddress,
       amount: amount,
       recipient: accAddress(recipient),
@@ -93,7 +93,7 @@ interface Send {
 
 const send = menu
   .command('send')
-  .description('Send bAsset to a contract')
+  .description('Send bEth to a contract')
   .requiredOption('--amount <string>', 'Amount of asset to send')
   .requiredOption('--contract <AccAddress>', 'contract recipient')
   .option('--msg <json>', 'string of JSON Receive hook to run')
@@ -103,7 +103,7 @@ const send = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const message = fabricatebAssetSend({
+    const message = fabricatebEthSend({
       address: userAddress,
       amount: amount,
       contract: accAddress(contract),
@@ -120,7 +120,7 @@ interface SendFrom {
 }
 const sendFrom = menu
   .command('send-from')
-  .description("Send bAsset to a contract from the user's allowance")
+  .description("Send bEth to a contract from the user's allowance")
   .requiredOption('--owner <AccAddress>', 'owner to spend from')
   .requiredOption('--amount <string>', 'Amount of asset to send')
   .requiredOption('--contract <AccAddress>', 'contract recipient')
@@ -131,7 +131,7 @@ const sendFrom = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const message = fabricatebAssetSendFrom({
+    const message = fabricatebEthSendFrom({
       address: userAddress,
       amount: amount,
       contract: accAddress(contract),
@@ -154,7 +154,7 @@ const burn = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebAssetBurn({
+    const msg = fabricatebEthBurn({
       address: userAddress,
       amount: amount,
     })(addressProvider);
@@ -168,7 +168,7 @@ interface BurnFrom {
 
 const burnFrom = menu
   .command('burn-from')
-  .description("burn bAsset from the user's allowance")
+  .description("burn bEth from the user's allowance")
   .requiredOption('--owner <AccAddress>', 'Account to burn from')
   .requiredOption('--amount <string>', 'Amount of asset to burn')
   .action(async ({ amount, owner }: BurnFrom) => {
@@ -177,7 +177,7 @@ const burnFrom = menu
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(menu.chainId),
     );
-    const msg = fabricatebAssetBurnFrom({
+    const msg = fabricatebEthBurnFrom({
       address: userAddress,
       amount: amount,
       owner: accAddress(owner),
@@ -197,7 +197,7 @@ interface Allowance {
 
 const increaseAllowance = menu
   .command('increase-allowance')
-  .description("burn bAsset from the user's allowance")
+  .description("burn bEth from the user's allowance")
   .requiredOption('--spender <AccAddress>', 'Spender address')
   .requiredOption('--amount <string>', 'Amount to increase')
   .option('--expiry-height <int>', 'block height expiration of allowance')
@@ -246,7 +246,7 @@ const increaseAllowance = menu
         };
       }
 
-      const msg = fabricatebAssetIncreaseAllowance({
+      const msg = fabricatebEthIncreaseAllowance({
         address: userAddress,
         amount: amount,
         spender: accAddress(spender),
@@ -258,7 +258,7 @@ const increaseAllowance = menu
 
 const decreaseAllowance = menu
   .command('decrease-allowance')
-  .description("burn bAsset from the user's allowance")
+  .description("burn bEth from the user's allowance")
   .requiredOption('--spender <AccAddress>', 'Spender address')
   .requiredOption('--amount <string>', 'Amount to increase')
   .option('--expiry-height <int>', 'block height expiration of allowance')
@@ -308,7 +308,7 @@ const decreaseAllowance = menu
         };
       }
 
-      const msg = fabricatebAssetDecreaseAllowance({
+      const msg = fabricatebEthDecreaseAllowance({
         address: userAddress,
         amount: amount,
         spender: spender,
@@ -319,8 +319,8 @@ const decreaseAllowance = menu
   );
 
 const query = createQueryMenu(
-  'basset-token',
-  'Anchor bAsset token  contract queries',
+  'beth-token',
+  'Anchor bEth token  contract queries',
 );
 
 const getTokenInfo = query
@@ -333,7 +333,7 @@ const getTokenInfo = query
     );
     const query_token = await queryTokenInfo({
       lcd: lcd,
-      token_address: addressProvider.addressesMap.bLunaToken,
+      token_address: addressProvider.addressesMap.bEthToken,
     })(addressProvider);
     await handleQueryCommand(query, query_token);
   });
@@ -353,7 +353,7 @@ const getBalance = query
     );
     const balance_query = await queryTokenBalance({
       lcd: lcd,
-      token_address: addressProvider.addressesMap.bLunaToken,
+      token_address: addressProvider.addressesMap.bEthToken,
       address: accAddress(address),
     })(addressProvider);
     await handleQueryCommand(query, balance_query);
@@ -369,7 +369,7 @@ const getMinter = query
     );
     const query_minter = await queryTokenMinter({
       lcd: lcd,
-      token_address: addressProvider.addressesMap.bLunaToken,
+      token_address: addressProvider.addressesMap.bEthToken,
     })(addressProvider);
     await handleQueryCommand(query, query_minter);
   });
@@ -390,7 +390,7 @@ const getAllowance = query
     );
     const allowance_query = await queryTokenAllowance({
       lcd: lcd,
-      token_address: addressProvider.addressesMap.bLunaToken,
+      token_address: addressProvider.addressesMap.bEthToken,
       owner: accAddress(owner),
       spender: accAddress(spender),
     })(addressProvider);
@@ -407,7 +407,7 @@ const getAllowances = query
   .command('all-allowances')
   .description('Get all allowances this owner has approved')
   .requiredOption('--owner <AccAddress>', 'Address of the owner')
-  .option('--start-after <int>', 'Address of bLuna holder to start query')
+  .option('--start-after <int>', 'Address of bEth holder to start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ owner, startAfter, limit }: AllAllowances) => {
     const lcd = getLCDClient(query.chainId);
@@ -416,7 +416,7 @@ const getAllowances = query
     );
     const batch_query = await queryTokenAllowances({
       lcd: lcd,
-      token_address: addressProvider.addressesMap.bLunaToken,
+      token_address: addressProvider.addressesMap.bEthToken,
       owner: accAddress(owner),
       start_after: startAfter,
       lim: int(limit),
@@ -434,7 +434,7 @@ const getAccounts = query
   .description('Get all accounts that have balances')
   .option(
     '--start-after <AccAddress>',
-    'Address of bLuna holder to start query',
+    'Address of bEth holder to start query',
   )
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: AllAccounts) => {
@@ -444,7 +444,7 @@ const getAccounts = query
     );
     const batch_query = await queryTokenAllAccounts({
       lcd: lcd,
-      token_address: addressProvider.addressesMap.bLunaToken,
+      token_address: addressProvider.addressesMap.bEthToken,
       start_after: accAddress(startAfter),
       limit: int(limit),
     })(addressProvider);

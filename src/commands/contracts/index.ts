@@ -1,10 +1,13 @@
 import Hub from './basset-hub';
 import Reward from './basset-reward';
 import Token from './basset-token';
+import bEthReward from './beth-reward';
+import bEthToken from './beth-token';
 import Liquidity from './money-market-liquidation';
 import Oracle from './money-market-oracle';
 import Market from './money-market-market';
 import Custody from './money-market-custody';
+import bEthCustody from './money-market-beth-custody';
 import Overseer from './money-market-overseer';
 import Interset from './money-market-interest';
 import Terraswap from './terraswap';
@@ -23,10 +26,13 @@ export const anchor = [
   Hub,
   Reward,
   Token,
+  bEthReward,
+  bEthToken,
   Liquidity,
   Oracle,
   Market,
   Custody,
+  bEthCustody,
   Overseer,
   Interset,
   Terraswap,

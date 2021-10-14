@@ -22,7 +22,7 @@ Command-line interface for Anchor Protocol on Terra.
 
 - Node.js 12+
 - NPM,
-- [`terracli`](https://github.com/terra-project/core) in your path.
+- [`terrad`](https://github.com/terra-project/core) in your path.
 
 `anchorcli` can be installed off NPM.
 ****
@@ -53,16 +53,16 @@ The entrypoint `anchorcli` should then be available in your `path`:
 </pre>
 
 ## Configuration
-By default, `anchorcli` works with the default configuration which is set for the contracts on the `tequila-0004` environment. 
+By default, `anchorcli` works with the default configuration which is set for the contracts on the `bombay-12` environment. 
 This setting provides the address of contracts and specifies the settings for LCD provider and fee estimation gas prices.
 `anchorcli` will create two configuration files in your home directory: `$HOME/anchorcliTestnet.json` and `$HOME/anchorcliMainnet.json`.
 
 ### Specifying LCD settings
 Each network configuration should define how to connect to the Terra blockchain via LCD parameters.
-- `columbus-4`:
+- `columbus-5`:
 ```json
 "lcd": {
-    "chainID": "columbus-4",
+    "chainID": "columbus-5",
     "URL": "https://lcd.terra.dev",
     "gasPrices": {
       "uluna": 0.15,
@@ -74,12 +74,12 @@ Each network configuration should define how to connect to the Terra blockchain 
     "gasAdjustment": 1.2
   },
 ```
-- `tequila-0004`:
+- `bombay-12`:
 ```json
 {
 "lcd": {
-    "chainID": "tequila-0004",
-    "URL": "https://tequila-lcd.terra.dev",
+    "chainID": "bomabay-12",
+    "URL": "https://bombay-lcd.terra.dev",
     "gasPrices": {
       "uluna": 0.15,
       "usdr": 0.1018,
@@ -94,18 +94,21 @@ Each network configuration should define how to connect to the Terra blockchain 
 
 ### Specifying Contracts
 Each address configuration should point to the correct Anchor core contract addresses.
-- `columbus-4`:
+- `columbus-5`:
 ```json
 "contracts": {
     "bLunaHub": "terra1mtwph2juhj0rvjz7dy92gvl6xvukaxu8rfv8ts",
     "bLunaToken": "terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp",
     "bLunaReward": "terra17yap3mhph35pcwvhza38c2lkj7gzywzy05h7l0",
     "bLunaAirdrop": "terra199t7hg7w5vymehhg834r6799pju2q3a0ya7ae9",
+    "bEthReward": "terra1939tzfn4hn960ychpcsjshu8jds3zdwlp8jed9",
+    "bEthToken": "terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun",
     "mmInterestModel": "terra1kq8zzq5hufas9t0kjsjc62t2kucfnx8txf547n",
     "mmOracle": "terra1cgg6yef7qcdm070qftghfulaxmllgmvk77nc7t",
     "mmMarket": "terra1sepfj7s0aeg5967uxnfk4thzlerrsktkpelm5s",
     "mmOverseer": "terra1tmnqgvg567ypvsvk6rwsga3srp7e3lg6u0elp8",
     "mmCustody": "terra1ptjp2vfjrwh0j0faj9r6katm640kgjxnwwq9kn",
+    "mmCustodyBEth": "terra10cxuzggyvvv44magvrh3thpdnk9cmlgk93gmx2",
     "mmLiquidation": "terra1w9ky73v4g7v98zzdqpqgf3kjmusnx4d4mvnac6",
     "mmDistributionModel": "terra14mufqpr5mevdfn92p4jchpkxp7xr46uyknqjwq",
     "aTerra": "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu",
@@ -124,52 +127,54 @@ Each address configuration should point to the correct Anchor core contract addr
     "team_vesting": "terra10evq9zxk2m86n3n3xnpw28jpqwp628c6dzuq42"
   }
 ```
-- `tequila-0004`:
+- `bombay-12`:
 ```json
-{
-   "contracts": {
-     "bLunaHub": "terra1fflas6wv4snv8lsda9knvq2w0cyt493r8puh2e",
-     "bLunaToken": "terra1u0t35drzyy0mujj8rkdyzhe264uls4ug3wdp3x",
-     "bLunaReward": "terra1ac24j6pdxh53czqyrkr6ygphdeftg7u3958tl2",
-     "bLunaAirdrop": "terra1334h20c9ewxguw9p9vdxzmr8994qj4qu77ux6q",
-     "mmInterestModel": "terra1m25aqupscdw2kw4tnq5ql6hexgr34mr76azh5x",
-     "mmOracle": "terra1p4gg3p2ue6qy2qfuxtrmgv2ec3f4jmgqtazum8",
-     "mmMarket": "terra15dwd5mj8v59wpj0wvt233mf5efdff808c5tkal",
-     "mmOverseer": "terra1qljxd0y3j3gk97025qvl3lgq8ygup4gsksvaxv",
-     "mmCustody": "terra1ltnkx0mv7lf2rca9f8w740ashu93ujughy4s7p",
-     "mmLiquidation": "terra16vc4v9hhntswzkuunqhncs9yy30mqql3gxlqfe",
-     "mmDistributionModel": "terra1u64cezah94sq3ye8y0ung28x3pxc37tv8fth7h",
-     "aTerra": "terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl",
-     "terraswapblunaLunaPair": "terra13e4jmcjnwrauvl2fnjdwex0exuzd8zrh5xk29v",
-     "terraswapblunaLunaLPToken": "terra1tj4pavqjqjfm0wh73sh7yy9m4uq3m2cpmgva6n",
-     "terraswapAncUstPair": "terra1wfvczps2865j0awnurk9m04u7wdmd6qv3fdnvz",
-     "terraswapAncUstLPToken": "terra1vg0qyq92ky9z9dp0j9fv5rmr2s80sg605dah6f",
-     "gov": "terra16ckeuu7c6ggu52a8se005mg5c0kd2kmuun63cu",
-     "distributor": "terra1z7nxemcnm8kp7fs33cs7ge4wfuld307v80gypj",
-     "collector": "terra1hlctcrrhcl2azxzcsns467le876cfuzam6jty4",
-     "community": "terra17g577z0pqt6tejhceh06y3lyeudfs3v90mzduy",
-     "staking": "terra19nxz35c8f7t3ghdxrxherym20tux8eccar0c3k",
-     "ANC": "terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc",
-     "airdrop": "terra1u5ywhlve3wugzqslqvm8ks2j0nsvrqjx0mgxpk",
-     "investor_vesting": "not available in testnet",
-     "team_vesting": "not available in testnet"
-   }
-}
+
+"contracts": {
+    "bLunaHub": "terra1fflas6wv4snv8lsda9knvq2w0cyt493r8puh2e",
+    "bLunaToken": "terra1u0t35drzyy0mujj8rkdyzhe264uls4ug3wdp3x",
+    "bLunaReward": "terra1ac24j6pdxh53czqyrkr6ygphdeftg7u3958tl2",
+    "bLunaAirdrop": "terra1334h20c9ewxguw9p9vdxzmr8994qj4qu77ux6q",
+    "bEthReward": "terra1ja3snkedk4t0zp7z3ljd064hcln8dsv5x004na",
+    "bEthToken": "terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l",
+    "mmInterestModel": "terra1m25aqupscdw2kw4tnq5ql6hexgr34mr76azh5x",
+    "mmOracle": "terra1p4gg3p2ue6qy2qfuxtrmgv2ec3f4jmgqtazum8",
+    "mmMarket": "terra15dwd5mj8v59wpj0wvt233mf5efdff808c5tkal",
+    "mmOverseer": "terra1qljxd0y3j3gk97025qvl3lgq8ygup4gsksvaxv",
+    "mmCustody": "terra1ltnkx0mv7lf2rca9f8w740ashu93ujughy4s7p",
+    "mmCustodyBEth": "terra1j6fey5tl70k9fvrv7mea7ahfr8u2yv7l23w5e6",
+    "mmLiquidation": "terra16vc4v9hhntswzkuunqhncs9yy30mqql3gxlqfe",
+    "mmDistributionModel": "terra1u64cezah94sq3ye8y0ung28x3pxc37tv8fth7h",
+    "aTerra": "terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl",
+    "terraswapblunaLunaPair": "terra13e4jmcjnwrauvl2fnjdwex0exuzd8zrh5xk29v",
+    "terraswapblunaLunaLPToken": "terra1tj4pavqjqjfm0wh73sh7yy9m4uq3m2cpmgva6n",
+    "terraswapAncUstPair": "terra1wfvczps2865j0awnurk9m04u7wdmd6qv3fdnvz",
+    "terraswapAncUstLPToken": "terra1vg0qyq92ky9z9dp0j9fv5rmr2s80sg605dah6f",
+    "gov": "terra16ckeuu7c6ggu52a8se005mg5c0kd2kmuun63cu",
+    "distributor": "terra1z7nxemcnm8kp7fs33cs7ge4wfuld307v80gypj",
+    "collector": "terra1hlctcrrhcl2azxzcsns467le876cfuzam6jty4",
+    "community": "terra17g577z0pqt6tejhceh06y3lyeudfs3v90mzduy",
+    "staking": "terra19nxz35c8f7t3ghdxrxherym20tux8eccar0c3k",
+    "ANC": "terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc",
+    "airdrop": "terra1u5ywhlve3wugzqslqvm8ks2j0nsvrqjx0mgxpk",
+    "investor_vesting": "not available in testnet",
+    "team_vesting": "not available in testnet"
+  }
 ```
 
 ### Specify the Network [IMPORTANT]
-By default, `anchorcli` will use the network setting for `columbus-4` configured in `$HOME/anchorcliMainnet.json`. You can direct `anchorcli` to use a different network configuration by changing the value of the `ANCHORCLI_NETWORK` environment variable.
+By default, `anchorcli` will use the network setting for `columbus-5` configured in `$HOME/anchorcliMainnet.json`. You can direct `anchorcli` to use a different network configuration by changing the value of the `ANCHORCLI_NETWORK` environment variable.
 
 #### Example
 
 ```sh
-ANCHORCLI_NETWORK=tequila-0004 anchorcli x basset-hub bond ...
+ANCHORCLI_NETWORK=bombay-12 anchorcli x basset-hub bond ...
 ```
 
 OR
 
 ```sh
-export ANCHORCLI_NETWORK=tequila-0004
+export ANCHORCLI_NETWORK=bombay-12
 anchorcli x basset-hub bond ...
 ```
 
@@ -190,8 +195,8 @@ Execute a function on a smart contract
 Options:
   --yaml                         Encode result as YAML instead of JSON
   -y,--yes                       Sign transaction without confirming (yes)
-  --home <string>                Directory for config of terracli
-  --from <key-name>              *Name of key in terracli keyring
+  --home <string>                Directory for config of terrad
+  --from <key-name>              *Name of key in terrad keyring
   --generate-only                Build an unsigned transaction and write it to stdout
   -G,--generate-msg              Build an ExecuteMsg (good for including in poll)
   --base64                       For --generate-msg: returns msg as base64
@@ -263,7 +268,7 @@ Commands:
 ```
 ## Examples
 This section illustrates the usage of `anchorcli` through some use cases. 
-All examples assume you have a key in `terracli` keychain called `test1`.
+All examples assume you have a key in `terrad` keychain called `test1`.
 
 ### Bond bLuna 
 The Anchor protocol requires providing collaterals to be able to borrow. bLuna (bonded Luna) is an accepted type of collateral. The following example illustrates how the user can attempt to bond Luna (in response to which the contract will issue bLuna for the user):

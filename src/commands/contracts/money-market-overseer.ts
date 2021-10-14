@@ -10,7 +10,9 @@ import {
 import {
   fabricateOverseerEpochOperations,
   fabricateOverseerLockCollateral,
+  fabricateOverseerLockBETHCollateral,
   fabricateOverseerUnlockCollateral,
+  fabricateOverseerUnlockBETHCollateral,
   fabricateOverseerUpdateConfig,
   fabricateOverseerUpdateWhitelist,
   fabricateOverseerWhitelist,
@@ -19,7 +21,6 @@ import {
   queryOverseerBorrowLimit,
   queryOverseerCollaterals,
   queryOverseerConfig,
-  queryOverseerDistributionParams,
   queryOverseerEpochState,
   queryOverseerWhitelist,
 } from '@anchor-protocol/anchor.js';
@@ -56,7 +57,7 @@ const executeEpochOperation = menu
 
 const lockCollateral = menu
   .command('lock-collateral')
-  .description('Lock specified amount of collateral deposited')
+  .description('Lock specified amount of bLuna collateral deposited')
   .requiredOption('--amount <string>', 'Amount of token')
   .action(async ({ amount }) => {
     const key = new CLIKey({ keyName: menu.from });
@@ -65,6 +66,24 @@ const lockCollateral = menu
       resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricateOverseerLockCollateral({
+      address: userAddress,
+      market: MARKET_DENOMS.UUSD,
+      amount: amount,
+    })(addressProvider);
+    await handleExecCommand(menu, msg);
+  });
+
+const lockbEthCollateral = menu
+  .command('lock-beth-collateral')
+  .description('Lock specified amount of bEth collateral deposited')
+  .requiredOption('--amount <string>', 'Amount of token')
+  .action(async ({ amount }) => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+    const msg = fabricateOverseerLockBETHCollateral({
       address: userAddress,
       market: MARKET_DENOMS.UUSD,
       amount: amount,
@@ -83,6 +102,24 @@ const unlockCollateral = menu
       resolveChainIDToNetworkName(menu.chainId),
     );
     const msg = fabricateOverseerUnlockCollateral({
+      address: userAddress,
+      market: MARKET_DENOMS.UUSD,
+      amount: amount,
+    })(addressProvider);
+    await handleExecCommand(menu, msg);
+  });
+
+const unlockbEthCollateral = menu
+  .command('unlock-beth-collateral')
+  .description('Unlock specified amount of bEth collateral unlocked')
+  .requiredOption('--amount <string>', 'Amount of token')
+  .action(async ({ amount }) => {
+    const key = new CLIKey({ keyName: menu.from });
+    const userAddress = key.accAddress;
+    const addressProvider = new AddressProviderFromJSON(
+      resolveChainIDToNetworkName(menu.chainId),
+    );
+    const msg = fabricateOverseerUnlockBETHCollateral({
       address: userAddress,
       market: MARKET_DENOMS.UUSD,
       amount: amount,
@@ -339,20 +376,6 @@ const getConfig = query
     await handleQueryCommand(query, queryConfig);
   });
 
-const getDistributionParams = query
-  .command('distribution-params')
-  .description('Get parameter information related to reward distribution')
-  .action(async () => {
-    const lcd = getLCDClient(query.chainId);
-    const addressProvider = new AddressProviderFromJSON(
-      resolveChainIDToNetworkName(query.chainId),
-    );
-    const queryDistributionParams = await queryOverseerDistributionParams({
-      lcd,
-      overseer: MARKET_DENOMS.UUSD,
-    })(addressProvider);
-    await handleQueryCommand(query, queryDistributionParams);
-  });
 
 const getEpochState = query
   .command('epoch-state')

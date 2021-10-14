@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": false,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "alwaysStrict": true,
     "declaration": true,
@@ -27,7 +27,8 @@
     "sourceMap": false,
     "strict": false,
     "target": "esnext",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "skipLibCheck": true
   },
   "include": ["src"]
 }

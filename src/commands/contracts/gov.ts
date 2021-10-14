@@ -262,7 +262,7 @@ const stake = menu
 
 const withdraw = menu
   .command('withdraw-voting <amount>')
-  .description(`Stake ANC tokens in governance`, {
+  .description(`Withdraw ANC tokens in governance`, {
     amount: '(Uint128) amount of ANC tokens to stake',
   })
   .action(async (amount: string) => {
@@ -327,8 +327,8 @@ const getPolls = query
   .action(async () => {
     if (
       getPolls.filter &&
-      !['in_progress', 'passed', 'rejected', 'executed'].includes(
-        getPolls.filter,
+      !['in_progress', 'passed', 'rejected', 'executed'].find(
+        filter => filter === getPolls.filter,
       )
     ) {
       throw new Error(
@@ -344,8 +344,8 @@ const getPolls = query
       await queryGovPolls({
         lcd,
         filter: getPolls.filter,
-        start_after: getPolls.startAfter,
-        limit: getPolls.limit,
+        start_after: Number(getPolls.startAfter),
+        limit: Number(getPolls.limit),
       })(addressProvider),
     );
   });

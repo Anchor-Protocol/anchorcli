@@ -10,11 +10,14 @@ export interface Contracts {
   bLunaToken: string;
   bLunaReward: string;
   bLunaAirdrop: string;
+  bEthToken: string;
+  bEthReward: string;
   mmInterestModel: string;
   mmOracle: string;
   mmMarket: string;
   mmOverseer: string;
   mmCustody: string;
+  mmCustodyBEth: string;
   mmLiquidation: string;
   mmDistributionModel: string;
   aTerra: string;

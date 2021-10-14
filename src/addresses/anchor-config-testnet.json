@@ -1,7 +1,7 @@
 {
   "lcd": {
-    "chainID": "tequila-0004",
-    "URL": "https://tequila-lcd.terra.dev",
+    "chainID": "bombay-12",
+    "URL": "https://bombay-lcd.terra.dev",
     "gasPrices": {
       "uluna": 0.15,
       "usdr": 0.1018,
@@ -16,11 +16,14 @@
     "bLunaToken": "terra1u0t35drzyy0mujj8rkdyzhe264uls4ug3wdp3x",
     "bLunaReward": "terra1ac24j6pdxh53czqyrkr6ygphdeftg7u3958tl2",
     "bLunaAirdrop": "terra1334h20c9ewxguw9p9vdxzmr8994qj4qu77ux6q",
+    "bEthReward": "terra1ja3snkedk4t0zp7z3ljd064hcln8dsv5x004na",
+    "bEthToken": "terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l",
     "mmInterestModel": "terra1m25aqupscdw2kw4tnq5ql6hexgr34mr76azh5x",
     "mmOracle": "terra1p4gg3p2ue6qy2qfuxtrmgv2ec3f4jmgqtazum8",
     "mmMarket": "terra15dwd5mj8v59wpj0wvt233mf5efdff808c5tkal",
     "mmOverseer": "terra1qljxd0y3j3gk97025qvl3lgq8ygup4gsksvaxv",
     "mmCustody": "terra1ltnkx0mv7lf2rca9f8w740ashu93ujughy4s7p",
+    "mmCustodyBEth": "terra1j6fey5tl70k9fvrv7mea7ahfr8u2yv7l23w5e6",
     "mmLiquidation": "terra16vc4v9hhntswzkuunqhncs9yy30mqql3gxlqfe",
     "mmDistributionModel": "terra1u64cezah94sq3ye8y0ung28x3pxc37tv8fth7h",
     "aTerra": "terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl",

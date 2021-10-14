@@ -1,19 +1,19 @@
 /* eslint-disable */
 import { Contracts } from './types';
 import { activeNetwork, loadConfig } from '../util/config';
-import { AddressProvider } from '@anchor-protocol/anchor.js';
+import { AddressProvider, COLLATERAL_DENOMS, MARKET_DENOMS } from '@anchor-protocol/anchor.js';
 
 export enum NETWORKS {
-  COLUMBUS4,
-  TEQUILA0004,
+  COLUMBUS5,
+  BOMBAY12,
 }
 
-const testnetContracts: Contracts = loadConfig('tequila-0004').contracts;
-const mainnetContracts: Contracts = loadConfig('columbus-4').contracts;
+const testnetContracts: Contracts = loadConfig('bombay-12').contracts;
+const mainnetContracts: Contracts = loadConfig('columbus-5').contracts;
 
 const chainIDToNetworkName: any = {
-  'tequila-0004': NETWORKS.TEQUILA0004,
-  'columbus-4': NETWORKS.COLUMBUS4,
+  'bombay-12': NETWORKS.BOMBAY12,
+  'columbus-5': NETWORKS.COLUMBUS5,
 };
 export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
   if (chainId === undefined) {
@@ -24,8 +24,8 @@ export const resolveChainIDToNetworkName = (chainId: string): NETWORKS => {
 };
 
 const networksMap: { [networkName: string]: Contracts } = {
-  [NETWORKS.COLUMBUS4]: mainnetContracts,
-  [NETWORKS.TEQUILA0004]: testnetContracts,
+  [NETWORKS.COLUMBUS5]: mainnetContracts,
+  [NETWORKS.BOMBAY12]: testnetContracts,
 };
 
 export class AddressProviderFromJSON implements AddressProvider {
@@ -47,12 +47,27 @@ export class AddressProviderFromJSON implements AddressProvider {
     return this.addressesMap.bLunaToken;
   }
 
+  bEthToken(): string {
+    return this.addressesMap.bEthToken;
+  }
+
+  bEthReward(): string {
+    return this.addressesMap.bEthReward;
+  }
+
   market(): string {
     return this.addressesMap.mmMarket;
   }
 
-  custody(): string {
-    return this.addressesMap.mmCustody;
+  custody(_denom: MARKET_DENOMS, collateral: COLLATERAL_DENOMS): string {
+    switch (collateral) {
+      case COLLATERAL_DENOMS.UBLUNA: {
+        return this.addressesMap.mmCustody
+      }
+      case COLLATERAL_DENOMS.UBETH: {
+        return this.addressesMap.mmCustodyBEth
+      }
+    }
   }
 
   overseer(): string {
