@@ -118,13 +118,13 @@ export async function handleExecCommand(
 
   const lcd = getLCDClient(exec.chainId);
   let key = new CLIKey({ keyName: exec.from, home: exec.home });
-  
+
   const keyType = JSON.parse(
     execSync(
       (`terrad keys show ${exec.from} --output json`)
     ).toString()
   ).type
-  
+
   const wallet = lcd.wallet(key);
 
   const chainId: string = exec.chainId ? exec.chainId : lcd.config.chainID;
@@ -232,7 +232,7 @@ export async function handleExecCommand(
 
     const signedTx = await key.signTx(unsignedTx, signOptions);
     let result;
-  
+
     switch (exec.broadcastMode) {
       case 'sync':
         result = await lcd.tx.broadcastSync(signedTx);
@@ -260,6 +260,6 @@ export async function handleQueryCommand(query: commander.Command, T: any) {
   if (query.yaml) {
     console.log(yaml.stringify(T));
   } else {
-    console.log(T);
+    console.log(JSON.stringify(T, null, 2));
   }
 }
