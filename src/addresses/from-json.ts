@@ -1,7 +1,11 @@
 /* eslint-disable */
 import { Contracts } from './types';
 import { activeNetwork, loadConfig } from '../util/config';
-import { AddressProvider, COLLATERAL_DENOMS, MARKET_DENOMS } from '@anchor-protocol/anchor.js';
+import {
+  AddressProvider,
+  COLLATERAL_DENOMS,
+  MARKET_DENOMS,
+} from '@anchor-protocol/anchor.js';
 
 export enum NETWORKS {
   COLUMBUS5,
@@ -62,10 +66,10 @@ export class AddressProviderFromJSON implements AddressProvider {
   custody(_denom: MARKET_DENOMS, collateral: COLLATERAL_DENOMS): string {
     switch (collateral) {
       case COLLATERAL_DENOMS.UBLUNA: {
-        return this.addressesMap.mmCustody
+        return this.addressesMap.mmCustody;
       }
       case COLLATERAL_DENOMS.UBETH: {
-        return this.addressesMap.mmCustodyBEth
+        return this.addressesMap.mmCustodyBEth;
       }
     }
   }

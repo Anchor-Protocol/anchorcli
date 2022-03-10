@@ -328,7 +328,7 @@ const getPolls = query
     if (
       getPolls.filter &&
       !['in_progress', 'passed', 'rejected', 'executed'].find(
-        filter => filter === getPolls.filter,
+        (filter) => filter === getPolls.filter,
       )
     ) {
       throw new Error(

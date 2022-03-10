@@ -23,7 +23,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": true,
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "sourceMap": false,
     "strict": false,
     "target": "esnext",
