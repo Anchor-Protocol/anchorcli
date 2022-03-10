@@ -90,6 +90,10 @@ export class AddressProviderFromJSON implements AddressProvider {
     return this.addressesMap.mmLiquidation;
   }
 
+  liquidationQueue(): string {
+    return this.addressesMap.mmLiquidation;
+  }
+
   terraswapblunaLunaPair(): string {
     return this.addressesMap.terraswapblunaLunaPair;
   }

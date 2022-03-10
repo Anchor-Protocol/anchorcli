@@ -157,10 +157,8 @@ export async function handleExecCommand(
   if (exec.gas === 'auto') {
     // estimate gas
     const estimatedFee = (
-      await lcd.tx.create(key.accAddress, {
+      await lcd.tx.create([{address: key.accAddress, sequenceNumber: sequence}], {
         msgs,
-        accountNumber: accountNumber,
-        sequence,
         gasPrices: exec.gasPrices,
         gasAdjustment: exec.gasAdjustment,
         memo,

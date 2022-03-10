@@ -1,5 +1,6 @@
 import { program, Command } from 'commander';
 import * as _ from 'lodash';
+import { version } from '../package.json'
 
 import commands from './commands';
 import * as logger from './util/logger';
@@ -17,7 +18,7 @@ export function run(argv: string[]): void {
   try {
     program
       .name('anchorcli')
-      .version('0.0.1')
+      .version(version)
       .option('-v,--verbose', 'Show verbose error logs')
       .description(
         'Command-line interface for interacting with Anchor Protocol on Terra',
