@@ -61,7 +61,9 @@ const getConfig = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const config_query = await querybEthRewardConfig({ lcd: lcd })(addressProvider);
+    const config_query = await querybEthRewardConfig({ lcd: lcd })(
+      addressProvider,
+    );
     await handleQueryCommand(query, config_query);
   });
 
@@ -73,7 +75,9 @@ const getState = query
     const addressProvider = new AddressProviderFromJSON(
       resolveChainIDToNetworkName(query.chainId),
     );
-    const config_query = await querybEthRewardState({ lcd: lcd })(addressProvider);
+    const config_query = await querybEthRewardState({ lcd: lcd })(
+      addressProvider,
+    );
     await handleQueryCommand(query, config_query);
   });
 
@@ -83,9 +87,7 @@ interface AccruedRewards {
 
 const getAccruedRewards = query
   .command('accrued-rewards')
-  .description(
-    'Get the amount of rewards accrued to the specified bEth holder',
-  )
+  .description('Get the amount of rewards accrued to the specified bEth holder')
   .requiredOption('--address <AccAddress>', 'Address of user')
   .action(async ({ address }: AccruedRewards) => {
     const lcd = getLCDClient(query.chainId);

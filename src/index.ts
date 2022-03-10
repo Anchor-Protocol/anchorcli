@@ -1,6 +1,6 @@
 import { program, Command } from 'commander';
 import * as _ from 'lodash';
-import { version } from '../package.json'
+import { version } from '../package.json';
 
 import commands from './commands';
 import * as logger from './util/logger';

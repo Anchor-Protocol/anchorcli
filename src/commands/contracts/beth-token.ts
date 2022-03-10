@@ -432,10 +432,7 @@ interface AllAccounts {
 const getAccounts = query
   .command('all-accounts')
   .description('Get all accounts that have balances')
-  .option(
-    '--start-after <AccAddress>',
-    'Address of bEth holder to start query',
-  )
+  .option('--start-after <AccAddress>', 'Address of bEth holder to start query')
   .option('--limit <int>', 'Maximum number of query entries')
   .action(async ({ startAfter, limit }: AllAccounts) => {
     const lcd = getLCDClient(query.chainId);

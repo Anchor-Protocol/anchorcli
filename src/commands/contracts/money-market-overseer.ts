@@ -376,7 +376,6 @@ const getConfig = query
     await handleQueryCommand(query, queryConfig);
   });
 
-
 const getEpochState = query
   .command('epoch-state')
   .description('Get information related to the current epoch')
